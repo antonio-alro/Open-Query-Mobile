@@ -6,6 +6,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -27,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Spinner dataSetSelector;
     private ListView propertiesListView;
-    private Spinner filterSelector;
+    //private Spinner filterSelector;
 
     PropertyListAdapter listDataAdapter = null;
 
@@ -52,7 +55,8 @@ public class MainActivity extends AppCompatActivity {
                 for (int i = 0; i < properties.size(); i++) {
                     Property property = properties.get(i);
                     if (property.isSelected()) {
-                        properties_text += ("[" + property.getName() + "," + property.getFilter() + "] ");
+//                        properties_text += ("[" + property.getName() + "," + property.getFilter() + "] ");
+                        properties_text += property.to_s();
                     }
                 }
                 String result2 = "Seleccionadas: " + properties_text;
@@ -75,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
 
 
     //METODO PARA GESTIONAR EL SPINNER DE LOS DATASETS
@@ -105,9 +110,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
     //METODO PARA GESTIONAR LA LIST VIEW
     private void displayPropertyListView(){
-        //Obtener la list view del layout
+        //Obtener la LISTVIEW del layout
         propertiesListView = (ListView) findViewById(R.id.propertiesListView);
         //Rellenar unas propiedades de ejemplo
         ArrayList<Property> properties = new ArrayList<Property>();
@@ -118,17 +124,18 @@ public class MainActivity extends AppCompatActivity {
         property = new Property(false, "rdfs:label");
         properties.add(property);
 
-        //Creamos un adaptador desde un Prpoerty array
+        //Creamos un ADAPTADOR desde un Property Array
         listDataAdapter = new PropertyListAdapter(this, R.layout.properties_list_item, properties);
 
-        //Asignamos el adaptador a la list view
+        //Asignamos el ADAPTADOR a la LISTVIEW
         propertiesListView.setAdapter(listDataAdapter);
 
         propertiesListView.setOnItemClickListener(new PropertiesListViewOnItemClickListener());
     }
 
 
-    //ADAPTER PARA LA LIST VIEW DE PROPIEDADES
+
+    //ADAPTER PARA LA LIST VIEW DE PROPIEDADES (Properties)
     private class PropertyListAdapter extends ArrayAdapter<Property> {
 
         private ArrayList<Property> properties;
@@ -145,28 +152,34 @@ public class MainActivity extends AppCompatActivity {
             TextView name;
             TextView filterLabel;
             Spinner  filterSelector;
+            EditText filterParam1;
+            EditText filterParam2;
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, final ViewGroup parent) {
 
             ViewHolder holder = null;
             Log.v("ConvertView", String.valueOf(position));
 
             if (convertView == null) {
+
+                //Indicar el LAYOUT para inflar la LISTVIEW
                 LayoutInflater vi = (LayoutInflater)getSystemService(
                         Context.LAYOUT_INFLATER_SERVICE);
                 convertView = vi.inflate(R.layout.properties_list_item, null);
 
-                //Obtener los elementos desde el layout
+                //Obtener los ELEMENTOS desde el LAYOUT
                 holder = new ViewHolder();
-                holder.selected = (CheckBox) convertView.findViewById(R.id.checkBox1);
-                holder.name = (TextView) convertView.findViewById(R.id.name);
-                holder.filterLabel = (TextView) convertView.findViewById(R.id.filterLabel);
-                holder.filterSelector = (Spinner) convertView.findViewById(R.id.filterSelector);
+                holder.selected       = (CheckBox) convertView.findViewById(R.id.checkBox1);
+                holder.name           = (TextView) convertView.findViewById(R.id.name);
+                holder.filterLabel    = (TextView) convertView.findViewById(R.id.filterLabel);
+                holder.filterSelector = (Spinner)  convertView.findViewById(R.id.filterSelector);
+                holder.filterParam1   = (EditText) convertView.findViewById(R.id.filterParam1);
+                holder.filterParam2   = (EditText) convertView.findViewById(R.id.filterParam2);
                 convertView.setTag(holder);
 
-                //Listener para el checbox del elemento
+                //LISTENER para el CHECKBOX del elemento de la LISTVIEW
                 holder.selected.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
                         CheckBox cb = (CheckBox) v;
@@ -179,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-                //Listener para el spinner del elemento
+                //LISTENER para el SPINNER del elemento de la LISTVIEW
                 holder.filterSelector.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -194,10 +207,10 @@ public class MainActivity extends AppCompatActivity {
                 });
 //                holder.filterSelector.setOnItemSelectedListener(new SpinnerOnItemSelectedListener());
 
-                //Rellenar el spinner con unos filtros de ejemplo
+                //Rellenar el SPINNER con unos filtros de ejemplo
                 List<String> filters = new ArrayList<String>();
                 filters.add("Ninguno");
-                filters.add("<");
+                filters.add("=");
                 filters.add("<");
                 filters.add(">");
                 filters.add("<=");
@@ -205,26 +218,58 @@ public class MainActivity extends AppCompatActivity {
                 filters.add("Rango(x,y)");
                 filters.add("que contenga");
 
-                //Creamos un adaptador para el spinner del elemento
+                //Creamos un ADAPTADOR para el SPINNER del elemento de la LISTVIEW
                 ArrayAdapter<String> filterDropdownDataAdapter = new ArrayAdapter<String>
                         (this.getContext(), android.R.layout.simple_spinner_item, filters);
 
                 filterDropdownDataAdapter.setDropDownViewResource
                         (android.R.layout.simple_spinner_dropdown_item);
 
-                //Asignamos el adaptador al spinner
+                //Asignamos el ADAPTADOR al de la LISTVIEW
                 holder.filterSelector.setAdapter(filterDropdownDataAdapter);
+
+                //LISTENER para el EDITTEXT 1 del elemento de la LISTVIEW
+                holder.filterParam1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                    public void onFocusChange(View v, boolean hasFocus) {
+                        if (!hasFocus) {
+                            EditText filterParam1 = (EditText) v;
+                            Property property = (Property) filterParam1.getTag();
+                            property.setFilterParam1(filterParam1.getText().toString());
+                        }
+                    }
+                });
+
+                //LISTENER para el EDITTEXT 2 del elemento de la LISTVIEW
+                holder.filterParam2.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                    public void onFocusChange(View v, boolean hasFocus) {
+                        if (!hasFocus) {
+                            EditText filterParam2 = (EditText) v;
+                            Property property = (Property) filterParam2.getTag();
+                            property.setFilterParam2(filterParam2.getText().toString());
+                        }
+                    }
+                });
 
             }
             else {
                 holder = (ViewHolder) convertView.getTag();
             }
 
+            //Rellenar el LAYOUT con los datos de la PROPERTY correspondiente
             Property property = properties.get(position);
+
             holder.selected.setChecked(property.isSelected());
             holder.selected.setTag(property);
+
             holder.name.setText(property.getName());
+
             holder.filterSelector.setTag(property);
+
+            holder.filterParam1.setText(property.getFilterParam1());
+            holder.filterParam1.setTag(property);
+
+            holder.filterParam2.setText(property.getFilterParam2());
+            holder.filterParam2.setTag(property);
 
 
             return convertView;
@@ -237,17 +282,14 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
-
-
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

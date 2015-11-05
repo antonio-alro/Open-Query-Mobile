@@ -8,6 +8,8 @@ public class Property {
     boolean selected = false;
     String name = null;
     String filter = null;
+    String filterParam1 = "param1";
+    String filterParam2 = "param2";
 
     public Property(boolean selected, String name) {
         super();
@@ -36,7 +38,24 @@ public class Property {
         this.filter = filter;
     }
 
+    public String getFilterParam1(){
+        return filterParam1;
+    }
+    public void setFilterParam1(String param1){
+        this.filterParam1 = param1;
+    }
 
+    public String getFilterParam2(){
+        return filterParam2;
+    }
+    public void setFilterParam2(String param2){
+        this.filterParam2 = param2;
+    }
+
+    public String to_s(){
+        return "[" + this.getName() + "," + this.getFilter() + ","
+                   + this.getFilterParam1() + "," + this.getFilterParam2() + "] ";
+    }
 
 
 

@@ -43,7 +43,8 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:choiceMode="none" />
+            android:choiceMode="none"
+            android:descendantFocusability="beforeDescendants" />
 
         <ScrollView
             android:layout_width="wrap_content"

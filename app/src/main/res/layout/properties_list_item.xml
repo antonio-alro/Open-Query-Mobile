@@ -43,4 +43,34 @@
         android:spinnerMode="dropdown"
         android:layout_below="@+id/filterLabel" />
 
+    <EditText
+        android:id="@+id/filterParam1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:autoText="false"
+        android:inputType="text"
+        android:text="parámetro 1"
+        android:layout_below="@+id/filterSelector"
+        android:layout_toRightOf="@+id/filterLabel"
+        android:layout_toEndOf="@+id/filterLabel"
+        android:textStyle="italic"
+        android:textSize="@dimen/abc_text_size_body_1_material"
+        android:textColor="@color/colorPrimary" />
+
+    <EditText
+        android:id="@+id/filterParam2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:autoText="false"
+        android:inputType="text"
+        android:text="parámetro 2"
+        android:layout_below="@+id/filterSelector"
+        android:layout_toRightOf="@+id/filterParam1"
+        android:layout_toEndOf="@+id/filterParam1"
+        android:layout_marginLeft="42dp"
+        android:layout_marginStart="42dp"
+        android:textStyle="italic"
+        android:textSize="@dimen/abc_text_size_body_1_material"
+        android:textColor="@color/colorPrimary" />
+
 </RelativeLayout>

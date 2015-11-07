@@ -8,8 +8,8 @@ public class Property {
     boolean selected = false;
     String name = null;
     String filter = null;
-    String filterParam1 = "param1";
-    String filterParam2 = "param2";
+    String filterParam1 = "";
+    String filterParam2 = "";
 
     public Property(boolean selected, String name) {
         super();

@@ -49,12 +49,13 @@
         android:layout_height="wrap_content"
         android:autoText="false"
         android:inputType="text"
-        android:text="parámetro 1"
+        android:hint="parámetro 1"
         android:layout_below="@+id/filterSelector"
         android:layout_toRightOf="@+id/filterLabel"
         android:layout_toEndOf="@+id/filterLabel"
         android:textStyle="italic"
         android:textSize="@dimen/abc_text_size_body_1_material"
+        android:ems="5"
         android:textColor="@color/colorPrimary" />
 
     <EditText
@@ -63,7 +64,7 @@
         android:layout_height="wrap_content"
         android:autoText="false"
         android:inputType="text"
-        android:text="parámetro 2"
+        android:hint="parámetro 2"
         android:layout_below="@+id/filterSelector"
         android:layout_toRightOf="@+id/filterParam1"
         android:layout_toEndOf="@+id/filterParam1"
@@ -71,6 +72,7 @@
         android:layout_marginStart="42dp"
         android:textStyle="italic"
         android:textSize="@dimen/abc_text_size_body_1_material"
+        android:ems="5"
         android:textColor="@color/colorPrimary" />
 
 </RelativeLayout>

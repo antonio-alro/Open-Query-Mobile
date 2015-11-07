@@ -280,6 +280,15 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /** Called when the user touches the button */
+    public void showHelpMessage(View view) {
+        // Do something in response to button click
+        Toast.makeText(MainActivity.this,
+                "Marque en la casilla de la izquierda las propiedades que desea en la consulta y " +
+                        "seleccione los filtros de consulta sobre los datos",
+                Toast.LENGTH_SHORT).show();
+    }
+
 
 
     @Override

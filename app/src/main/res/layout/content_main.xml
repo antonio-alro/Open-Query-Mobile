@@ -9,27 +9,61 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_main" tools:context=".MainActivity">
 
+    <TextView
+        style="@style/Header"
+        android:text="Conjunto de datos"
+        android:id="@+id/dataSetHeader" />
+
+    <View
+        style="@style/Separator"
+        android:id="@+id/dataSetSeparator"
+        android:layout_below="@+id/dataSetHeader" />
+
     <Spinner
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/dataSetSelector"
         android:spinnerMode="dropdown"
+        android:layout_below="@+id/dataSetSeparator"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
+    <TextView
+        style="@style/Header"
+        android:text="Propiedades"
+        android:id="@+id/propertiesHeader"
+        android:layout_below="@+id/dataSetSelector" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/helpMessageButton"
+        android:src="@mipmap/ic_action_help"
+        android:background="@android:color/transparent"
+        android:layout_above="@+id/propertiesSeparator"
+        android:layout_alignParentRight="true"
+        android:onClick="showHelpMessage" />
+
+    <View
+        style="@style/Separator"
+        android:id="@+id/propertiesSeparator"
+        android:layout_below="@+id/propertiesHeader" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Marque en la casilla de la izquierda las propiedades que desea en la consulta y seleccione los filtros de consulta sobre los datos"
         android:id="@+id/textView2"
-        android:layout_below="@+id/dataSetSelector"
+        android:layout_below="@+id/propertiesSeparator"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
+
+
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/dataSetSelector"
+        android:layout_below="@+id/propertiesSeparator"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginTop="66dp">

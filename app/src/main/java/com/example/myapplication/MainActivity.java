@@ -150,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
         private class ViewHolder {
             CheckBox selected;
             TextView name;
+            CheckBox mandatory;
             TextView filterLabel;
             Spinner  filterSelector;
             EditText filterParam1;
@@ -171,15 +172,16 @@ public class MainActivity extends AppCompatActivity {
 
                 //Obtener los ELEMENTOS desde el LAYOUT
                 holder = new ViewHolder();
-                holder.selected       = (CheckBox) convertView.findViewById(R.id.checkBox1);
+                holder.selected       = (CheckBox) convertView.findViewById(R.id.selected);
                 holder.name           = (TextView) convertView.findViewById(R.id.name);
+                holder.mandatory      = (CheckBox) convertView.findViewById(R.id.mandatory);
                 holder.filterLabel    = (TextView) convertView.findViewById(R.id.filterLabel);
                 holder.filterSelector = (Spinner)  convertView.findViewById(R.id.filterSelector);
                 holder.filterParam1   = (EditText) convertView.findViewById(R.id.filterParam1);
                 holder.filterParam2   = (EditText) convertView.findViewById(R.id.filterParam2);
                 convertView.setTag(holder);
 
-                //LISTENER para el CHECKBOX del elemento de la LISTVIEW
+                //LISTENER para el CHECKBOX 1 del elemento de la LISTVIEW
                 holder.selected.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
                         CheckBox cb = (CheckBox) v;
@@ -189,6 +191,15 @@ public class MainActivity extends AppCompatActivity {
 //                                        " is " + cb.isChecked(),
 //                                Toast.LENGTH_LONG).show();
                         property.setSelected(cb.isChecked());
+                    }
+                });
+
+                //LISTENER para el CHECKBOX 2 del elemento de la LISTVIEW
+                holder.mandatory.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+                        CheckBox cb = (CheckBox) v;
+                        Property property = (Property) cb.getTag();
+                        property.setMandatory(cb.isChecked());
                     }
                 });
 
@@ -262,6 +273,9 @@ public class MainActivity extends AppCompatActivity {
             holder.selected.setTag(property);
 
             holder.name.setText(property.getName());
+
+            holder.mandatory.setChecked(property.isMandatory());
+            holder.mandatory.setTag(property);
 
             holder.filterSelector.setTag(property);
 

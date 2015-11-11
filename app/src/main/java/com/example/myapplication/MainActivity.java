@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -19,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,34 +42,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Obtenemos el dataset seleccionado
-                String dataSet = String.valueOf(dataSetSelector.getSelectedItem());
-                String result1 = "Dataset seleccionado: " + dataSet + "\n";
-
-                //Obtenemos las properties seleccionadas
-                String properties_text = new String();
-                ArrayList<Property> properties = listDataAdapter.properties;
-                for (int i = 0; i < properties.size(); i++) {
-                    Property property = properties.get(i);
-                    if (property.isSelected()) {
-//                        properties_text += ("[" + property.getName() + "," + property.getFilter() + "] ");
-                        properties_text += property.to_s();
-                    }
-                }
-                String result2 = "Seleccionadas: " + properties_text;
-
-                //Concatenamos ambas cosas
-                String result = result1 + result2;
-                //Mostramos el resultado en snackbar
-                Snackbar.make(view, result, Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         //CODIGO NUEVO PARA GESTIONAR EL SPINNER DE LOS DATASETS
         //Generate spinner from ArrayList
@@ -144,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
                                    ArrayList<Property> properties) {
             super(context, textViewResourceId, properties);
             this.properties = new ArrayList<Property>();
+            this.properties.addAll(properties);
             this.properties.addAll(properties);
         }
 
@@ -294,13 +269,48 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    /** Called when the user touches the button */
+    /**
+     * Método que se ejecuta cuando el usuario toca el botón
+     * @param view
+     */
     public void showHelpMessage(View view) {
         // Do something in response to button click
         Toast.makeText(MainActivity.this,
                 "Marque en la casilla de la izquierda las propiedades que desea en la consulta y " +
-                        "seleccione los filtros de consulta sobre los datos",
-                Toast.LENGTH_SHORT).show();
+                        "seleccione los filtros de consulta sobre los datos. Si marca la casilla " +
+                        "'Obligatorio' no se mostraran aquellos datos que no posean esa propiedad.",
+                Toast.LENGTH_LONG).show();
+    }
+
+    /**
+     * Método que se ejecuta cuando el usuario toca el botón flotante
+     * @param view
+     */
+    public void doSparqlConsult(View view) {
+        //Obtenemos el dataset seleccionado
+        String dataSet = String.valueOf(dataSetSelector.getSelectedItem());
+        String result1 = "Dataset seleccionado: " + dataSet + "\n";
+
+        //Obtenemos las properties seleccionadas
+        String properties_text = new String();
+        ArrayList<Property> properties = listDataAdapter.properties;
+        for (int i = 0; i < properties.size(); i++) {
+            Property property = properties.get(i);
+            if (property.isSelected()) {
+                properties_text += property.to_s();
+            }
+        }
+        String result2 = "Seleccionadas: " + properties_text;
+
+        //Concatenamos ambas cosas
+        String result = result1 + result2;
+        //Mostramos el resultado en snackbar
+        Snackbar.make(view, result, Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
+
+        //Lanzamos la actividad que muestra los resultados de la consulta
+        Intent intent_results = new Intent(this, ResultsActivity.class);
+        startActivity(intent_results);
     }
 
 

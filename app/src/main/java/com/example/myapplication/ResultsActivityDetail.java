@@ -1,7 +1,5 @@
 package com.example.myapplication;
 
-
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -9,15 +7,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-public class ResultsActivity extends AppCompatActivity implements ResultsFragmentList.ResultsListener {
+public class ResultsActivityDetail extends AppCompatActivity {
+
+    public static final String EXTRA_TEXT = "ELEMENT";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_results);
+        setContentView(R.layout.activity_results_activity_detail);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        View v = (View) findViewById(R.id.toolbar_layout);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -29,24 +28,12 @@ public class ResultsActivity extends AppCompatActivity implements ResultsFragmen
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
         //Obtenemos una referencia al fragment de esta actividad mediante el fragment manager
-        ResultsFragmentList frgList
-                = (ResultsFragmentList)getSupportFragmentManager()
-                .findFragmentById(R.id.FrgList);
-        //Le ponemos el Listener al fragment
-        frgList.setResultsListener(this);
+        ResultsFragmentDetail FrgDetail =
+                (ResultsFragmentDetail)getSupportFragmentManager()
+                        .findFragmentById(R.id.FrgDetail);
 
-    }
-
-    /**
-     * Método del interfaz de ResultListener
-     * @param element
-     */
-    @Override
-    public void onElementSelected(String element) {
-        Intent i = new Intent(this, ResultsActivityDetail.class);
-        i.putExtra( ResultsActivityDetail.EXTRA_TEXT, element );
-        startActivity(i);
+        //Mostramos el parámetro del intent en el fragment de detalle
+        FrgDetail.showDetail(getIntent().getStringExtra(EXTRA_TEXT));
     }
 }

@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,16 +23,38 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.example.myapplication.datamodels.DataSet;
+import com.example.myapplication.utils.PrefixesManagerSingleton;
+import com.example.myapplication.utils.RequestsManager;
+import com.example.myapplication.utils.VolleySingleton;
+
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Spinner dataSetSelector;
-    private ListView propertiesListView;
+
+    /**
+     * ATTRIBUTES OF MAIN ACTIVITY
+     */
+    private Spinner dataSetSelector;            // Spinner to select a dataSet
+    private ListView propertiesListView;        // ListView to display the properties of a dataSet
+//    private ProgressDialog progressDialog;      // ProgressDialog to display while the app get data
     //private Spinner filterSelector;
 
-    PropertyListAdapter listDataAdapter = null;
+    TextView mtextView; //BORRAR DESPUES
+
+    PropertyListAdapter listDataAdapter = null; // Adapter for the properties ListView
+
+    List<DataSet> dataSets = new ArrayList<DataSet>(); // Datasets data
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,34 +63,46 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        mtextView = (TextView) findViewById(R.id.textView2); //BORRAR DESPUES
+
         //CODIGO NUEVO PARA GESTIONAR EL SPINNER DE LOS DATASETS
         //Generate spinner from ArrayList
-        displayDataSetSelector();
+//        displayDataSetSelector();
+
+        // Obtenemos los prefijos y los guardamos para su posterior consulta
+        getAndSavePrefixes();
+
+        // Get the datasets through HTTP request from opendata caceres
+        getDataSets();
 
         //CODIGO NUEVO PARA GESTIONAR LA LIST VIEW
         //Generate list View from ArrayList
-        displayPropertyListView();
+//        displayPropertyListView();
 
     }
 
 
 
     //METODO PARA GESTIONAR EL SPINNER DE LOS DATASETS
-    private void displayDataSetSelector(){
+    private void displayDataSetSelector( List<DataSet> dataSets ){
         //Obtener el spinner del layout
         dataSetSelector = (Spinner) findViewById(R.id.dataSetSelector);
 
         //Rellenar unos datasets de ejemplo
-        List<String> dataSets = new ArrayList<String>();
-        dataSets.add("om:Arbol");
-        dataSets.add("om:Cine");
-        dataSets.add("om:BarCopas");
-        dataSets.add("dbpedia-owl:Museum");
-        dataSets.add("om:Farmacia");
+        List<String> textDataSets = new ArrayList<String>();
+
+        for( int i=0; i<dataSets.size(); i++ ) {
+            textDataSets.add(dataSets.get(i).getFullName() );
+        }
+//        textDataSets.add("om:Arbol");
+//        textDataSets.add("om:Cine");
+//        textDataSets.add("om:BarCopas");
+//        textDataSets.add("dbpedia-owl:Museum");
+//        textDataSets.add("om:Farmacia");
 
         //Creamos un adaptador
         ArrayAdapter<String> dropdownDataAdapter = new ArrayAdapter<String>
-                (this, android.R.layout.simple_spinner_item, dataSets);
+                (this, android.R.layout.simple_spinner_item, textDataSets);
 
         dropdownDataAdapter.setDropDownViewResource
                 (android.R.layout.simple_spinner_dropdown_item);
@@ -265,8 +300,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
+
+
     /**
-     * Método que se ejecuta cuando el usuario toca el botón
+     * Método que se ejecuta cuando el usuario toca el botón de ayuda
      * @param view
      */
     public void showHelpMessage(View view) {
@@ -288,6 +326,129 @@ public class MainActivity extends AppCompatActivity {
         // Mostrar el diálogo
         helpDialog.show(fragmentManager, "tagAyuda");
     }
+
+
+
+
+    // METODOS PARA CREAR Y EJECUTAR PETICIONES HTTP (de tipo string y JsonObject)
+
+    /**
+     * Método que ejecuta una petición HTTP que devuelve una respuesta en texto plano
+     * @param url      URL to execute the request
+     */
+    public void createStringRequest( String url ) {
+        // PETICION CON LIBRERIA VOLLEY
+        //String url = "http://opendata.caceres.es/sparql?nsdecl";
+
+        final ProgressDialog progressDialog = new ProgressDialog( MainActivity.this );
+
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Parse the response
+                        PrefixesManagerSingleton.getInstance().parseResponseHTML(response);
+                        // Close the progress Dialog
+                        progressDialog.dismiss();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                // Close the progress Dialog
+                progressDialog.dismiss();
+            }
+        });
+
+        // Add the request to the RequestQueue.
+        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue( stringRequest );
+
+        // Initialize the progress dialog and show it
+        //progressDialog = new ProgressDialog( MainActivity.this );   //Indicamos la activity como contexto
+        progressDialog.setTitle("Obteniendo datos...");
+        progressDialog.setMessage("Espere un momento...");
+        progressDialog.show();
+    }
+
+
+    /**
+     * Método que ejecuta una petición HTTP que devuelve una respuesta en formato JSON
+     * @param url   URL to execute the request
+     */
+    public void createJSONResquest( String url, final int option ) {
+        // PETICION CON LIBRERIA VOLLEY
+        // String url = "http://opendata.caceres.es/sparql?default-graph-uri=&query=select+distinct+%3Fprop+Min%28%3Fy%29+%0D%0A+++where+{%0D%0A++++++%3Fx+a+om%3ACafeBar.%0D%0A++++++%3Fx+%3Fprop+%3Fy.+%0D%0A+++}&format=json&timeout=0&debug=on";
+
+        final ProgressDialog progressDialog = new ProgressDialog( MainActivity.this );
+
+        // Request a JSON response from the provided URL.
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        //Option 1: for datasets, Option 2: for properties, Option 3: for any other query
+                        switch ( option ){
+                            case 1:
+                                // Get the dataSets
+                                dataSets = RequestsManager.parseJSON( response, option );
+                                displayDataSetSelector( dataSets );
+                                break;
+                            case 2:
+                                break;
+                            case 3:
+                                break;
+                            default:
+                                break;
+                        }
+
+
+                        // Close the progress Dialog
+                        progressDialog.dismiss();
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Close the progress Dialog
+                        progressDialog.dismiss();
+                    }
+                });
+
+        // Add the request to the RequestQueue.
+        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue( jsObjRequest );
+
+        // Initialize the progress dialog and show it
+//        progressDialog = new ProgressDialog( MainActivity.this );   //Indicamos la activity como contexto
+        progressDialog.setTitle("Obteniendo datos...");
+        progressDialog.setMessage("Espere un momento...");
+        progressDialog.show();
+    }
+
+
+
+    // METODOS PARA OBTENER LOS DATOS DESDE EL PORTAL OPENDATA CACERES
+    public void getAndSavePrefixes() {
+        String url = "http://opendata.caceres.es/sparql?nsdecl";
+        createStringRequest(url);
+    }
+
+    public void getDataSets() {
+        String url = "http://opendata.caceres.es/sparql?default-graph-uri=&query=select+distinct+%3Fconcept%0D%0A+++where{%0D%0A++++++%3FURI+rdf%3Atype+%3Fconcept.%0D%0A+++}%0D%0A+++order+by+%28%3Fconcept%29&format=json&timeout=0&debug=on";
+        int option = 1;
+        createJSONResquest( url, option );
+    }
+
+    public void getProperties() {
+        String url = "http://opendata.caceres.es/sparql?default-graph-uri=&query=select+distinct+%3Fp+%3Fproperties+Min%28%3Fy%29+%0D%0A+++where+{%0D%0A++++++{%0D%0A+++++++++%3Fu+a+om%3ACafeBar.%0D%0A+++++++++%3Fu+%3Fproperties+%3Fy.%0D%0A+++++++++FILTER+isLiteral%28%3Fy%29%0D%0A++++++}%0D%0A++++++UNION%0D%0A++++++{%0D%0A+++++++++%3Fu+a+om%3ACafeBar.%0D%0A+++++++++%3Fu+%3Fp+_%3ABlankNode.%0D%0A+++++++++_%3ABlankNode+%3Fproperties+%3Fy.%0D%0A++++++}+%0D%0A+++}&format=json&timeout=0&debug=on";
+        int option = 2;
+
+    }
+
+
+
+
+
+
 
     /**
      * Método que se ejecuta cuando el usuario toca el botón flotante

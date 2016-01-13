@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -270,11 +271,22 @@ public class MainActivity extends AppCompatActivity {
      */
     public void showHelpMessage(View view) {
         // Do something in response to button click
-        Toast.makeText(MainActivity.this,
-                "Marque en la casilla de la izquierda las propiedades que desea en la consulta y " +
-                        "seleccione los filtros de consulta sobre los datos. Si marca la casilla " +
-                        "'Obligatorio' no se mostraran aquellos datos que no posean esa propiedad.",
-                Toast.LENGTH_LONG).show();
+
+        // CONSTRUIR Y MOSTRAR UN DIALOG
+        // Obtener el FragmentManager
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        // Crear un HelpMessageDialogFragment
+        HelpMessageDialogFragment helpDialog = new HelpMessageDialogFragment();
+        // Al crearlo le pasamos dos argumentos (el título y el mensaje)
+        Bundle args = new Bundle();
+        args.putString(helpDialog.ARG_TITLE, "Ayuda");
+        args.putString(helpDialog.ARG_MESSAGE, "Marque en la casilla de la izquierda las propiedades " +
+                "que desea en la consulta y seleccione los filtros de consulta sobre los datos.\n" +
+                "Si marca la casilla 'Obligatorio' no se mostraran aquellos datos que " +
+                "no posean esa propiedad.");
+        helpDialog.setArguments(args);
+        // Mostrar el diálogo
+        helpDialog.show(fragmentManager, "tagAyuda");
     }
 
     /**
@@ -304,7 +316,8 @@ public class MainActivity extends AppCompatActivity {
                 .setAction("Action", null).show();
 
         //Lanzamos la actividad que muestra los resultados de la consulta
-        Intent intent_results = new Intent(this, ResultsActivity.class);
+//        Intent intent_results = new Intent(this, ResultsActivity.class);
+        Intent intent_results = new Intent(this, TabsActivity.class);
         startActivity(intent_results);
     }
 

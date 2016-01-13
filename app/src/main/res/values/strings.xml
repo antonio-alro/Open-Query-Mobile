@@ -5,4 +5,6 @@
     <string name="title_activity_results">Resultados</string>
 
     <string name="title_activity_results_activity_detail">Vista detallada</string>
+    <string name="title_activity_tabs">Resultados</string>
+    <string name="section_format">Hello World from section: %1$d</string>
 </resources>

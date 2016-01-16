@@ -31,6 +31,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.example.myapplication.datamodels.DataSet;
 import com.example.myapplication.utils.PrefixesManagerSingleton;
 import com.example.myapplication.utils.RequestsManager;
+import com.example.myapplication.utils.SparqlURIBuilder;
 import com.example.myapplication.utils.VolleySingleton;
 
 import org.json.JSONObject;
@@ -38,22 +39,24 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
 
     /**
      * ATTRIBUTES OF MAIN ACTIVITY
      */
+    // Layout elements
     private Spinner dataSetSelector;            // Spinner to select a dataSet
     private ListView propertiesListView;        // ListView to display the properties of a dataSet
 //    private ProgressDialog progressDialog;      // ProgressDialog to display while the app get data
-    //private Spinner filterSelector;
+//    private Spinner filterSelector;
 
-    TextView mtextView; //BORRAR DESPUES
-
+    // Adapters for the layout elements
     PropertyListAdapter listDataAdapter = null; // Adapter for the properties ListView
 
-    List<DataSet> dataSets = new ArrayList<DataSet>(); // Datasets data
+    // Variables para guardar los datos obtenidos del portal opendata caceres
+    List<DataSet> dataSets = new ArrayList<DataSet>();      // Datasets data
+    ArrayList<Property> properties = new ArrayList<Property>();  // Properties data
 
 
     @Override
@@ -63,21 +66,21 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mtextView = (TextView) findViewById(R.id.textView2); //BORRAR DESPUES
 
         //CODIGO NUEVO PARA GESTIONAR EL SPINNER DE LOS DATASETS
         //Generate spinner from ArrayList
 //        displayDataSetSelector();
+
+        //CODIGO NUEVO PARA GESTIONAR LA LIST VIEW
+        //Generate list View from ArrayList
+//        displayPropertyListView();
+
 
         // Obtenemos los prefijos y los guardamos para su posterior consulta
         getAndSavePrefixes();
 
         // Get the datasets through HTTP request from opendata caceres
         getDataSets();
-
-        //CODIGO NUEVO PARA GESTIONAR LA LIST VIEW
-        //Generate list View from ArrayList
-//        displayPropertyListView();
 
     }
 
@@ -111,23 +114,40 @@ public class MainActivity extends AppCompatActivity {
         dataSetSelector.setAdapter(dropdownDataAdapter);
 
         // Spinner item selection Listener
-        dataSetSelector.setOnItemSelectedListener(new SpinnerOnItemSelectedListener());
+//        dataSetSelector.setOnItemSelectedListener(new SpinnerOnItemSelectedListener());
+        dataSetSelector.setOnItemSelectedListener( this );
+    }
+
+    // Overrided methods of listener for the datasets selector
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        // On selecting a spinner item
+        String item = parent.getItemAtPosition(position).toString();
+
+        // Showing selected spinner item
+        Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
+
+        // Do a HTTP request to get the properties of selected item
+        getProperties( item );
+    }
+    public void onNothingSelected(AdapterView<?> arg0) {
+        // TODO Auto-generated method stub
     }
 
 
 
     //METODO PARA GESTIONAR LA LIST VIEW
-    private void displayPropertyListView(){
+    private void displayPropertyListView( ArrayList<Property> properties ){
         //Obtener la LISTVIEW del layout
         propertiesListView = (ListView) findViewById(R.id.propertiesListView);
         //Rellenar unas propiedades de ejemplo
-        ArrayList<Property> properties = new ArrayList<Property>();
-        Property property = new Property(false, "geo:long");
-        properties.add(property);
-        property = new Property(false, "geo:lat");
-        properties.add(property);
-        property = new Property(false, "rdfs:label");
-        properties.add(property);
+//        ArrayList<Property> properties = new ArrayList<Property>();
+//        Property property = new Property(false, "geo:long");
+//        properties.add(property);
+//        property = new Property(false, "geo:lat");
+//        properties.add(property);
+//        property = new Property(false, "rdfs:label");
+//        properties.add(property);
 
         //Creamos un ADAPTADOR desde un Property Array
         listDataAdapter = new PropertyListAdapter(this, R.layout.properties_list_item, properties);
@@ -372,10 +392,10 @@ public class MainActivity extends AppCompatActivity {
 
 
     /**
-     * Método que ejecuta una petición HTTP que devuelve una respuesta en formato JSON
+     * Método que ejecuta una petición HTTP para obtener los datasets. Devuelve una respuesta en formato JSON
      * @param url   URL to execute the request
      */
-    public void createJSONResquest( String url, final int option ) {
+    public void createJSONResquestDataSets( String url ) {
         // PETICION CON LIBRERIA VOLLEY
         // String url = "http://opendata.caceres.es/sparql?default-graph-uri=&query=select+distinct+%3Fprop+Min%28%3Fy%29+%0D%0A+++where+{%0D%0A++++++%3Fx+a+om%3ACafeBar.%0D%0A++++++%3Fx+%3Fprop+%3Fy.+%0D%0A+++}&format=json&timeout=0&debug=on";
 
@@ -384,27 +404,57 @@ public class MainActivity extends AppCompatActivity {
         // Request a JSON response from the provided URL.
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-
                     @Override
                     public void onResponse(JSONObject response) {
-                        //Option 1: for datasets, Option 2: for properties, Option 3: for any other query
-                        switch ( option ){
-                            case 1:
-                                // Get the dataSets
-                                dataSets = RequestsManager.parseJSON( response, option );
-                                displayDataSetSelector( dataSets );
-                                break;
-                            case 2:
-                                break;
-                            case 3:
-                                break;
-                            default:
-                                break;
-                        }
-
-
+                        // Get the dataSets
+                        dataSets = RequestsManager.parseJSONDataSets( response );
                         // Close the progress Dialog
                         progressDialog.dismiss();
+                        // Fill the layout with the data
+                        displayDataSetSelector(dataSets);
+
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Close the progress Dialog
+                        progressDialog.dismiss();
+                    }
+                });
+
+        // Add the request to the RequestQueue.
+        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue( jsObjRequest );
+
+        // Initialize the progress dialog and show it
+//        progressDialog = new ProgressDialog( MainActivity.this );   //Indicamos la activity como contexto
+        progressDialog.setTitle("Obteniendo datos...");
+        progressDialog.setMessage("Espere un momento...");
+        progressDialog.show();
+    }
+
+
+    /**
+     * Método que ejecuta una petición HTTP para obtener las propiedades del dataset seleccionado. Devuelve una respuesta en formato JSON
+     * @param url   URL to execute the request
+     */
+    public void createJSONResquestProperties( String url ) {
+        // PETICION CON LIBRERIA VOLLEY
+        // String url = "http://opendata.caceres.es/sparql?default-graph-uri=&query=select+distinct+%3Fprop+Min%28%3Fy%29+%0D%0A+++where+{%0D%0A++++++%3Fx+a+om%3ACafeBar.%0D%0A++++++%3Fx+%3Fprop+%3Fy.+%0D%0A+++}&format=json&timeout=0&debug=on";
+
+        final ProgressDialog progressDialog = new ProgressDialog( MainActivity.this );
+
+        // Request a JSON response from the provided URL.
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // Get the dataSets
+                        properties = RequestsManager.parseJSONProperties(response);
+                        // Close the progress Dialog
+                        progressDialog.dismiss();
+                        // Fill the layout with the data
+                        displayPropertyListView( properties );
+
                     }
                 }, new Response.ErrorListener() {
                     @Override
@@ -427,20 +477,61 @@ public class MainActivity extends AppCompatActivity {
 
 
     // METODOS PARA OBTENER LOS DATOS DESDE EL PORTAL OPENDATA CACERES
+
+    /**
+     * Get the prefixes and theirs URI and save all in a map
+     */
     public void getAndSavePrefixes() {
         String url = "http://opendata.caceres.es/sparql?nsdecl";
         createStringRequest(url);
     }
 
+    /**
+     * Get the datasets to display them in the layout
+     */
     public void getDataSets() {
-        String url = "http://opendata.caceres.es/sparql?default-graph-uri=&query=select+distinct+%3Fconcept%0D%0A+++where{%0D%0A++++++%3FURI+rdf%3Atype+%3Fconcept.%0D%0A+++}%0D%0A+++order+by+%28%3Fconcept%29&format=json&timeout=0&debug=on";
-        int option = 1;
-        createJSONResquest( url, option );
+        // CONSULTA SPARQL PARA OBTENER LOS DATASETS
+
+//        String url = "http://opendata.caceres.es/sparql?default-graph-uri=&query=select+distinct+%3Fconcept%0D%0A+++where{%0D%0A++++++%3FURI+rdf%3Atype+%3Fconcept.%0D%0A+++}%0D%0A+++order+by+%28%3Fconcept%29&format=json&timeout=0&debug=on";
+
+        String sparqlQuery = "select distinct ?concept " +
+                                "where { " +
+                                    "?URI rdf:type ?concept. " +
+                                "} order by (?concept)";
+
+        SparqlURIBuilder uriBuilder = new SparqlURIBuilder( "", sparqlQuery, "json" );  //graph, sparql query and format
+        String url = uriBuilder.getUri();
+
+        createJSONResquestDataSets(url);
     }
 
-    public void getProperties() {
-        String url = "http://opendata.caceres.es/sparql?default-graph-uri=&query=select+distinct+%3Fp+%3Fproperties+Min%28%3Fy%29+%0D%0A+++where+{%0D%0A++++++{%0D%0A+++++++++%3Fu+a+om%3ACafeBar.%0D%0A+++++++++%3Fu+%3Fproperties+%3Fy.%0D%0A+++++++++FILTER+isLiteral%28%3Fy%29%0D%0A++++++}%0D%0A++++++UNION%0D%0A++++++{%0D%0A+++++++++%3Fu+a+om%3ACafeBar.%0D%0A+++++++++%3Fu+%3Fp+_%3ABlankNode.%0D%0A+++++++++_%3ABlankNode+%3Fproperties+%3Fy.%0D%0A++++++}+%0D%0A+++}&format=json&timeout=0&debug=on";
-        int option = 2;
+    /**
+     * Get the properties of the selected dataset by the user to display them in the layout
+     * @param dataset  selected dataset by user
+     */
+    public void getProperties( String dataset ) {
+        // CONSULTA SPARQL PARA OBTENER LAS PROPERTIES DE UN DATASET
+
+//        String url = "http://opendata.caceres.es/sparql?default-graph-uri=&query=select+distinct+%3Fp+%3Fproperties+Min%28%3Fy%29%0D%0A++++++++++++++++where+{%0D%0A++++++++++++++++++++{%0D%0A+++++++++++++++++++++++++%3Fu+a+om%3ACafeBar.%0D%0A+++++++++++++++++++++++++%3Fu+%3Fproperties+%3Fy.%0D%0A+++++++++++++++++++++++++FILTER+isLiteral%28%3Fy%29%0D%0A++++++++++++++++++++}%0D%0A++++++++++++++++++++UNION%0D%0A++++++++++++++++++++{%0D%0A+++++++++++++++++++++++++%3Fu+a+om%3ACafeBar.%0D%0A+++++++++++++++++++++++++%3Fu+%3Fp+_%3ABlankNode.%0D%0A+++++++++++++++++++++++++_%3ABlankNode+%3Fproperties+%3Fy.%0D%0A++++++++++++++++++++}%0D%0A+++++++++++++++}%0D%0A+++++++++++++++order+by+%28%3Fp%29&format=json&timeout=0&debug=on";
+
+        String sparqlQuery = "select distinct ?p ?properties Min(?y) " +
+                                "where { " +
+                                    "{ " +
+                                        "?u a " + dataset + ". " +
+                                        "?u ?properties ?y. " +
+                                        "FILTER isLiteral(?y) " +
+                                    "} " +
+                                    "UNION { " +
+                                        "?u a " + dataset + ". " +
+                                        "?u ?p _:BlankNode. " +
+                                        "_:BlankNode ?properties ?y. " +
+                                    "} " +
+                                "} order by (?p)";
+
+        SparqlURIBuilder uriBuilder = new SparqlURIBuilder( "", sparqlQuery, "json" );  //graph, sparql query and format
+        String url = uriBuilder.getUri();
+
+        createJSONResquestProperties(url);
 
     }
 

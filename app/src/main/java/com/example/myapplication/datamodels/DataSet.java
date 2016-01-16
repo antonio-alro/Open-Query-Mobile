@@ -6,14 +6,14 @@ package com.example.myapplication.datamodels;
 public class DataSet {
 
     /**
-     * Attributes of DataSet class
+     * ATTRIBUTES of DataSet class
      */
-    String name   = "";
-    String prefix = "";
+    private String name   = "";
+    private String prefix = "";
 
 
     /**
-     * Constructor for Property class
+     * PARAMETRIZED CONSTRUCTOR for DataSet class
      * @param name      name of the dataset
      * @param prefix    prefix of the dataset
      */
@@ -25,6 +25,7 @@ public class DataSet {
     }
 
 
+    //GETTERS and SETTERS METHODS FOR ATTRIBUTES OF THE CLASS
     /**
      * Get method for Name attribute
      * @return  the name of the dataset

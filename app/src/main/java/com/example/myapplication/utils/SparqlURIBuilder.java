@@ -8,6 +8,9 @@ import java.net.URLEncoder;
  */
 public class SparqlURIBuilder {
 
+    /**
+     * ATTRIBUTES for SparqlURIBuilder class
+     */
     private String preQuery;
     private String graph;
     private String sparqlQuery;
@@ -37,6 +40,7 @@ public class SparqlURIBuilder {
         this.setFormat(format);
 
     }
+
 
 
     // METHODS TO BUILD THE QUERY URL
@@ -75,7 +79,6 @@ public class SparqlURIBuilder {
 
 
     // METHODS TO ENCODE A STRING AS A URL
-
     /**
      * Methods to encode a string as a URL
      * @param text     string input
@@ -90,8 +93,8 @@ public class SparqlURIBuilder {
     }
 
 
-    //GETTERS and SETTERS METHODS FOR ATTRIBUTES OF THE CLASS
 
+    //GETTERS and SETTERS METHODS FOR ATTRIBUTES OF THE CLASS
     /**
      * Get method for preQuery attribute
      * @return      preQuery attribute

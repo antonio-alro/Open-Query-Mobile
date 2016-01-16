@@ -7,17 +7,19 @@ public class Property {
 
 
     /**
-     * Attributes of Property class
+     * ATTRIBUTES of Property class
      */
-    boolean selected     = false;
-    String  name         = null;
-    boolean mandatory    = false;
-    String  filter       = null;
-    String  filterParam1 = "";
-    String  filterParam2 = "";
+    private boolean selected     = false;
+    private String  name         = null;
+    private boolean mandatory    = false;
+    private String  filter       = null;
+    private String  filterParam1 = "";
+    private String  filterParam2 = "";
 
+
+    
     /**
-     * Constructor for Property class
+     * PARAMETRIZED CONSTRUCTOR for Property class
      * @param selected
      * @param name
      */
@@ -27,6 +29,9 @@ public class Property {
         this.selected = selected;
     }
 
+
+
+    //GETTERS and SETTERS METHODS FOR ATTRIBUTES OF THE CLASS
     /**
      * Get method for SELECTED attribute
      * @return

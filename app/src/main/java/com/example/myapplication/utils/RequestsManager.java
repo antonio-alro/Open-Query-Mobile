@@ -128,8 +128,10 @@ public class RequestsManager {
         JSONArray bindings;     // Guarda la coleccion de resultados
         JSONObject propertyLevelOne = null;
         JSONObject propertyLevelTwo = null;
+        JSONObject exampleValues    = null;
         String propertyLevelOneName = "";
         String propertyLevelTwoName = "";
+        String datatype             = "";
         ArrayList<Property> properties = new ArrayList();
 
         // Obtener los resultados (bindings)
@@ -154,6 +156,16 @@ public class RequestsManager {
                                                 getNameFromURI( propertyLevelTwo.getString( "value" ) );
                     }
 
+
+                    // Obtener el objeto callret-2 del item (que indica el tipo de datos y el valor del item)
+                    exampleValues = item.getJSONObject( "callret-2" );
+
+                    // Construir el tipo de datos de la property
+                    if ( exampleValues != null ) {
+                        datatype = exampleValues.getString( "type" );
+                    }
+
+
                     // Obtener el objeto p del item (que indica propiedad de 1º nivel)
                     propertyLevelOne = item.getJSONObject( "p" );
 
@@ -168,8 +180,28 @@ public class RequestsManager {
                     Log.e("PARSE JSON", "Error de parsing: " + e.getMessage());
                 }
 
+                // Comprobar datatype para obtener el tipo de dato correcto ( xsd:double, xsd:float, xsd:int, xsd:decimal, xsd:date)
+                if ( datatype.equals( "typed-literal" ) ) {
+                    try {
+                                                // Obtener cada item de bindings
+                        JSONObject item = bindings.getJSONObject(i);
+
+                        // Obtener el objeto callret-2 del item (que indica el tipo de datos y el valor del item)
+                        exampleValues = item.getJSONObject( "callret-2" );
+
+                        // Construir el tipo de datos de la property
+                        if ( exampleValues != null ) {
+                            datatype = getPrefixFromURI( exampleValues.getString( "datatype" ) ) + ":" +
+                                        getNameFromURI( exampleValues.getString( "datatype" ) );
+                        }
+
+                    } catch (JSONException e) {
+                        Log.e("PARSE JSON", "Error de parsing: " + e.getMessage());
+                    }
+                }
+
                 // Creamos un objeto Property
-                Property property = new Property( false, propertyLevelOneName + propertyLevelTwoName);
+                Property property = new Property( false, propertyLevelOneName + propertyLevelTwoName, datatype );
 
                 // Añadimos el objeto a la lista
                 properties.add(property);

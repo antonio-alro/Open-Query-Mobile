@@ -189,6 +189,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             ViewHolder holder = null;
             Log.v("ConvertView", String.valueOf(position));
 
+            // Obtenemos la property de la posicion que viene como parametro
+            Property property = properties.get(position);
+
             if (convertView == null) {
 
                 //Indicar el LAYOUT para inflar la LISTVIEW
@@ -245,15 +248,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 //                holder.filterSelector.setOnItemSelectedListener(new SpinnerOnItemSelectedListener());
 
                 //Rellenar el SPINNER con unos filtros de ejemplo
-                List<String> filters = new ArrayList<String>();
-                filters.add("Ninguno");
-                filters.add("=");
-                filters.add("<");
-                filters.add(">");
-                filters.add("<=");
-                filters.add(">=");
-                filters.add("Rango(x,y)");
-                filters.add("que contenga");
+//                List<String> filters = new ArrayList<String>();
+//                filters.add("Ninguno");
+//                filters.add("=");
+//                filters.add("<");
+//                filters.add(">");
+//                filters.add("<=");
+//                filters.add(">=");
+//                filters.add("Rango(x,y)");
+//                filters.add("que contenga");
+                List<String> filters = property.getAllowedFilters();
 
                 //Creamos un ADAPTADOR para el SPINNER del elemento de la LISTVIEW
                 ArrayAdapter<String> filterDropdownDataAdapter = new ArrayAdapter<String>
@@ -293,8 +297,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
 
             //Rellenar el LAYOUT con los datos de la PROPERTY correspondiente
-            Property property = properties.get(position);
-
             holder.selected.setChecked(property.isSelected());
             holder.selected.setTag(property);
 

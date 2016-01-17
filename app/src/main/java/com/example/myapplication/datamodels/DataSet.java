@@ -70,5 +70,16 @@ public class DataSet {
 
 
 
+    /**
+     * Method to show DATASET class as String
+     * @return      a string with the information of class
+     */
+    public String to_s(){
+        return "[" + this.getPrefix()   + ","
+                   + this.getName()     + ","
+                   + this.getFullName() +
+                "] ";
+    }
+
 
 }

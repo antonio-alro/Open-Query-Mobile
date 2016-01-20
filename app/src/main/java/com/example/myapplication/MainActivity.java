@@ -31,6 +31,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.example.myapplication.datamodels.DataSet;
 import com.example.myapplication.utils.PrefixesManagerSingleton;
 import com.example.myapplication.utils.RequestsManager;
+import com.example.myapplication.utils.SparqlQueryBuilder;
 import com.example.myapplication.utils.SparqlURIBuilder;
 import com.example.myapplication.utils.VolleySingleton;
 
@@ -252,22 +253,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 //                filters.add("Ninguno");
 //                filters.add("=");
 //                filters.add("<");
-//                filters.add(">");
-//                filters.add("<=");
-//                filters.add(">=");
-//                filters.add("Rango(x,y)");
-//                filters.add("que contenga");
-                List<String> filters = property.getAllowedFilters();
 
-                //Creamos un ADAPTADOR para el SPINNER del elemento de la LISTVIEW
-                ArrayAdapter<String> filterDropdownDataAdapter = new ArrayAdapter<String>
-                        (this.getContext(), android.R.layout.simple_spinner_item, filters);
-
-                filterDropdownDataAdapter.setDropDownViewResource
-                        (android.R.layout.simple_spinner_dropdown_item);
-
-                //Asignamos el ADAPTADOR al de la LISTVIEW
-                holder.filterSelector.setAdapter(filterDropdownDataAdapter);
 
                 //LISTENER para el EDITTEXT 1 del elemento de la LISTVIEW
                 holder.filterParam1.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -305,7 +291,19 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             holder.mandatory.setChecked(property.isMandatory());
             holder.mandatory.setTag(property);
 
+
+            ArrayList<String> filters = property.getAllowedFilters();
+
+            //Creamos un ADAPTADOR para el SPINNER del elemento de la LISTVIEW
+            ArrayAdapter<String> filterDropdownDataAdapter = new ArrayAdapter<String>
+                    (this.getContext(), android.R.layout.simple_spinner_item, filters);
+
+            filterDropdownDataAdapter.setDropDownViewResource
+                    (android.R.layout.simple_spinner_dropdown_item);
+
+            holder.filterSelector.setAdapter( filterDropdownDataAdapter );
             holder.filterSelector.setTag(property);
+
 
             holder.filterParam1.setText(property.getFilterParam1());
             holder.filterParam1.setTag(property);
@@ -409,6 +407,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     @Override
                     public void onResponse(JSONObject response) {
                         // Get the dataSets
+                        dataSets.clear();
                         dataSets = RequestsManager.parseJSONDataSets( response );
                         // Close the progress Dialog
                         progressDialog.dismiss();
@@ -450,7 +449,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        // Get the dataSets
+                        // Get the Properties of selected dataSets
+                        properties.clear();
                         properties = RequestsManager.parseJSONProperties(response);
                         // Close the progress Dialog
                         progressDialog.dismiss();
@@ -554,20 +554,31 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         //Obtenemos las properties seleccionadas
         String properties_text = new String();
-        ArrayList<Property> properties = listDataAdapter.properties;
+        ArrayList<Property> propertiesOfDataSet = listDataAdapter.properties;
         for (int i = 0; i < properties.size(); i++) {
-            Property property = properties.get(i);
+            Property property = propertiesOfDataSet.get(i);
             if (property.isSelected()) {
                 properties_text += property.to_s();
             }
         }
         String result2 = "Seleccionadas: " + properties_text;
+        Log.d( "SELECTED PROPERTIES: ", properties_text);
 
         //Concatenamos ambas cosas
         String result = result1 + result2;
         //Mostramos el resultado en snackbar
         Snackbar.make(view, result, Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
+
+        // Construimos la consulta Sparql correspondiente
+        DataSet data_set = new DataSet( dataSet.substring( dataSet.indexOf( ":" )+1, dataSet.length() ),
+                                        dataSet.substring( 0, dataSet.indexOf( ":" ) )
+                                      );
+        Log.d( "---- MAIN BUILDER ----", String.valueOf( properties.size() ) );
+        SparqlQueryBuilder builder = new SparqlQueryBuilder( data_set, properties );
+        Log.d( "---- MAIN BUILDER ----", builder.to_s() );
+        builder.buildSparqlQuery();
+        Log.d( "---- SPARQL QUERY ----", builder.getSparqlQuery() );
 
         //Lanzamos la actividad que muestra los resultados de la consulta
 //        Intent intent_results = new Intent(this, ResultsActivity.class);

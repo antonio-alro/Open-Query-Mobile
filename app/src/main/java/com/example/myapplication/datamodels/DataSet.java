@@ -17,9 +17,9 @@ public class DataSet {
      * @param name      name of the dataset
      * @param prefix    prefix of the dataset
      */
-    public DataSet( String name, String prefix ) {
+    public DataSet( String name, String prefix  ) {
         super();
-        this.name = name;
+        this.name   = name;
         this.prefix = prefix;
 
     }

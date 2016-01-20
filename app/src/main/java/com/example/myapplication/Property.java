@@ -159,6 +159,7 @@ public class Property {
             case "xsd:float":
             case "xsd:int":
             case "xsd:decimal":
+            case "xsd:date":
                 allowedFilters.add( "Ninguno" );
                 allowedFilters.add( "=" );
                 allowedFilters.add( "<" );
@@ -173,6 +174,7 @@ public class Property {
                 allowedFilters.add( "que contenga" );
                 allowedFilters.add( "=" );
                 break;
+
             default:
                 allowedFilters.add( "Ninguno" );
                 break;

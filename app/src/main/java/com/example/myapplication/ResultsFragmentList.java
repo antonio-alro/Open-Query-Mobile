@@ -112,10 +112,10 @@ public class ResultsFragmentList extends Fragment {
             LayoutInflater inflater = context.getLayoutInflater();
             View item = inflater.inflate(R.layout.fragment_results_list_item, null);
 
-            TextView resultsItemLabel = (TextView)item.findViewById(R.id.resultsItemLabel);
+            TextView resultsItemLabel = (TextView)item.findViewById(R.id.resourceUri);
             resultsItemLabel.setText( results.get( position ) );
 
-            TextView resultsItemContent = (TextView)item.findViewById(R.id.resultsItemContent);
+            TextView resultsItemContent = (TextView)item.findViewById(R.id.resourceLabel);
             resultsItemContent.setText( results.get( position ) );
 
             return(item);

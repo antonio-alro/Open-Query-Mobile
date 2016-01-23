@@ -18,14 +18,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.AdapterView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.myapplication.datamodels.Resource;
 
 
 /**
  * Activity para mostrar las distintas vistas con los resultados de la consulta realizada
  * Incluye una clase que es el adaptador de fragmentos para el ViewPager
  */
-public class TabsActivity extends AppCompatActivity {
+public class TabsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     /**
      * Atributo para indicar el número de páginas que va a tener esta activity
@@ -89,7 +93,9 @@ public class TabsActivity extends AppCompatActivity {
 
 
 
+    public void dodo() {
 
+    }
 
 
     @Override
@@ -114,8 +120,14 @@ public class TabsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
-
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//        Resource resource = (Resource) parent.getItemAtPosition(position);
+//        Toast.makeText(parent.getContext(),
+//                "Clicked on Row: " + position,
+//                Toast.LENGTH_LONG).show();
+        mViewPager.setCurrentItem(0);
+    }
 
 
     /**
@@ -176,10 +188,11 @@ public class TabsActivity extends AppCompatActivity {
                     return TabsDetailFragment.newInstance("Información de ejemplo");
                 case 1:
                     // Return a PlaceholderFragment (defined as a static inner class below).
-                    return PlaceholderFragment.newInstance(position + 1);
+                    return TabsListFragment.newInstance("Lista de recursos");
                 case 2:
                     // Return a PlaceholderFragment (defined as a static inner class below).
                     return PlaceholderFragment.newInstance(position + 1);
+
             }
             return null;
         }
@@ -223,4 +236,9 @@ public class TabsActivity extends AppCompatActivity {
             return rootView;
         }
     }
+
+
+
+
+
 }

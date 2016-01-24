@@ -24,6 +24,8 @@ import android.widget.Toast;
 
 import com.example.myapplication.datamodels.Resource;
 
+import java.util.ArrayList;
+
 
 /**
  * Activity para mostrar las distintas vistas con los resultados de la consulta realizada
@@ -188,7 +190,8 @@ public class TabsActivity extends AppCompatActivity implements AdapterView.OnIte
                     return TabsDetailFragment.newInstance("Información de ejemplo");
                 case 1:
                     // Return a PlaceholderFragment (defined as a static inner class below).
-                    return TabsListFragment.newInstance("Lista de recursos");
+                    return TabsListFragment.newInstance( fillExampleData() );
+
                 case 2:
                     // Return a PlaceholderFragment (defined as a static inner class below).
                     return PlaceholderFragment.newInstance(position + 1);
@@ -198,6 +201,49 @@ public class TabsActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
+
+    // BORRAR DESPUES. ES SOLO PARA PRUEBAS
+    public ArrayList<Resource> fillExampleData() {
+        Resource res1 = new Resource();
+        res1.addPropertyValue( "uri", "http://opendata.caceres.es/recurso/salud/farmacias/Farmacia/117-obdulia-andrade-iglesias" );
+        res1.addPropertyValue("long", "-6.366742");
+        res1.addPropertyValue("lat", "39.482367");
+
+        Resource res2 = new Resource();
+        res2.addPropertyValue( "uri", "http://opendata.caceres.es/recurso/salud/farmacias/Farmacia/147-jose-luis-rufo-ruiz" );
+        res2.addPropertyValue( "long", "-6.38141" );
+        res2.addPropertyValue( "lat", "39.468874" );
+
+        Resource res3 = new Resource();
+        res3.addPropertyValue( "uri", "http://opendata.caceres.es/recurso/salud/farmacias/Farmacia/166-mari-isabel-torres-perez" );
+        res3.addPropertyValue( "long", "-6.366742" );
+        res3.addPropertyValue( "lat", "39.482367" );
+
+        Resource res4 = new Resource();
+        res4.addPropertyValue( "uri", "http://opendata.caceres.es/recurso/salud/farmacias/Farmacia/180-hernandez-cb" );
+        res4.addPropertyValue( "long", "-6.366742" );
+        res4.addPropertyValue( "lat", "39.482367" );
+
+        Resource res5 = new Resource();
+        res5.addPropertyValue( "uri", "http://opendata.caceres.es/recurso/salud/farmacias/Farmacia/183-julian-saavedra-pavon"  );
+        res5.addPropertyValue("long", "-6.366742");
+        res5.addPropertyValue("lat", "39.482367");
+
+        Resource res6 = new Resource();
+        res6.addPropertyValue( "uri", "http://opendata.caceres.es/recurso/salud/farmacias/Farmacia/274-pedro-antonio-claros-vicario" );
+        res6.addPropertyValue( "long", "-6.38141" );
+        res6.addPropertyValue("lat", "39.468874");
+
+        ArrayList<Resource> resources = new ArrayList<Resource>();
+        resources.add( res1 );
+        resources.add( res2 );
+        resources.add( res3 );
+        resources.add( res4 );
+        resources.add( res5 );
+        resources.add( res6 );
+
+        return resources;
+    }
 
 
 

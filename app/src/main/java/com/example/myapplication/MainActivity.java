@@ -327,24 +327,40 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * Método que se ejecuta cuando el usuario toca el botón de ayuda
      * @param view
      */
-    public void showHelpMessage(View view) {
+    public void clickHelpButton(View view ) {
         // Do something in response to button click
+
+        String title   = "Ayuda";
+        String message = "Marque en la casilla de la izquierda las propiedades " +
+                "que desea en la consulta y seleccione los filtros de consulta sobre los datos.\n" +
+                "Si marca la casilla 'Obligatorio' no se mostraran aquellos datos que " +
+                "no posean esa propiedad.";
+
+        showDialogMessage( view, title, message );
+
+    }
+
+
+    /**
+     * Method to show a dialog with a message
+     * @param view
+     * @param title     title for the dialog
+     * @param message   message gor the dialog
+     */
+    public void showDialogMessage(View view, String title, String message ) {
 
         // CONSTRUIR Y MOSTRAR UN DIALOG
         // Obtener el FragmentManager
         FragmentManager fragmentManager = getSupportFragmentManager();
         // Crear un HelpMessageDialogFragment
-        HelpMessageDialogFragment helpDialog = new HelpMessageDialogFragment();
+        HelpMessageDialogFragment messageDialog = new HelpMessageDialogFragment();
         // Al crearlo le pasamos dos argumentos (el título y el mensaje)
         Bundle args = new Bundle();
-        args.putString(helpDialog.ARG_TITLE, "Ayuda");
-        args.putString(helpDialog.ARG_MESSAGE, "Marque en la casilla de la izquierda las propiedades " +
-                "que desea en la consulta y seleccione los filtros de consulta sobre los datos.\n" +
-                "Si marca la casilla 'Obligatorio' no se mostraran aquellos datos que " +
-                "no posean esa propiedad.");
-        helpDialog.setArguments(args);
+        args.putString( messageDialog.ARG_TITLE, title );
+        args.putString( messageDialog.ARG_MESSAGE, message );
+        messageDialog.setArguments(args);
         // Mostrar el diálogo
-        helpDialog.show(fragmentManager, "tagAyuda");
+        messageDialog.show( fragmentManager, "tag"+title );
     }
 
 
@@ -550,25 +566,30 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public void doSparqlConsult(View view) {
         //Obtenemos el dataset seleccionado
         String dataSet = String.valueOf(dataSetSelector.getSelectedItem());
-        String result1 = "Dataset seleccionado: " + dataSet + "\n";
 
         //Obtenemos las properties seleccionadas
         String properties_text = new String();
-        ArrayList<Property> propertiesOfDataSet = listDataAdapter.properties;
-        for (int i = 0; i < properties.size(); i++) {
-            Property property = propertiesOfDataSet.get(i);
-            if (property.isSelected()) {
-                properties_text += property.to_s();
+        ArrayList<Property> propertiesOfDataSet;
+        if (listDataAdapter == null) {
+            propertiesOfDataSet = new ArrayList<Property>();
+            //showDialogMessage(view, "Error", "Los datos no se han cargado correctamente. Vuelva a intentarlo de nuevo.");
+        }
+        else {
+            propertiesOfDataSet = listDataAdapter.properties;
+        }
+        if ( propertiesOfDataSet.size() == 0 ){
+            showDialogMessage(view, "Advertencia", "Seleccione al menos una propiedad de la lista para realizar la consulta.");
+            return;
+        }
+        else {
+            for (int i = 0; i < properties.size(); i++) {
+                Property property = propertiesOfDataSet.get(i);
+                if (property.isSelected()) {
+                    properties_text += property.to_s();
+                }
             }
         }
-        String result2 = "Seleccionadas: " + properties_text;
-        Log.d( "SELECTED PROPERTIES: ", properties_text);
-
-        //Concatenamos ambas cosas
-        String result = result1 + result2;
-        //Mostramos el resultado en snackbar
-        Snackbar.make(view, result, Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show();
+        Log.d("SELECTED PROPERTIES: ", properties_text);
 
         // Construimos la consulta Sparql correspondiente
         DataSet data_set = new DataSet( dataSet.substring( dataSet.indexOf( ":" )+1, dataSet.length() ),
@@ -583,8 +604,51 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //Lanzamos la actividad que muestra los resultados de la consulta
 //        Intent intent_results = new Intent(this, ResultsActivity.class);
         Intent intent_results = new Intent(this, TabsActivity.class);
+        // Pasamos el nombre del dataset y la consulta sparql como argumentos
+        intent_results.putExtra( "DATASET", dataSet );
+        intent_results.putExtra( "SPARQL QUERY", builder.getSparqlQuery() );
+        // Lanzamos la actividad de destino
         startActivity(intent_results);
     }
+
+//    public void doSparqlConsult(View view) {
+//        //Obtenemos el dataset seleccionado
+//        String dataSet = String.valueOf(dataSetSelector.getSelectedItem());
+//        String result1 = "Dataset seleccionado: " + dataSet + "\n";
+//
+//        //Obtenemos las properties seleccionadas
+//        String properties_text = new String();
+//        ArrayList<Property> propertiesOfDataSet = listDataAdapter.properties;
+//        for (int i = 0; i < properties.size(); i++) {
+//            Property property = propertiesOfDataSet.get(i);
+//            if (property.isSelected()) {
+//                properties_text += property.to_s();
+//            }
+//        }
+//        String result2 = "Seleccionadas: " + properties_text;
+//        Log.d( "SELECTED PROPERTIES: ", properties_text);
+//
+//        //Concatenamos ambas cosas
+//        String result = result1 + result2;
+//        //Mostramos el resultado en snackbar
+//        Snackbar.make(view, result, Snackbar.LENGTH_LONG)
+//                .setAction("Action", null).show();
+//
+//        // Construimos la consulta Sparql correspondiente
+//        DataSet data_set = new DataSet( dataSet.substring( dataSet.indexOf( ":" )+1, dataSet.length() ),
+//                dataSet.substring( 0, dataSet.indexOf( ":" ) )
+//        );
+//        Log.d( "---- MAIN BUILDER ----", String.valueOf( properties.size() ) );
+//        SparqlQueryBuilder builder = new SparqlQueryBuilder( data_set, properties );
+//        Log.d( "---- MAIN BUILDER ----", builder.to_s() );
+//        builder.buildSparqlQuery();
+//        Log.d( "---- SPARQL QUERY ----", builder.getSparqlQuery() );
+//
+//        //Lanzamos la actividad que muestra los resultados de la consulta
+////        Intent intent_results = new Intent(this, ResultsActivity.class);
+//        Intent intent_results = new Intent(this, TabsActivity.class);
+//        startActivity(intent_results);
+//    }
 
 
 

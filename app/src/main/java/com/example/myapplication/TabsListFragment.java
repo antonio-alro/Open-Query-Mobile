@@ -34,14 +34,14 @@ public class TabsListFragment extends Fragment {
     /**
      * Devuelve una nueva instancia de este FRAGMENT para la página correspondiente
      */
-    public static TabsListFragment newInstance(String content_list) {
+    public static TabsListFragment newInstance( ArrayList<Resource> resources ) {
 
         // Crear instancia del FRAGMENT que muestra la lista de recursos
         TabsListFragment fragment = new TabsListFragment();
 
         // Le pasamos los argumentos necesarios (en este caso, el detalle del recurso)
         Bundle args = new Bundle();
-        args.putString(ARG_CONTENT_LIST, content_list);
+        args.putParcelableArrayList( ARG_CONTENT_LIST, resources );
         fragment.setArguments(args);
 
         // Devolver el FRAGMENT
@@ -71,48 +71,9 @@ public class TabsListFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_results_list, container, false);
 
         // Obtener la LISTVIEW del Layout y rellenarlo con los datos que vienen en los argumentos
-//        TextView resultsDetail = (TextView) rootView.findViewById(R.id.resultsDetail);
-//        resultsDetail.setText(getArguments().getString(ARG_CONTENT_LIST));
 
-        // DATOS DE EJEMPLO
-        Resource res1 = new Resource();
-        res1.addPropertyValue( "uri", "http://opendata.caceres.es/recurso/salud/farmacias/Farmacia/117-obdulia-andrade-iglesias" );
-        res1.addPropertyValue("long", "-6.366742");
-        res1.addPropertyValue("lat", "39.482367");
-
-        Resource res2 = new Resource();
-        res2.addPropertyValue( "uri", "http://opendata.caceres.es/recurso/salud/farmacias/Farmacia/147-jose-luis-rufo-ruiz" );
-        res2.addPropertyValue( "long", "-6.38141" );
-        res2.addPropertyValue( "lat", "39.468874" );
-
-        Resource res3 = new Resource();
-        res3.addPropertyValue( "uri", "http://opendata.caceres.es/recurso/salud/farmacias/Farmacia/166-mari-isabel-torres-perez" );
-        res3.addPropertyValue( "long", "-6.366742" );
-        res3.addPropertyValue( "lat", "39.482367" );
-
-        Resource res4 = new Resource();
-        res4.addPropertyValue( "uri", "http://opendata.caceres.es/recurso/salud/farmacias/Farmacia/180-hernandez-cb" );
-        res4.addPropertyValue( "long", "-6.366742" );
-        res4.addPropertyValue( "lat", "39.482367" );
-
-        Resource res5 = new Resource();
-        res5.addPropertyValue( "uri", "http://opendata.caceres.es/recurso/salud/farmacias/Farmacia/183-julian-saavedra-pavon"  );
-        res5.addPropertyValue("long", "-6.366742");
-        res5.addPropertyValue("lat", "39.482367");
-
-        Resource res6 = new Resource();
-        res6.addPropertyValue( "uri", "http://opendata.caceres.es/recurso/salud/farmacias/Farmacia/274-pedro-antonio-claros-vicario" );
-        res6.addPropertyValue( "long", "-6.38141" );
-        res6.addPropertyValue( "lat", "39.468874" );
-
-        ArrayList<Resource> resources = new ArrayList<Resource>();
-        resources.add( res1 );
-        resources.add( res2 );
-        resources.add( res3 );
-        resources.add( res4 );
-        resources.add( res5 );
-        resources.add( res6 );
-
+        // Obtenemos los datos de la lista con los datos que vienen en los argumentos
+        ArrayList<Resource> resources = getArguments().getParcelableArrayList( ARG_CONTENT_LIST );
 
         //Creamos un ADAPTADOR desde un Property Array
         ResultsListAdapter listDataAdapter = new ResultsListAdapter( container.getContext(), R.layout.fragment_results_list_item, resources );
@@ -134,9 +95,6 @@ public class TabsListFragment extends Fragment {
     public class ResultsListAdapter extends ArrayAdapter<Resource>{
 
         private ArrayList<Resource> resources;
-
-        private LayoutInflater mInflater;
-
         Context context;
 
         public ResultsListAdapter(Context context, int textViewResourceId,
@@ -180,9 +138,6 @@ public class TabsListFragment extends Fragment {
                         Context.LAYOUT_INFLATER_SERVICE);
                 convertView = vi.inflate(R.layout.fragment_results_list_item, null);
 
-                //Indicar el LAYOUT para inflar la LISTVIEW
-//                convertView = mInflater.inflate( R.layout.fragment_results_list_item, null );
-
                 //Obtener los ELEMENTOS desde el LAYOUT
                 holder = new ViewHolder();
                 holder.uri   = (TextView) convertView.findViewById(R.id.resourceUri);
@@ -202,6 +157,10 @@ public class TabsListFragment extends Fragment {
         }
 
     }
+
+
+
+
 
 
 

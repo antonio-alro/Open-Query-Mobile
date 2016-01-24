@@ -42,7 +42,7 @@
         android:background="@android:color/transparent"
         android:layout_above="@+id/propertiesSeparator"
         android:layout_alignParentRight="true"
-        android:onClick="showHelpMessage" />
+        android:onClick="clickHelpButton" />
 
     <View
         style="@style/Separator"

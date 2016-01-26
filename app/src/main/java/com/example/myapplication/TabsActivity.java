@@ -1,5 +1,7 @@
 package com.example.myapplication;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 
@@ -12,6 +14,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,11 +23,24 @@ import android.view.ViewGroup;
 
 import android.widget.AdapterView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.RequestFuture;
 import com.example.myapplication.datamodels.Resource;
+import com.example.myapplication.utils.RequestsManager;
+import com.example.myapplication.utils.SparqlURIBuilder;
+import com.example.myapplication.utils.VolleySingleton;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 
 /**
@@ -32,6 +48,24 @@ import java.util.ArrayList;
  * Incluye una clase que es el adaptador de fragmentos para el ViewPager
  */
 public class TabsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+
+    /**
+     * Attribute to save the dataset name of the sparql query
+     */
+    private String datasetName = "";
+
+    /**
+     * Attribute to save the sparql query
+     */
+    private String sparqlQuery = "";
+
+    /**
+     * Atributos para guardar los recursos obtenidos del portal opendata caceres
+     */
+    ArrayList<Resource> resources = new ArrayList<Resource>();
+
+    protected Object lock = new Object();
+
 
     /**
      * Atributo para indicar el número de páginas que va a tener esta activity
@@ -53,6 +87,8 @@ public class TabsActivity extends AppCompatActivity implements AdapterView.OnIte
      */
     private ViewPager mViewPager;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,20 +102,33 @@ public class TabsActivity extends AppCompatActivity implements AdapterView.OnIte
         // Habilitar la navegación hacia arriba
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        // Crear el adaptador de fragmentos que retornará un fragment por cada una de las
-        // 3 secciones primarias de la actvity
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-        // Obtener el ViewPager desde el layout
-        // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
-        // Indicar el adaptador para el ViewPager
-        mViewPager.setAdapter(mSectionsPagerAdapter);
-        // Indicar la pestaña a mostrar por defecto
-        mViewPager.setCurrentItem(1);
+        // Get the parameters of the intent
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        if ( bundle != null ){
+            datasetName = bundle.getString( "DATASET" );
+            sparqlQuery = bundle.getString( "SPARQL QUERY" );
+        }
 
+
+        // Get the resources through HTTP request from opendata caceres
+        getRequestedResources();
+
+
+//        // Crear el adaptador de fragmentos que retornará un fragment por cada una de las
+//        // 3 secciones primarias de la actvity
+//        // Create the adapter that will return a fragment for each of the three
+//        // primary sections of the activity.
+//        mSectionsPagerAdapter = new SectionsPagerAdapter( getSupportFragmentManager() );
+//
+//        // Obtener el ViewPager desde el layout
+//        // Set up the ViewPager with the sections adapter.
+//        mViewPager = (ViewPager) findViewById( R.id.container );
+//        // Indicar el adaptador para el ViewPager
+//        mViewPager.setAdapter( mSectionsPagerAdapter );
+//        // Indicar la pestaña a mostrar por defecto
+//        mViewPager.setCurrentItem( 1 );
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -94,10 +143,85 @@ public class TabsActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
 
+    public void displayViewPager() {
+        // Crear el adaptador de fragmentos que retornará un fragment por cada una de las
+        // 3 secciones primarias de la actvity
+        // Create the adapter that will return a fragment for each of the three
+        // primary sections of the activity.
+        mSectionsPagerAdapter = new SectionsPagerAdapter( getSupportFragmentManager() );
 
-    public void dodo() {
+        // Obtener el ViewPager desde el layout
+        // Set up the ViewPager with the sections adapter.
+        mViewPager = (ViewPager) findViewById( R.id.container );
+        // Indicar el adaptador para el ViewPager
+        mViewPager.setAdapter( mSectionsPagerAdapter );
+        // Indicar la pestaña a mostrar por defecto
+        mViewPager.setCurrentItem( 1 );
 
     }
+
+
+
+
+    /**
+     * Get the resources to display them in the layout
+     */
+    public void getRequestedResources() {
+
+        SparqlURIBuilder uriBuilder = new SparqlURIBuilder( "", sparqlQuery, "json" );  //graph, sparql query and format
+        String url = uriBuilder.getUri();
+
+        createJSONResquestResources( url );
+    }
+
+    /**
+     * Método que ejecuta una petición HTTP para obtener los recursos que cumplan con la consulta solicitada. Devuelve una respuesta en formato JSON
+     * @param url   URL to execute the request
+     */
+    public void createJSONResquestResources( String url ) {
+        // PETICION CON LIBRERIA VOLLEY
+
+        // Initialize the progress dialog
+        final ProgressDialog progressDialog = new ProgressDialog( TabsActivity.this );
+
+        // Request a JSON response from the provided URL.
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // Get the requested Resources in the aparql query and save them
+                        resources = RequestsManager.parseJSONResources(response);
+
+                        // Display ViewPager of the Activity
+                        displayViewPager();
+
+                        // Close the progress Dialog
+                        progressDialog.dismiss();
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Close the progress Dialog
+                        progressDialog.dismiss();
+                    }
+                });
+
+        // Add the request to the RequestQueue.
+        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
+
+        // Parametrize the progress dialog and show it
+        progressDialog.setTitle("Obteniendo datos...");
+        progressDialog.setMessage("Espere un momento...");
+        progressDialog.show();
+    }
+
+
+
+
+
+
+
+
 
 
     @Override
@@ -122,6 +246,7 @@ public class TabsActivity extends AppCompatActivity implements AdapterView.OnIte
         return super.onOptionsItemSelected(item);
     }
 
+    // Método a ejecutar cuando se pulsa sobre un elemento de la lista de Resources
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 //        Resource resource = (Resource) parent.getItemAtPosition(position);
@@ -188,9 +313,10 @@ public class TabsActivity extends AppCompatActivity implements AdapterView.OnIte
                 case 0:
                     // Devuelve un TabsDetailFragment
                     return TabsDetailFragment.newInstance("Información de ejemplo");
+
                 case 1:
                     // Return a PlaceholderFragment (defined as a static inner class below).
-                    return TabsListFragment.newInstance( fillExampleData() );
+                    return TabsListFragment.newInstance( resources );
 
                 case 2:
                     // Return a PlaceholderFragment (defined as a static inner class below).
@@ -248,6 +374,8 @@ public class TabsActivity extends AppCompatActivity implements AdapterView.OnIte
 
 
 
+
+    // BORRAR DESPUES. ES SOLO PARA PRUEBAS
     /**
      * A placeholder fragment containing a simple view.
      */

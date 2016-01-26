@@ -123,12 +123,12 @@ public class SparqlQueryBuilder {
     public String addCompoundVariableWhereStatement( String variableName1, String type1, String variableName2, String type2, Boolean mandatoryProperty ) {
 
         String variableWhereStatement = "";
-        String statement1 = "?uri " + type1 + " ?" + variableName1 + ". ";
-        String statement2 = "?uri " + type2 + " ?" + variableName2 + ". ";
+        String statement1 = "?uri "                    + type1 +  " ?" + variableName1 + ". ";
+        String statement2 = "?" + variableName1 + " "  + type2 +  " ?" + variableName2 + ". ";
 
         if ( !mandatoryProperty ) {
-            statement1 = addOptionalStatement( "?uri " + type1 + " ?" + variableName1 + ". " );
-            statement2 = addOptionalStatement( "?uri " + type2 + " ?" + variableName2 + ". " );
+            statement1 = addOptionalStatement( "?uri "                    + type1 + " ?" + variableName1 + ". " );
+            statement2 = addOptionalStatement( "?" + variableName1 + " "  + type2 + " ?" + variableName2 + ". " );
         }
 
         variableWhereStatement = statement1 + statement2;

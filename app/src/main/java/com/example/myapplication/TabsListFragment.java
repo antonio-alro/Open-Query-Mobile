@@ -1,6 +1,5 @@
 package com.example.myapplication;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,15 +7,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.myapplication.datamodels.Resource;
-import com.example.myapplication.dummy.DummyContent;
 
 import java.util.ArrayList;
 
@@ -29,6 +25,7 @@ public class TabsListFragment extends Fragment {
      * El argumento del fragment representa la información de la lista de recursos
      */
     private static final String ARG_CONTENT_LIST = "content_list";
+
 
 
     /**
@@ -80,7 +77,7 @@ public class TabsListFragment extends Fragment {
 
         //Creamos una LISTVIEW y le asginamos el ADAPTADOR
         ListView resultsList = (ListView) rootView.findViewById(R.id.resultsList);
-        resultsList.setAdapter( listDataAdapter );
+        resultsList.setAdapter(listDataAdapter);
 
         //Indicamos que el propio fragment es el listener para cuando se haga click un elemento de la lista
         resultsList.setOnItemClickListener((AdapterView.OnItemClickListener) this.getActivity());
@@ -157,12 +154,6 @@ public class TabsListFragment extends Fragment {
         }
 
     }
-
-
-
-
-
-
 
 
 

@@ -29,6 +29,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.example.myapplication.datamodels.DataSet;
+import com.example.myapplication.datamodels.Resource;
 import com.example.myapplication.utils.PrefixesManagerSingleton;
 import com.example.myapplication.utils.RequestsManager;
 import com.example.myapplication.utils.SparqlQueryBuilder;
@@ -58,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     // Variables para guardar los datos obtenidos del portal opendata caceres
     List<DataSet> dataSets = new ArrayList<DataSet>();      // Datasets data
     ArrayList<Property> properties = new ArrayList<Property>();  // Properties data
+
 
 
     @Override
@@ -170,7 +172,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                    ArrayList<Property> properties) {
             super(context, textViewResourceId, properties);
             this.properties = new ArrayList<Property>();
-            this.properties.addAll(properties);
             this.properties.addAll(properties);
         }
 
@@ -577,38 +578,42 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         else {
             propertiesOfDataSet = listDataAdapter.properties;
         }
-        if ( propertiesOfDataSet.size() == 0 ){
+        Log.d( "PROPERTIES OF DATASET", String.valueOf( propertiesOfDataSet.size() ));
+        int selectedPropertiesCount = 0;
+        for (int i = 0; i < properties.size(); i++) {
+            Property property = propertiesOfDataSet.get(i);
+            if (property.isSelected()) {
+                properties_text += property.to_s();
+                selectedPropertiesCount++;
+            }
+        }
+        if ( selectedPropertiesCount == 0 ){
             showDialogMessage(view, "Advertencia", "Seleccione al menos una propiedad de la lista para realizar la consulta.");
             return;
         }
         else {
-            for (int i = 0; i < properties.size(); i++) {
-                Property property = propertiesOfDataSet.get(i);
-                if (property.isSelected()) {
-                    properties_text += property.to_s();
-                }
-            }
-        }
-        Log.d("SELECTED PROPERTIES: ", properties_text);
+            Log.d("SELECTED PROPERTIES: ", properties_text);
 
-        // Construimos la consulta Sparql correspondiente
-        DataSet data_set = new DataSet( dataSet.substring( dataSet.indexOf( ":" )+1, dataSet.length() ),
-                                        dataSet.substring( 0, dataSet.indexOf( ":" ) )
-                                      );
-        Log.d( "---- MAIN BUILDER ----", String.valueOf( properties.size() ) );
-        SparqlQueryBuilder builder = new SparqlQueryBuilder( data_set, properties );
-        Log.d( "---- MAIN BUILDER ----", builder.to_s() );
-        builder.buildSparqlQuery();
-        Log.d( "---- SPARQL QUERY ----", builder.getSparqlQuery() );
+            // Construimos la consulta Sparql correspondiente
+            DataSet data_set = new DataSet(dataSet.substring(dataSet.indexOf(":") + 1, dataSet.length()),
+                    dataSet.substring(0, dataSet.indexOf(":")));
 
-        //Lanzamos la actividad que muestra los resultados de la consulta
+            Log.d("---- MAIN BUILDER ----", String.valueOf(properties.size()));
+            SparqlQueryBuilder builder = new SparqlQueryBuilder(data_set, properties);
+            Log.d("---- MAIN BUILDER ----", builder.to_s());
+            builder.buildSparqlQuery();
+            Log.d("---- SPARQL QUERY ----", builder.getSparqlQuery());
+
+            //Lanzamos la actividad que muestra los resultados de la consulta
 //        Intent intent_results = new Intent(this, ResultsActivity.class);
-        Intent intent_results = new Intent(this, TabsActivity.class);
-        // Pasamos el nombre del dataset y la consulta sparql como argumentos
-        intent_results.putExtra( "DATASET", dataSet );
-        intent_results.putExtra( "SPARQL QUERY", builder.getSparqlQuery() );
-        // Lanzamos la actividad de destino
-        startActivity(intent_results);
+            Intent intent_results = new Intent(this, TabsActivity.class);
+            // Pasamos el nombre del dataset y la consulta sparql como argumentos
+            intent_results.putExtra("DATASET", dataSet);
+            intent_results.putExtra("SPARQL QUERY", builder.getSparqlQuery());
+            // Lanzamos la actividad de destino
+            startActivity(intent_results);
+
+        }
     }
 
 //    public void doSparqlConsult(View view) {
@@ -649,6 +654,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 //        Intent intent_results = new Intent(this, TabsActivity.class);
 //        startActivity(intent_results);
 //    }
+
+
+
+
+
+
+
+
+
+
 
 
 

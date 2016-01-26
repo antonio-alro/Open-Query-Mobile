@@ -22,6 +22,14 @@ public class Resource implements Parcelable {
         this.setPropertiesValues( new LinkedHashMap<String, String>() );
     }
 
+    /**
+     * PARAMETRIZED CONSTRUCTOR for Resource class
+     */
+    public Resource( LinkedHashMap<String,String> propertiesValues ) {
+        super();
+        this.setPropertiesValues(propertiesValues);
+    }
+
 
     /**
      * CONSTRUCTOR TO CREATE THE OBJECT FROM A PARCELABLE
@@ -112,8 +120,12 @@ public class Resource implements Parcelable {
      * @return      the uri of the resource
      */
     public String getUri() {
-        String key = (String) this.getPropertiesValues().keySet().toArray()[0];
-        return this.getPropertiesValues().get( key );
+        String uri = "";
+        if ( this.getPropertiesValues().size() > 0 ) {
+            String key = (String) this.getPropertiesValues().keySet().toArray()[0];
+            uri = this.getPropertiesValues().get( key );
+        }
+        return uri;
     }
 
     /**
@@ -121,8 +133,12 @@ public class Resource implements Parcelable {
      * @return      the label of the resource ( label is the first property of the resource without the resource uri )
      */
     public String getLabel() {
-        String key = (String) this.getPropertiesValues().keySet().toArray()[1];
-        return this.getPropertiesValues().get( key );
+        String label = "";
+        if ( this.getPropertiesValues().size() >= 2 ) {
+            String key = (String) this.getPropertiesValues().keySet().toArray()[1];
+            label = this.getPropertiesValues().get( key );
+        }
+        return label;
     }
 
 
@@ -139,7 +155,7 @@ public class Resource implements Parcelable {
         Iterator it = this.getPropertiesValues().keySet().iterator();
         while(it.hasNext()){
             String key = (String) it.next();
-            resource += key + ":" + this.getPropertiesValues().get(key) + ",";
+            resource += key + " : " + this.getPropertiesValues().get(key) + "    ";
         }
 
         resource += "]";

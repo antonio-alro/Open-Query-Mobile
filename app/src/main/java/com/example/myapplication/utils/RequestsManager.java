@@ -10,12 +10,14 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.example.myapplication.Property;
 import com.example.myapplication.datamodels.DataSet;
+import com.example.myapplication.datamodels.Resource;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -60,7 +62,6 @@ public class RequestsManager {
 
     public static JSONArray parseJSONGeneral( JSONObject jsonObject ) {
         // Variables locales
-        JSONArray vars;         // Guarda las variables utilizadas en la consulta SPARQL
         JSONObject results;     // Guarda el objeto que contiene los resultados de la consulta
         JSONArray bindings;     // Guarda la coleccion de resultados
 
@@ -213,6 +214,81 @@ public class RequestsManager {
     }
 
 
+    /**
+     * Get the variables names in the sparql query
+     * @return  a JSONArray with the variables names
+     */
+    public static JSONArray parseJSONVars ( JSONObject jsonObject ) {
+
+        JSONArray vars;         // Guarda las variables utilizadas en la consulta SPARQL
+
+        try {
+            // Obtener el array con las variables de la consulta
+            vars = jsonObject.getJSONObject( "head" ).getJSONArray( "vars" );
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            vars = null;
+        }
+
+        return vars;
+    }
+
+
+    public static ArrayList<Resource> parseJSONResources( JSONObject jsonObject ) {
+
+        JSONArray vars;                                     //Guarda las variables involucradas en la consulta
+        JSONArray bindings;                                 //Guarda la coleccion de resultados
+        ArrayList<Resource> resources = new ArrayList();    //Guarda los resources obtenidos de bindings
+
+        // Obtener las variables (vars)
+        vars = parseJSONVars(jsonObject);
+
+        // Obtener los resultados (bindings)
+        bindings = parseJSONGeneral( jsonObject );
+
+        if ( ( bindings != null ) && ( vars != null ) ) {
+
+            //Recorrer los bindings
+            for (int j = 0; j < bindings.length(); j++) {
+
+                JSONObject item = null;
+                LinkedHashMap<String,String> resourceInfo = new LinkedHashMap<String,String>();
+
+                // Obtener cada item de bindings
+                try {
+                    item = bindings.getJSONObject( j );
+                } catch (JSONException e) {
+                    Log.e("PARSE JSON", "Error de parsing: " + e.getMessage());
+                }
+
+                // Recorrer las vars para obtener sus valores
+                for (int i = 0; i < vars.length(); i++) {
+
+                    try {
+                        // Obtener el nombre de la variable y su correspondiente valor
+                        String variableSparql = ( String ) vars.get(i);
+                        String value          = item.getJSONObject( variableSparql ).getString( "value" );
+                        // Almacenar esa información
+                        resourceInfo.put( variableSparql, value );
+                    } catch ( JSONException e ) {
+                        Log.e("PARSE JSON", "Error de parsing: " + e.getMessage());
+                    }
+
+                }
+
+                // Crear un Resource con la información que acabamos de almacenar
+                Resource resource = new Resource( resourceInfo );
+
+                // Añadir el Resource a la lista de Resources
+                resources.add( resource );
+
+            }
+
+        }
+
+        return resources;
+    }
 
 
 //    public static List<DataSet> parseJSON( JSONObject jsonObject, int option ) {

@@ -30,9 +30,10 @@ public class ResultsFragmentDetail extends Fragment {
      * @param text
      */
     public void showDetail(String text) {
-        TextView resultsDetail = (TextView)getView().findViewById(R.id.resultsDetail);
-
-        resultsDetail.setText(text);
+        //COMENTADO PORQUE YA NO EXISTE ESE ELEMENTO EN EL LAYOUT
+//        TextView resultsDetail = (TextView)getView().findViewById(R.id.resultsDetail);
+//
+//        resultsDetail.setText(text);
     }
 
 }

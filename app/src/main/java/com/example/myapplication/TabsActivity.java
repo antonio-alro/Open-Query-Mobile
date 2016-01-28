@@ -60,11 +60,14 @@ public class TabsActivity extends AppCompatActivity implements AdapterView.OnIte
     private String sparqlQuery = "";
 
     /**
-     * Atributos para guardar los recursos obtenidos del portal opendata caceres
+     * Atributo para guardar los recursos obtenidos del portal opendata caceres
      */
     ArrayList<Resource> resources = new ArrayList<Resource>();
 
-    protected Object lock = new Object();
+    /**
+     * Atributo para guardar el recurso seleccionado para ver su vista de detalle
+     */
+    Resource detailResource = new Resource();
 
 
     /**
@@ -253,7 +256,19 @@ public class TabsActivity extends AppCompatActivity implements AdapterView.OnIte
 //        Toast.makeText(parent.getContext(),
 //                "Clicked on Row: " + position,
 //                Toast.LENGTH_LONG).show();
-        mViewPager.setCurrentItem(0);
+
+        // Obtener y guardar el Resource de la posicion seleccionada de la lista
+        String _class = parent.getItemAtPosition(position).getClass().toString();
+        String className = _class.substring( _class.lastIndexOf(".") + 1, _class.length() );
+        Log.d("CLASS ", className + " " + className.length());
+
+        if ( className.equals( "Resource" ) ) {
+            detailResource = (Resource) parent.getItemAtPosition(position);
+            mViewPager.setCurrentItem(2);
+            mViewPager.setCurrentItem(0);
+            Log.d( "RESOURCE ", ((Resource) parent.getItemAtPosition(position)).to_s() );
+        }
+
     }
 
 
@@ -311,8 +326,9 @@ public class TabsActivity extends AppCompatActivity implements AdapterView.OnIte
             // getItem is called to instantiate the fragment for the given page.
             switch (position) {
                 case 0:
+                    Log.d( "DETALLE ", "Pasando al Fragment el Recurso " + detailResource.to_s() );
                     // Devuelve un TabsDetailFragment
-                    return TabsDetailFragment.newInstance("Información de ejemplo");
+                    return TabsDetailFragment.newInstance( detailResource );
 
                 case 1:
                     // Return a PlaceholderFragment (defined as a static inner class below).
@@ -326,6 +342,10 @@ public class TabsActivity extends AppCompatActivity implements AdapterView.OnIte
             return null;
         }
     }
+
+
+
+
 
 
     // BORRAR DESPUES. ES SOLO PARA PRUEBAS
@@ -370,6 +390,14 @@ public class TabsActivity extends AppCompatActivity implements AdapterView.OnIte
 
         return resources;
     }
+
+
+
+
+
+
+
+
 
 
 

@@ -7,12 +7,70 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior" >
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/layout_results_type"
+        android:background="@drawable/layout_shadow_box_height_50">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@mipmap/my_icon_resource"
+            android:layout_marginLeft="30dp"
+            android:layout_marginStart="30dp"
+            android:layout_gravity="center_vertical" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="recurso"
+            android:id="@+id/result_list_type"
+            android:layout_marginLeft="40dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginEnd="20dp"
+            android:maxWidth="200dp"
+            android:minWidth="150dp"
+            android:textAlignment="center"
+            android:textColor="#212121"
+            android:textSize="16sp"
+            android:gravity="center_vertical"
+            android:layout_gravity="center_vertical" />
+    </LinearLayout>
+
+
+    <TextView
+        style="@style/Header"
+        android:text="0 recursos encontrados"
+        android:id="@+id/resultsListHeader"
+        android:layout_below="@+id/layout_results_type" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/helpMessageButton"
+        android:src="@mipmap/my_icon_list"
+        android:background="@android:color/transparent"
+        android:layout_above="@+id/resultsListSeparator"
+        android:layout_alignParentRight="true"
+        android:onClick="clickHelpButton" />
+
+    <View
+        style="@style/Separator"
+        android:id="@+id/resultsListSeparator"
+        android:layout_below="@+id/resultsListHeader" />
 
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/resultsListSeparator">
 
         <ListView
             android:id="@+id/resultsList"

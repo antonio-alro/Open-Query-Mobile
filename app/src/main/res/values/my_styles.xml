@@ -1,6 +1,8 @@
 <resources>
 
     <!--Estilos personalizados para los componentes de la aplicacion-->
+
+    <!-- Estilo para el text de cabecera de un separador -->
     <style name="Header" parent="@android:style/Widget.Holo.Light.TextView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -9,11 +11,15 @@
         <item name="android:layout_marginTop">10dp</item>
     </style>
 
+    <!-- Estilo para una linea que haga de separador -->
     <style name="Separator">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
         <item name="android:background">@color/colorAccent</item>
         <item name="android:layout_marginBottom">@dimen/activity_vertical_margin</item>
     </style>
+
+    <!-- -->
+
 
 </resources>

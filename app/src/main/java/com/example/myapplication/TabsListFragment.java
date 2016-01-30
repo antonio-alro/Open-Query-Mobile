@@ -25,13 +25,14 @@ public class TabsListFragment extends Fragment {
      * El argumento del fragment representa la información de la lista de recursos
      */
     private static final String ARG_CONTENT_LIST = "content_list";
+    private static final String ARG_DATASETNAME = "dataSetName";
 
 
 
     /**
      * Devuelve una nueva instancia de este FRAGMENT para la página correspondiente
      */
-    public static TabsListFragment newInstance( ArrayList<Resource> resources ) {
+    public static TabsListFragment newInstance( String dataSetName, ArrayList<Resource> resources ) {
 
         // Crear instancia del FRAGMENT que muestra la lista de recursos
         TabsListFragment fragment = new TabsListFragment();
@@ -39,6 +40,7 @@ public class TabsListFragment extends Fragment {
         // Le pasamos los argumentos necesarios (en este caso, el detalle del recurso)
         Bundle args = new Bundle();
         args.putParcelableArrayList( ARG_CONTENT_LIST, resources );
+        args.putString( ARG_DATASETNAME, dataSetName );
         fragment.setArguments(args);
 
         // Devolver el FRAGMENT
@@ -67,11 +69,20 @@ public class TabsListFragment extends Fragment {
         // Obtener el LAYOUT que va a mostrar el FRAGMENT
         View rootView = inflater.inflate(R.layout.fragment_results_list, container, false);
 
-        // Obtener la LISTVIEW del Layout y rellenarlo con los datos que vienen en los argumentos
-
         // Obtenemos los datos de la lista con los datos que vienen en los argumentos
-        ArrayList<Resource> resources = getArguments().getParcelableArrayList( ARG_CONTENT_LIST );
+        ArrayList<Resource> resources = getArguments().getParcelableArrayList(ARG_CONTENT_LIST);
 
+        // Obtenemos del layout el textView que muestra el tipo de recurso consultado
+        TextView resultsType = (TextView) rootView.findViewById( R.id.result_list_type );
+        resultsType.setText( getArguments().getString( ARG_DATASETNAME ) );
+
+        // Obtenemos del layout el textView que muestra el numero de recursos encontrados
+        TextView resultsCounter = (TextView) rootView.findViewById( R.id.resultsListHeader );
+        resultsCounter.setText( String.valueOf(resources.size() ) + " recursos encontrados" );
+
+
+
+        // Obtener la LISTVIEW del Layout y rellenarlo con los datos que vienen en los argumentos
         //Creamos un ADAPTADOR desde un Property Array
         ResultsListAdapter listDataAdapter = new ResultsListAdapter( container.getContext(), R.layout.fragment_results_list_item, resources );
 

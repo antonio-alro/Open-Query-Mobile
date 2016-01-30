@@ -328,11 +328,11 @@ public class TabsActivity extends AppCompatActivity implements AdapterView.OnIte
                 case 0:
                     Log.d( "DETALLE ", "Pasando al Fragment el Recurso " + detailResource.to_s() );
                     // Devuelve un TabsDetailFragment
-                    return TabsDetailFragment.newInstance( detailResource );
+                    return TabsDetailFragment.newInstance( datasetName, detailResource );
 
                 case 1:
                     // Return a PlaceholderFragment (defined as a static inner class below).
-                    return TabsListFragment.newInstance( resources );
+                    return TabsListFragment.newInstance( datasetName, resources );
 
                 case 2:
                     // Return a PlaceholderFragment (defined as a static inner class below).
@@ -346,50 +346,44 @@ public class TabsActivity extends AppCompatActivity implements AdapterView.OnIte
 
 
 
+    /**
+     * Método que se ejecuta cuando el usuario toca el botón de ayuda
+     * @param view
+     */
+    public void clickHelpButton( View view ) {
+        // Do something in response to button click
 
+        String title   = "Información";
+        String message = "En la lista puede ver la URL de cada recurso y el valor de una de las " +
+                "propiedades que seleccionó previamente para realizar la consulta";
 
-    // BORRAR DESPUES. ES SOLO PARA PRUEBAS
-    public ArrayList<Resource> fillExampleData() {
-        Resource res1 = new Resource();
-        res1.addPropertyValue( "uri", "http://opendata.caceres.es/recurso/salud/farmacias/Farmacia/117-obdulia-andrade-iglesias" );
-        res1.addPropertyValue("long", "-6.366742");
-        res1.addPropertyValue("lat", "39.482367");
+        showDialogMessage( view, title, message );
 
-        Resource res2 = new Resource();
-        res2.addPropertyValue( "uri", "http://opendata.caceres.es/recurso/salud/farmacias/Farmacia/147-jose-luis-rufo-ruiz" );
-        res2.addPropertyValue( "long", "-6.38141" );
-        res2.addPropertyValue( "lat", "39.468874" );
-
-        Resource res3 = new Resource();
-        res3.addPropertyValue( "uri", "http://opendata.caceres.es/recurso/salud/farmacias/Farmacia/166-mari-isabel-torres-perez" );
-        res3.addPropertyValue( "long", "-6.366742" );
-        res3.addPropertyValue( "lat", "39.482367" );
-
-        Resource res4 = new Resource();
-        res4.addPropertyValue( "uri", "http://opendata.caceres.es/recurso/salud/farmacias/Farmacia/180-hernandez-cb" );
-        res4.addPropertyValue( "long", "-6.366742" );
-        res4.addPropertyValue( "lat", "39.482367" );
-
-        Resource res5 = new Resource();
-        res5.addPropertyValue( "uri", "http://opendata.caceres.es/recurso/salud/farmacias/Farmacia/183-julian-saavedra-pavon"  );
-        res5.addPropertyValue("long", "-6.366742");
-        res5.addPropertyValue("lat", "39.482367");
-
-        Resource res6 = new Resource();
-        res6.addPropertyValue( "uri", "http://opendata.caceres.es/recurso/salud/farmacias/Farmacia/274-pedro-antonio-claros-vicario" );
-        res6.addPropertyValue( "long", "-6.38141" );
-        res6.addPropertyValue("lat", "39.468874");
-
-        ArrayList<Resource> resources = new ArrayList<Resource>();
-        resources.add( res1 );
-        resources.add( res2 );
-        resources.add( res3 );
-        resources.add( res4 );
-        resources.add( res5 );
-        resources.add( res6 );
-
-        return resources;
     }
+
+
+    /**
+     * Method to show a dialog with a message
+     * @param view
+     * @param title     title for the dialog
+     * @param message   message gor the dialog
+     */
+    public void showDialogMessage(View view, String title, String message ) {
+
+        // CONSTRUIR Y MOSTRAR UN DIALOG
+        // Obtener el FragmentManager
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        // Crear un HelpMessageDialogFragment
+        HelpMessageDialogFragment messageDialog = new HelpMessageDialogFragment();
+        // Al crearlo le pasamos dos argumentos (el título y el mensaje)
+        Bundle args = new Bundle();
+        args.putString( messageDialog.ARG_TITLE, title );
+        args.putString( messageDialog.ARG_MESSAGE, message );
+        messageDialog.setArguments(args);
+        // Mostrar el diálogo
+        messageDialog.show(fragmentManager, "tag" + title);
+    }
+
 
 
 

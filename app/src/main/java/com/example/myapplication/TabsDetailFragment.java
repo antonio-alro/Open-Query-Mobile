@@ -27,6 +27,7 @@ public class TabsDetailFragment extends Fragment {
      * El argumento del fragment representa la información de detalle del recurso
      */
     private static final String ARG_CONTENT_DETAIL = "content_detail";
+    private static final String ARG_DATASETNAME = "dataSetName";
 
     /**
      * El recurso del cual se va a mostrar la informacion de detalle
@@ -37,7 +38,7 @@ public class TabsDetailFragment extends Fragment {
     /**
      * Devuelve una nueva instancia de este FRAGMENT para la página correspondiente
      */
-    public static TabsDetailFragment newInstance(Resource resource) {
+    public static TabsDetailFragment newInstance( String dataSetName, Resource resource) {
 
         // Crear instancia del FRAGMENT que muestra la vista de detalle de un recurso
         TabsDetailFragment fragment = new TabsDetailFragment();
@@ -45,6 +46,7 @@ public class TabsDetailFragment extends Fragment {
         // Le pasamos los argumentos necesarios (en este caso, el detalle del recurso)
         Bundle args = new Bundle();
         args.putParcelable( ARG_CONTENT_DETAIL, resource );
+        args.putString(ARG_DATASETNAME, dataSetName);
         fragment.setArguments(args);
 
         // Devolver el FRAGMENT
@@ -72,6 +74,11 @@ public class TabsDetailFragment extends Fragment {
 
         // Obtener el LAYOUT que va a mostrar el FRAGMENT
         View rootView = inflater.inflate(R.layout.fragment_results_detail, container, false);
+
+        // Obtenemos del layout el textView que muestra el tipo de recurso consultado
+        TextView resourceType = (TextView) rootView.findViewById( R.id.textView_resource_detail_type );
+        resourceType.setText( getArguments().getString( ARG_DATASETNAME ) );
+
 
         // Obtener el recurso seleccionado
         detailResource = (Resource) getArguments().getParcelable( ARG_CONTENT_DETAIL );

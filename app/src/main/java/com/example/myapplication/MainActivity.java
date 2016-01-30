@@ -328,7 +328,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * Método que se ejecuta cuando el usuario toca el botón de ayuda
      * @param view
      */
-    public void clickHelpButton(View view ) {
+    public void clickHelpButton( View view ) {
         // Do something in response to button click
 
         String title   = "Ayuda";

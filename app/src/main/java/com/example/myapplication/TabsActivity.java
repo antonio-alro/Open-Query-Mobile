@@ -260,13 +260,11 @@ public class TabsActivity extends AppCompatActivity implements AdapterView.OnIte
         // Obtener y guardar el Resource de la posicion seleccionada de la lista
         String _class = parent.getItemAtPosition(position).getClass().toString();
         String className = _class.substring( _class.lastIndexOf(".") + 1, _class.length() );
-        Log.d("CLASS ", className + " " + className.length());
 
         if ( className.equals( "Resource" ) ) {
             detailResource = (Resource) parent.getItemAtPosition(position);
             mViewPager.setCurrentItem(2);
             mViewPager.setCurrentItem(0);
-            Log.d( "RESOURCE ", ((Resource) parent.getItemAtPosition(position)).to_s() );
         }
 
     }
@@ -326,7 +324,6 @@ public class TabsActivity extends AppCompatActivity implements AdapterView.OnIte
             // getItem is called to instantiate the fragment for the given page.
             switch (position) {
                 case 0:
-                    Log.d( "DETALLE ", "Pasando al Fragment el Recurso " + detailResource.to_s() );
                     // Devuelve un TabsDetailFragment
                     return TabsDetailFragment.newInstance( datasetName, detailResource );
 

@@ -68,15 +68,15 @@
             android:layout_alignParentEnd="true"
             android:layout_marginBottom="40dp" />
 
-        <ScrollView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/scrollViewdetailValuesList"
-            android:layout_centerVertical="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginLeft="232dp"
-            android:layout_marginStart="232dp" />
+        <!--<ScrollView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:id="@+id/scrollViewdetailValuesList"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_alignParentLeft="true"-->
+            <!--android:layout_alignParentStart="true"-->
+            <!--android:layout_marginLeft="232dp"-->
+            <!--android:layout_marginStart="232dp" />-->
     </RelativeLayout>
 
 </LinearLayout>

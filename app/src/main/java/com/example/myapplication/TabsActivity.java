@@ -333,7 +333,8 @@ public class TabsActivity extends AppCompatActivity implements AdapterView.OnIte
 
                 case 2:
                     // Return a PlaceholderFragment (defined as a static inner class below).
-                    return PlaceholderFragment.newInstance(position + 1);
+                    return TabsMapsFragment.newInstance( datasetName, resources );
+//                    return PlaceholderFragment.newInstance(position + 1);
 
             }
             return null;

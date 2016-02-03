@@ -141,6 +141,41 @@ public class Resource implements Parcelable {
         return label;
     }
 
+    /**
+     * Method to get the latitude value of the resource if this exists
+     * @return      the latitude value of resource
+     */
+    public String getLatitude() {
+        return this.getPropertiesValues().get( "lat" );
+    }
+
+    /**
+     * Method to get the longitude value of the resource if this exists
+     * @return      the longitude value of resource
+     */
+    public String getLongitude() {
+        return this.getPropertiesValues().get( "long" );
+    }
+
+
+
+    /**
+     * Method to show RESOURCE class as String
+     * @return      a string with the information of class
+     */
+    public String to_snippet(){
+
+        String resource = "";
+
+        Iterator it = this.getPropertiesValues().keySet().iterator();
+        while(it.hasNext()){
+            String key = (String) it.next();
+            resource += key + ": " + this.getPropertiesValues().get(key) + "\n";
+        }
+
+        return resource;
+
+    }
 
 
 

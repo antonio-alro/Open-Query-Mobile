@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -251,38 +252,46 @@ public class TabsMapsFragment extends Fragment implements OnMapReadyCallback, Go
         @Override
         public View getInfoContents(Marker marker) {
 
-            TextView tvTitle = ((TextView)myContentsView.findViewById(R.id.title));
-            tvTitle.setText(marker.getTitle());
+            return null;
+        }
 
-//            TextView tvSnippet = ((TextView)myContentsView.findViewById(R.id.snippet));
-//            tvSnippet.setText(marker.getSnippet());
+        @Override
+        public View getInfoWindow(Marker marker) {
+            // TODO Auto-generated method stub
+//            return null;
+            //Obtener el TextView del layout para poner un título a la infoWindow del marker
+            TextView tvTitle = ( (TextView) myContentsView.findViewById( R.id.title ) );
+            tvTitle.setText( marker.getTitle() );
 
             // Obtener el Layout que va a mostrar la información del recurso
             LinearLayout infoWindowLayout = (LinearLayout) myContentsView.findViewById( R.id.infoWindowLayout );
-            // Vaciar el Layout --- BORRAR DESPUES
-//            if ( infoWindowLayout.getChildCount() > 0 ){
-//                infoWindowLayout.removeAllViews();
-//            }
+            // Vaciar el Layout si tiene contenido
+            if ( infoWindowLayout.getChildCount() > 0 ){
+                infoWindowLayout.removeAllViews();
+            }
 
             // Crear TextViews por cada par propiedad-valor y añadirlo al layout
             String[] values = marker.getSnippet().split( "\n" );
 
             for (int i=0; i<values.length; i++){
                 TextView textView = new TextView( infoWindowLayout.getContext() );
-                textView.setLayoutParams( new LinearLayout.LayoutParams( LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1f ) );
-                textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 10);
+
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams( LinearLayout.LayoutParams.WRAP_CONTENT,
+                                                                                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                                                                                        1f
+                                                                                    );
+
+                textView.setLayoutParams( layoutParams );
+
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 11);
+                textView.setTextColor(Color.parseColor("#FFFFFF"));
+
                 textView.setText( values[ i ] );
 
                 infoWindowLayout.addView( textView );
             }
 
             return myContentsView;
-        }
-
-        @Override
-        public View getInfoWindow(Marker marker) {
-            // TODO Auto-generated method stub
-            return null;
         }
 
     }

@@ -29,7 +29,7 @@ import java.util.ArrayList;
 /**
  * Created by ANTONIO on 02/02/2016.
  */
-public class TabsMapsFragment extends Fragment implements OnMapReadyCallback {
+public class TabsMapsFragment extends Fragment implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
 
     /**
      * El argumento del fragment representa la información de detalle del recurso
@@ -175,7 +175,7 @@ public class TabsMapsFragment extends Fragment implements OnMapReadyCallback {
             LatLng center = new LatLng( 39.473995, -6.374444 );
 
             // Add the markers to the map (a marker for each resource)
-            addMarkersToMap( map, resources, dataSetName );
+            addMarkersToMap(map, resources, dataSetName);
 
             // Needs to call MapsInitializer before doing any CameraUpdateFactory calls
             MapsInitializer.initialize(this.getActivity());
@@ -232,6 +232,12 @@ public class TabsMapsFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
+    // Método que se ejecutará cuando se pulse sobre el mapa
+    @Override
+    public void onMapClick(LatLng latLng) {
+        // En este caso, servirá para cerrar la InfoWindow del Marker
+    }
+
 
     class MyInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
@@ -245,13 +251,18 @@ public class TabsMapsFragment extends Fragment implements OnMapReadyCallback {
         @Override
         public View getInfoContents(Marker marker) {
 
-            LinearLayout infoWindowLayout = (LinearLayout) myContentsView.findViewById( R.id.infoWindowLayout );
-
             TextView tvTitle = ((TextView)myContentsView.findViewById(R.id.title));
             tvTitle.setText(marker.getTitle());
 
 //            TextView tvSnippet = ((TextView)myContentsView.findViewById(R.id.snippet));
 //            tvSnippet.setText(marker.getSnippet());
+
+            // Obtener el Layout que va a mostrar la información del recurso
+            LinearLayout infoWindowLayout = (LinearLayout) myContentsView.findViewById( R.id.infoWindowLayout );
+            // Vaciar el Layout --- BORRAR DESPUES
+//            if ( infoWindowLayout.getChildCount() > 0 ){
+//                infoWindowLayout.removeAllViews();
+//            }
 
             // Crear TextViews por cada par propiedad-valor y añadirlo al layout
             String[] values = marker.getSnippet().split( "\n" );

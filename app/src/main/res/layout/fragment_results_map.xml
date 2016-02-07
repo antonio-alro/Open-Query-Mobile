@@ -1,6 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.gms.maps.MapView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/mapView" />
+    android:layout_height="match_parent" >
+
+    <com.google.android.gms.maps.MapView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/mapView" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/map_type_selector_layout" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tipo de mapa:"
+            android:id="@+id/textView"
+            android:layout_below="@+id/mapTypeSelector" />
+
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/mapTypeSelector"
+            android:spinnerMode="dropdown"
+            android:background="#CCFFFFFF" />
+
+
+
+    </LinearLayout>
+
+
+</RelativeLayout>
+
+
+
+

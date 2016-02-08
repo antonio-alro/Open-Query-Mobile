@@ -330,13 +330,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      */
     public void clickHelpButton( View view ) {
         // Do something in response to button click
-
-        String title   = "Ayuda";
-        String message = "Marque en la casilla de la izquierda las propiedades " +
-                "que desea en la consulta y seleccione los filtros de consulta sobre los datos.\n" +
-                "Si marca la casilla 'Obligatorio' no se mostraran aquellos datos que " +
-                "no posean esa propiedad.";
-
+        String title   = getResources().getString( R.string.help_message_title_properties_list );               //"Ayuda";
+        String message = getResources().getString( R.string.help_message_content_properties_list_part_1 )       //"Marque en la casilla de la izquierda las propiedades " +
+                         + "\n"                                                                                 //"que desea en la consulta y seleccione los filtros de consulta sobre los datos.\n" +
+                         + getResources().getString( R.string.help_message_content_properties_list_part_2 );    //"Si marca la casilla 'Obligatorio' no se mostraran aquellos datos que " +
+                                                                                                                //"no posean esa propiedad.";
         showDialogMessage( view, title, message );
 
     }
@@ -401,9 +399,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue( stringRequest );
 
         // Initialize the progress dialog and show it
-        //progressDialog = new ProgressDialog( MainActivity.this );   //Indicamos la activity como contexto
-        progressDialog.setTitle("Obteniendo datos...");
-        progressDialog.setMessage("Espere un momento...");
+        //progressDialog = new ProgressDialog( MainActivity.this );     //Indicamos la activity como contexto
+        progressDialog.setTitle( getResources().getString( R.string.progress_dialog_title ) );      //"Obteniendo datos..."
+        progressDialog.setMessage( getResources().getString( R.string.progress_dialog_message ) ); //"Espere un momento..."
         progressDialog.show();
     }
 
@@ -445,8 +443,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         // Initialize the progress dialog and show it
 //        progressDialog = new ProgressDialog( MainActivity.this );   //Indicamos la activity como contexto
-        progressDialog.setTitle("Obteniendo datos...");
-        progressDialog.setMessage("Espere un momento...");
+        progressDialog.setTitle( getResources().getString( R.string.progress_dialog_title ) );    //"Obteniendo datos..."
+        progressDialog.setMessage( getResources().getString( R.string.progress_dialog_message ) ); //"Espere un momento..."
         progressDialog.show();
     }
 
@@ -488,8 +486,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         // Initialize the progress dialog and show it
 //        progressDialog = new ProgressDialog( MainActivity.this );   //Indicamos la activity como contexto
-        progressDialog.setTitle("Obteniendo datos...");
-        progressDialog.setMessage("Espere un momento...");
+        progressDialog.setTitle( getResources().getString( R.string.progress_dialog_title ) );    //"Obteniendo datos..."
+        progressDialog.setMessage( getResources().getString( R.string.progress_dialog_message ) ); //"Espere un momento..."
         progressDialog.show();
     }
 
@@ -571,15 +569,21 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //Obtenemos las properties seleccionadas
         String properties_text = new String();
         ArrayList<Property> propertiesOfDataSet;
+
         if (listDataAdapter == null) {
             propertiesOfDataSet = new ArrayList<Property>();
-            //showDialogMessage(view, "Error", "Los datos no se han cargado correctamente. Vuelva a intentarlo de nuevo.");
+//            showDialogMessage( view,
+//                               getResources().getString( R.string.error_message_title_properties_list ),      //"Error"
+//                               getResources().getString( R.string.error_message_content_properties_list ) );  //"Los datos no se han cargado correctamente. Vuelva a intentarlo de nuevo."
         }
+
         else {
             propertiesOfDataSet = listDataAdapter.properties;
         }
+
         Log.d( "PROPERTIES OF DATASET", String.valueOf( propertiesOfDataSet.size() ));
         int selectedPropertiesCount = 0;
+
         for (int i = 0; i < properties.size(); i++) {
             Property property = propertiesOfDataSet.get(i);
             if (property.isSelected()) {
@@ -587,10 +591,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 selectedPropertiesCount++;
             }
         }
+
         if ( selectedPropertiesCount == 0 ){
-            showDialogMessage(view, "Advertencia", "Seleccione al menos una propiedad de la lista para realizar la consulta.");
+            showDialogMessage( view,
+                               getResources().getString( R.string.warning_message_title_execute_query ),      //"Advertencia"
+                               getResources().getString(R.string.warning_message_content_execute_query ) );  //"Seleccione al menos una propiedad de la lista para realizar la consulta."
             return;
         }
+
         else {
             Log.d("SELECTED PROPERTIES: ", properties_text);
 

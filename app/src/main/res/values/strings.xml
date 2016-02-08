@@ -2,9 +2,55 @@
     <string name="app_name">My Application</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_main">Visor Opendata Cáceres</string>
-    <string name="title_activity_results">Resultados</string>
-
-    <string name="title_activity_results_activity_detail">Vista detallada</string>
     <string name="title_activity_tabs">Resultados</string>
-    <string name="section_format">Hello World from section: %1$d</string>
+
+    <string name="title_activity_results">Resultados</string>                       <!-- BORRAR CUANDO SE BORRE LA ACTIVITY -->
+    <string name="title_activity_results_activity_detail">Vista detallada</string>  <!-- BORRAR CUANDO SE BORRE LA ACTIVITY -->
+    <string name="section_format">Hello World from section: %1$d</string>           <!-- BORRAR CUANDO SE BORRE EL FRAGMENT -->
+
+
+
+    <!-- Strings for main activity -->
+    <string name="header_title_dataset">Conjunto de datos</string>
+    <string name="header_title_properties">Propiedades</string>
+    <string name="title_property_filter">Filtro:</string>
+    <string name="title_property_mandatory">Obligatoria</string>
+    <string name="title_property_first_parameter">parámetro 1</string>
+    <string name="title_property_second_parameter">parámetro 2</string>
+
+    <string name="help_message_title_properties_list">Ayuda</string>
+    <string name="help_message_content_properties_list_part_1">Marque en la casilla de la izquierda las propiedades que desea en la consulta y seleccione los filtros de consulta sobre los datos.</string>
+    <string name="help_message_content_properties_list_part_2">Si marca la casilla \'Obligatorio\' no se mostraran aquellos datos que no posean esa propiedad.</string>
+
+    <string name="error_message_title_properties_list">Error</string>
+    <string name="error_message_content_properties_list">Los datos no se han cargado correctamente. Vuelva a intentarlo de nuevo.</string>
+
+    <string name="warning_message_title_execute_query">Advertencia</string>
+    <string name="warning_message_content_execute_query">Seleccione al menos una propiedad de la lista para realizar la consulta.</string>
+
+    <string name="progress_dialog_title">Obteniendo datos...</string>
+    <string name="progress_dialog_message">Espere un momento...</string>
+
+
+    <!-- Strings for result details activity -->
+    <string name="title_tab_detail">DETALLE</string>
+    <string name="title_tab_list">LISTADO</string>
+    <string name="title_tab_map">MAPA</string>
+
+
+    <!-- Strings for result details fragment -->
+    <!--<string name=""></string>-->
+
+
+
+    <!-- Strings for result list fragment -->
+    <!--<string name=""></string>-->
+
+
+    <!-- Strings for result map fragment -->
+    <!--<string name=""></string>-->
+
+
+
+
 </resources>

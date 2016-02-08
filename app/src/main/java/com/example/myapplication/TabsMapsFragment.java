@@ -355,24 +355,26 @@ public class TabsMapsFragment extends Fragment implements OnMapReadyCallback, Go
         // On selecting a spinner item
         String mapType = parent.getItemAtPosition( position ).toString();
 
-        switch ( mapType ) {
-            case "Normal":
-                map.setMapType( GoogleMap.MAP_TYPE_NORMAL );
-                break;
-            case "Híbrido":
-            case "Hybrid":
-                map.setMapType( GoogleMap.MAP_TYPE_HYBRID );
-                break;
-            case "Satélite":
-            case "Satellite":
-                map.setMapType( GoogleMap.MAP_TYPE_SATELLITE );
-                break;
-            case "Terreno":
-            case "Terrain":
-                map.setMapType( GoogleMap.MAP_TYPE_TERRAIN );
-                break;
-            default:
-                break;
+        if ( map != null ){     // Si esta inicializado
+            switch ( mapType ) {
+                case "Normal":
+                    map.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                    break;
+                case "Híbrido":
+                case "Hybrid":
+                    map.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                    break;
+                case "Satélite":
+                case "Satellite":
+                    map.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                    break;
+                case "Terreno":
+                case "Terrain":
+                    map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+                    break;
+                default:
+                    break;
+            }
         }
 
         // Showing selected spinner item

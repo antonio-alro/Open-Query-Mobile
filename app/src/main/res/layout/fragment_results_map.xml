@@ -14,7 +14,12 @@
         android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/map_type_selector_layout" >
+        android:background="@drawable/map_type_selector_layout"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="12dp"
+        android:layout_marginRight="6dp">
 
         <TextView
             android:layout_width="wrap_content"

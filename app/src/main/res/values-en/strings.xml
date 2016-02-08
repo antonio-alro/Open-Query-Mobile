@@ -1,0 +1,55 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_main">Visor Opendata Cáceres</string>
+    <string name="title_activity_tabs">Results</string>
+
+    <string name="title_activity_results">Resultados</string>                       <!-- BORRAR CUANDO SE BORRE LA ACTIVITY -->
+    <string name="title_activity_results_activity_detail">Vista detallada</string>  <!-- BORRAR CUANDO SE BORRE LA ACTIVITY -->
+    <string name="section_format">Hello World from section: %1$d</string>           <!-- BORRAR CUANDO SE BORRE EL FRAGMENT -->
+
+
+
+    <!-- Strings for main activity -->
+    <string name="header_title_dataset">Data set</string>
+    <string name="header_title_properties">Properties</string>
+    <string name="title_property_filter">Filter:</string>
+    <string name="title_property_mandatory">Mandatory</string>
+    <string name="title_property_first_parameter">parameter 1</string>
+    <string name="title_property_second_parameter">parameter 2</string>
+
+    <string name="help_message_title_properties_list">Help</string>
+    <string name="help_message_content_properties_list_part_1">Mark the box to the left the properties you want to query and select query filters on the data.</string>
+    <string name="help_message_content_properties_list_part_2">If you check the box \'Mandatory\' no data that do not have this property will be displayed.</string>
+
+    <string name="error_message_title_properties_list">Error</string>
+    <string name="error_message_content_properties_list">The data has not loaded correctly. Please try again.</string>
+
+    <string name="warning_message_title_execute_query">warning</string>
+    <string name="warning_message_content_execute_query">Select at least a property from the list to query.</string>
+
+    <string name="progress_dialog_title">Fetching data...</string>
+    <string name="progress_dialog_message">Wait a moment...</string>
+
+
+    <!-- Strings for result details activity -->
+    <string name="title_tab_detail">DETAIL</string>
+    <string name="title_tab_list">LIST</string>
+    <string name="title_tab_map">MAP</string>
+
+    <!-- Strings for result details fragment -->
+
+
+
+
+    <!-- Strings for result list fragment -->
+
+
+
+    <!-- Strings for result map fragment -->
+
+
+
+
+
+</resources>

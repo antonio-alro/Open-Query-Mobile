@@ -30,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="10dp"
-                android:text="TextView"
+                android:text="@string/tab_list_default_textview_name"
                 android:textColor="#212121" />
         </LinearLayout>
 
@@ -56,7 +56,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="10dp"
-                android:text="TextView"
+                android:text="@string/tab_list_default_textview_value"
                 android:textColor="#B6B6B6" />
         </LinearLayout>
 </LinearLayout>

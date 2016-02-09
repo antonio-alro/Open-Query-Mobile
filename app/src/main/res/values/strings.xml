@@ -36,18 +36,36 @@
     <string name="title_tab_detail">DETALLE</string>
     <string name="title_tab_list">LISTADO</string>
     <string name="title_tab_map">MAPA</string>
+    <string name="resource_name_class">Resource</string>
 
 
     <!-- Strings for result details fragment -->
-    <!--<string name=""></string>-->
-
+    <string name="tab_detail_default_resource">recurso</string>
+    <string name="tab_detail_header_title">Información del recurso</string>
+    <string name="tab_detail_default_textview_name">Propiedad</string>
+    <string name="tab_detail_default_textview_value">valor</string>
 
 
     <!-- Strings for result list fragment -->
-    <!--<string name=""></string>-->
+    <string name="tab_list_default_resource">recurso</string>
+    <string name="tab_list_default_header_title">0 recursos encontrados</string>
+    <string name="tab_list_end_header_title">recursos encontrados</string>
+    <string name="tab_list_default_textview_name">URI</string>
+    <string name="tab_list_default_textview_value">Propiedad: valor</string>
+
+    <string name="info_message_title_resources_list">Información</string>
+    <string name="info_message_content_resources_list">En la lista puede ver la URL de cada recurso y el valor de una de las propiedades que seleccionó previamente para realizar la consulta.</string>
 
 
     <!-- Strings for result map fragment -->
+    <string name="tab_map_textview_map_type">Tipo de mapa:</string>
+    <string name="tab_map_type_normal">Normal</string>
+    <string name="tab_map_type_hybrid">Híbrido</string>
+    <string name="tab_map_type_satellite">Satélite</string>
+    <string name="tab_map_type_terrain">Terreno</string>
+
+
+    <!-- Strings for settings activity -->
     <!--<string name=""></string>-->
 
 

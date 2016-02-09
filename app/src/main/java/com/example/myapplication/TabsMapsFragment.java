@@ -326,13 +326,13 @@ public class TabsMapsFragment extends Fragment implements OnMapReadyCallback, Go
         //Obtener el spinner del layout
         mapTypeSelector = (Spinner) view.findViewById( R.id.mapTypeSelector );
 
-        //Rellenar unos datasets de ejemplo
+        //Rellenar el array con los posibles tipos de mapas
         List<String> mapTypes = new ArrayList<String>();
 
-        mapTypes.add( "Normal" );
-        mapTypes.add( "Hybrid" );
-        mapTypes.add( "Satélite" );
-        mapTypes.add( "Terrain" );
+        mapTypes.add( getResources().getString( R.string.tab_map_type_normal ) );       //"Normal"
+        mapTypes.add( getResources().getString( R.string.tab_map_type_hybrid ) );       //"Híbrido"
+        mapTypes.add( getResources().getString( R.string.tab_map_type_satellite ) );    //"Satélite"
+        mapTypes.add( getResources().getString( R.string.tab_map_type_terrain ) );      //"Terreno"
 
 
         //Creamos un adaptador

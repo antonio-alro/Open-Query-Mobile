@@ -213,8 +213,8 @@ public class TabsActivity extends AppCompatActivity implements AdapterView.OnIte
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
 
         // Parametrize the progress dialog and show it
-        progressDialog.setTitle("Obteniendo datos...");
-        progressDialog.setMessage("Espere un momento...");
+        progressDialog.setTitle( getResources().getString( R.string.progress_dialog_title ) );
+        progressDialog.setMessage( getResources().getString( R.string.progress_dialog_message ) );
         progressDialog.show();
     }
 
@@ -261,7 +261,7 @@ public class TabsActivity extends AppCompatActivity implements AdapterView.OnIte
         String _class = parent.getItemAtPosition(position).getClass().toString();
         String className = _class.substring( _class.lastIndexOf(".") + 1, _class.length() );
 
-        if ( className.equals( "Resource" ) ) {
+        if ( className.equals( getResources().getString( R.string.resource_name_class ) ) ) {       //"Resource"
             detailResource = (Resource) parent.getItemAtPosition(position);
             mViewPager.setCurrentItem(2);
             mViewPager.setCurrentItem(0);
@@ -304,11 +304,11 @@ public class TabsActivity extends AppCompatActivity implements AdapterView.OnIte
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "DETALLE";
+                    return getResources().getString( R.string.title_tab_detail );
                 case 1:
-                    return "LISTADO";
+                    return getResources().getString( R.string.title_tab_list );
                 case 2:
-                    return "MAPA";
+                    return getResources().getString( R.string.title_tab_map );
             }
             return null;
         }
@@ -351,9 +351,8 @@ public class TabsActivity extends AppCompatActivity implements AdapterView.OnIte
     public void clickHelpButton( View view ) {
         // Do something in response to button click
 
-        String title   = "Información";
-        String message = "En la lista puede ver la URL de cada recurso y el valor de una de las " +
-                "propiedades que seleccionó previamente para realizar la consulta";
+        String title   = getResources().getString( R.string.info_message_title_resources_list );
+        String message = getResources().getString( R.string.info_message_content_resources_list );
 
         showDialogMessage( view, title, message );
 

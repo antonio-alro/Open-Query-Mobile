@@ -36,18 +36,37 @@
     <string name="title_tab_detail">DETAIL</string>
     <string name="title_tab_list">LIST</string>
     <string name="title_tab_map">MAP</string>
+    <string name="resource_name_class">Resource</string>
+
 
     <!-- Strings for result details fragment -->
-
-
+    <string name="tab_detail_default_resource">resource</string>
+    <string name="tab_detail_header_title">Resource information</string>
+    <string name="tab_detail_default_textview_name">Property</string>
+    <string name="tab_detail_default_textview_value">value</string>
 
 
     <!-- Strings for result list fragment -->
+    <string name="tab_list_default_resource">resource</string>
+    <string name="tab_list_default_header_title">0 resources found</string>
+    <string name="tab_list_end_header_title">resources found</string>
+    <string name="tab_list_default_textview_name">URI</string>
+    <string name="tab_list_default_textview_value">Property: value</string>
 
+    <string name="info_message_title_resources_list">Information</string>
+    <string name="info_message_content_resources_list">The list shows the URL of each resource and the value of one of the properties that you previously selected to query.</string>
 
 
     <!-- Strings for result map fragment -->
+    <string name="tab_map_textview_map_type">Map type:</string>
+    <string name="tab_map_type_normal">Normal</string>
+    <string name="tab_map_type_hybrid">Hybrid</string>
+    <string name="tab_map_type_satellite">Satellite</string>
+    <string name="tab_map_type_terrain">Terrain</string>
 
+
+    <!-- Strings for settings activity -->
+    <!--<string name=""></string>-->
 
 
 

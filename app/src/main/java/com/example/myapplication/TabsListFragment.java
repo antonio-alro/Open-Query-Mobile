@@ -78,7 +78,8 @@ public class TabsListFragment extends Fragment {
 
         // Obtenemos del layout el textView que muestra el numero de recursos encontrados
         TextView resultsCounter = (TextView) rootView.findViewById( R.id.resultsListHeader );
-        resultsCounter.setText( String.valueOf(resources.size() ) + " recursos encontrados" );
+        resultsCounter.setText( String.valueOf( resources.size() ) + " "
+                                + getResources().getString( R.string.tab_list_end_header_title ) );
 
 
 

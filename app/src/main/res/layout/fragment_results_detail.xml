@@ -31,7 +31,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="recurso"
+            android:text="@string/tab_detail_default_resource"
             android:id="@+id/textView_resource_detail_type"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="40dp"
@@ -46,7 +46,7 @@
 
     <TextView
         style="@style/Header"
-        android:text="Información del recurso"
+        android:text="@string/tab_detail_header_title"
         android:id="@+id/detailHeader"/>
 
     <View

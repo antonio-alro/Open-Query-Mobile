@@ -65,6 +65,20 @@
     <string name="tab_map_type_terrain">Terreno</string>
 
 
+    <!-- Strings for navigation drawer -->
+    <string name="navigation_drawer_open">Abrir navigation drawer</string>
+    <string name="navigation_drawer_close">Cerrar navigation drawer</string>
+
+    <string name="navigation_drawer_header_title">Visor Opendata Cáceres</string>
+    <string name="navigation_drawer_header_subtitle">Visualización de datos mediante la explotación del punto de consulta SPARQL de opendata.caceres.es</string>
+
+    <string name="navigation_drawer_menu_item_link_opendata">Opendata Cáceres</string>
+    <string name="navigation_drawer_menu_item_advanced_options">Opciones avanzadas</string>
+    <string name="navigation_drawer_menu_item_settings">Ajustes</string>
+    <string name="navigation_drawer_menu_item_about">Sobre mí</string>
+    <string name="navigation_drawer_menu_section_title_configuration">Configuración</string>
+
+
     <!-- Strings for settings activity -->
     <!--<string name=""></string>-->
 

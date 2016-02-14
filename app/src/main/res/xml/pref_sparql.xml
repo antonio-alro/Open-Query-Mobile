@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:theme="@style/AppTheme.AppBarOverlay" >
+
+    <PreferenceCategory android:title="@string/categorty_order_by">
+
+        <SwitchPreference
+            android:key="order_by_check"
+            android:title="@string/title_order_by_check"
+            android:summary="@string/summary_order_by_check"
+            android:defaultValue="false" />
+
+        <ListPreference
+            android:dependency="order_by_check"
+            android:key="order_by_type"
+            android:title="@string/title_order_type"
+            android:summary="@string/summary_order_type"
+            android:dialogTitle="@string/title_dialog_order_type"
+            android:entries="@array/order_by_types"
+            android:entryValues="@array/order_by_types" />
+
+        <ListPreference
+            android:dependency="order_by_check"
+            android:key="order_by_property"
+            android:title="@string/title_order_property"
+            android:summary="@string/summary_order_property"
+            android:dialogTitle="@string/title_dialog_order_property" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/category_limit">
+        <SwitchPreference
+            android:key="limit_check"
+            android:title="@string/title_limit_check"
+            android:summary="@string/summary_limit_check"
+            android:defaultValue="false" />
+
+        <EditTextPreference
+            android:dependency="limit_check"
+            android:key="limit"
+            android:title="@string/title_limit"
+            android:summary="@string/summary_limit"
+            android:dialogTitle="@string/title_dialog_limit"
+            android:defaultValue="0" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/category_offset">
+
+        <SwitchPreference
+            android:key="offset_check"
+            android:title="@string/title_offset_check"
+            android:summary="@string/summary_offset_check"
+            android:defaultValue="false" />
+
+        <EditTextPreference
+            android:dependency="offset_check"
+            android:key="offset"
+            android:title="@string/title_offset"
+            android:summary="@string/summary_offset"
+            android:dialogTitle="@string/title_dialog_offset"
+            android:defaultValue="0" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

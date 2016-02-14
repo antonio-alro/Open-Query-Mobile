@@ -70,6 +70,17 @@
                 android:value="com.example.myapplication.MainActivity" />
         </activity>
 
+        <activity
+            android:name=".preferences.SparqlPreferencesActivity"
+            android:label="@string/title_activity_sparqlpreferences"
+            android:parentActivityName=".MainActivity"
+            android:configChanges="screenSize|orientation"
+            android:theme="@style/AppTheme.NoActionBar" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.myapplication.MainActivity" />
+        </activity>
+
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

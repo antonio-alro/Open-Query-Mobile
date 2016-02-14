@@ -20,6 +20,10 @@ public class SparqlQueryBuilder {
     private String sparqlQuery;
     private DataSet dataset;
     private ArrayList<Property> properties;
+    private String orderType;
+    private String orderProperty;
+    private String limitValue;
+    private String offsetValue;
 
 
     /**
@@ -32,11 +36,15 @@ public class SparqlQueryBuilder {
     /**
      * PARAMETRIZED CONSTRUCTOR for SparqlQueryBuilder class
      */
-    public SparqlQueryBuilder( DataSet dataset,  ArrayList<Property> properties ) {
+    public SparqlQueryBuilder( DataSet dataset,  ArrayList<Property> properties, String orderType, String orderProperty, String limitValue, String offsetValue ) {
         super();
-        this.sparqlQuery = "";
-        this.dataset     = dataset;
-        this.properties  = properties;
+        this.sparqlQuery   = "";
+        this.dataset       = dataset;
+        this.properties    = properties;
+        this.orderType     = orderType;
+        this.orderProperty = orderProperty;
+        this.limitValue    = limitValue;
+        this.offsetValue   = offsetValue;
     }
 
 
@@ -192,8 +200,13 @@ public class SparqlQueryBuilder {
     }
 
     // ORDER_BY
-    public String addVariableToOrderByStatement( String variableName ) {
-        String orderByVariableStatement = "?" + variableName;
+    public String addVariableToOrderByStatement( String orderType, String variableName ) {
+
+        String orderByVariableStatement = "";
+
+        if ( !variableName.isEmpty() ){
+            orderByVariableStatement = "ORDER BY " + orderType + "( ?" + variableName + " )";
+        }
         return orderByVariableStatement;
     }
 
@@ -241,7 +254,7 @@ public class SparqlQueryBuilder {
                         );
 
                 // Add the variable name of the current property to SELECT STATEMENT
-                selectStatement += addVariableToSelectStatement(parsedName.get("variableName2"));
+                selectStatement += addVariableToSelectStatement( parsedName.get( "variableName2" ) );
                 Log.d( "---- SELECT ----", selectStatement );
 
                 // Add the variable statement in where of the current property to WHERE STATEMENT
@@ -289,12 +302,18 @@ public class SparqlQueryBuilder {
         addClosingWhereStatement();                             // }
 
         // Add ORDER_BY STATEMENT to SPARQL QUERY               // ORDER_BY ...
+        String orderByStatement = "";
+        String variableName = parseName( this.orderProperty ).get( "variableName2" );
+        orderByStatement = addVariableToOrderByStatement( this.getOrderType(), variableName );
+        Log.d( "---- ORDER BY ----", orderByStatement );
+
+        addOrderByStatement( orderByStatement );
 
         // Add LIMIT STATEMENT to SPARQL QUERY
-        addLimitStatement( "100" );                             // LIMIT ...
+        addLimitStatement(this.getLimitValue() );             // LIMIT ...
 
         // Add OFFSET STATEMENT to SPARQL QUERY
-        addOffsetStatement( "0" );                              // OFFSET ...
+        addOffsetStatement( this.getOffsetValue() );           // OFFSET ...
 
     }
 
@@ -335,6 +354,7 @@ public class SparqlQueryBuilder {
         this.sparqlQuery = sparqlQuery;
     }
 
+
     /**
      * Get method for dataset attribute
      * @return      dataset attribute
@@ -364,6 +384,73 @@ public class SparqlQueryBuilder {
      */
     public void setProperties( ArrayList<Property> properties ) {
         this.properties = properties;
+    }
+
+
+    /**
+     * Get method for orderType attribute
+     * @return  the order type (ASC o DESC)
+     */
+    public String getOrderType() {
+        return orderType;
+    }
+
+    /**
+     * Set method for orderType attribute
+     * @param orderType
+     */
+    public void setOrderType( String orderType ) {
+        this.orderType = orderType;
+    }
+
+
+    /**
+     * Get method for orderProperty attribute
+     * @return  the property to order
+     */
+    public String getOrderProperty() {
+        return orderProperty;
+    }
+
+    /**
+     * Set method for orderProperty attribute
+     * @param orderProperty
+     */
+    public void setOrderProperty( String orderProperty ) {
+        this.orderProperty = orderProperty;
+    }
+
+    /**
+     * Get method for limit_value attribute
+     * @return  the limit value
+     */
+    public String getLimitValue() {
+        return limitValue;
+    }
+
+    /**
+     * Set method for limit_value attribute
+     * @param limitValue
+     */
+    public void setLimitValue( String limitValue ) {
+        this.limitValue = limitValue;
+    }
+
+
+    /**
+     * Get method for offset_value attribute
+     * @return  the offset value
+     */
+    public String getOffsetValue() {
+        return offsetValue;
+    }
+
+    /**
+     * Set method for offset_value attribute
+     * @param offsetValue
+     */
+    public void setOffsetValue( String offsetValue ) {
+        this.offsetValue = offsetValue;
     }
 
 

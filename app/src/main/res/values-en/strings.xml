@@ -79,6 +79,37 @@
     <string name="navigation_drawer_menu_section_title_configuration">Configuration</string>
 
 
+    <!-- Strings for SPARQL settings activity -->
+    <string name="title_activity_sparqlpreferences">Query settings</string>
+
+    <string name="categorty_order_by">Order</string>
+    <string name="category_limit">Limit of results</string>
+    <string name="category_offset">Offset</string>
+
+    <string name="title_order_by_check">Order results</string>
+    <string name="summary_order_by_check">Enable / disable sorting of query results </string>
+
+    <string name="title_order_type">Order type</string>
+    <string name="summary_order_type">Choose how to sort the results</string>
+    <string name="title_dialog_order_type">Order</string>
+
+    <string name="title_order_property">Property to order</string>
+    <string name="summary_order_property">Choose the property by that results are sorted</string>
+    <string name="title_dialog_order_property">Indicate property</string>
+
+    <string name="title_limit_check">Limit the number of results</string>
+    <string name="summary_limit_check">Enable / disable limitation of query results</string>
+
+    <string name="title_limit">Maximum number of results</string>
+    <string name="summary_limit">Select the maximum number of results you want</string>
+    <string name="title_dialog_limit">Enter value</string>
+
+    <string name="title_offset_check">Skip the first results</string>
+    <string name="summary_offset_check">Enable / disable scrolling on the query results</string>
+
+    <string name="title_offset">Number of results to skip</string>
+    <string name="summary_offset">Select the number of results to be skipped</string>
+    <string name="title_dialog_offset">Enter value</string>
 
     <!-- Strings for settings activity -->
     <!--<string name=""></string>-->

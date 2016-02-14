@@ -1,11 +1,15 @@
 package com.example.myapplication;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 /**
  * Created by ANTONIO on 21/10/2015.
  */
-public class Property {
+public class Property implements Parcelable {
 
 
     /**
@@ -32,6 +36,74 @@ public class Property {
         this.selected = selected;
         this.datatype = datatype;
     }
+
+
+    /**
+     * CONSTRUCTOR TO CREATE THE OBJECT FROM A PARCELABLE
+     * @param in
+     */
+    protected Property(Parcel in) {
+        readFromParcel(in);
+    }
+
+
+
+    // METHOS OF PARCELABLE INTERFACE
+    /**
+     * Mandatory method of Parcelable interface
+     * @return
+     */
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    /**
+     * Method to write the object in a Parcel. The order of the attributes is important
+     * @param dest      Parcel where it is going to write
+     * @param flags
+     */
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeByte( (byte) ( isSelected() == true ? 1 : 0 ) );
+        dest.writeString( getName() );
+        dest.writeByte( (byte) ( isMandatory() == true ? 1 : 0 ) );
+        dest.writeString( getFilter() );
+        dest.writeString( getFilterParam1() );
+        dest.writeString( getFilterParam2() );
+        dest.writeString( getDatatype() );
+    }
+
+    /**
+     * Method to read the object from a Parcel. It is important reading data in the same order that when they were written
+     * @param in    Parcel with the data to read
+     */
+    private void readFromParcel(Parcel in) {
+        setSelected( in.readByte() == 1 ? true : false );
+        setName( in.readString() );
+        setMandatory( in.readByte() == 1 ? true : false );
+        setFilter( in.readString() );
+        setFilterParam1( in.readString() );
+        setFilterParam2( in.readString() );
+        setDatatype( in.readString() );
+    }
+
+    /**
+     * CREATOR to use the object in arrays
+     */
+    public static final Parcelable.Creator<Property> CREATOR = new Parcelable.Creator<Property>() {
+        @Override
+        public Property createFromParcel(Parcel in) {
+            return new Property(in);
+        }
+
+        @Override
+        public Property[] newArray(int size) {
+            return new Property[size];
+        }
+    };
+
+
 
 
 

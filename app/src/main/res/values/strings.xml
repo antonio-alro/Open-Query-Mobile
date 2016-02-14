@@ -79,6 +79,41 @@
     <string name="navigation_drawer_menu_section_title_configuration">Configuración</string>
 
 
+    <!-- Strings for SPARQL settings activity -->
+    <string name="title_activity_sparqlpreferences">Opciones de consulta</string>
+
+    <string name="categorty_order_by">Ordenación</string>
+    <string name="category_limit">Limite de resultados</string>
+    <string name="category_offset">Desplazamiento</string>
+
+    <string name="title_order_by_check">Ordenar los resultados</string>
+    <string name="summary_order_by_check">Activar / desactivar la ordenación de los resultados de las consultas realizadas</string>
+
+    <string name="title_order_type">Tipo de orden</string>
+    <string name="summary_order_type">Selecciona la forma de ordenar los resultados</string>
+    <string name="title_dialog_order_type">Ordenación</string>
+
+    <string name="title_order_property">Propiedad para ordenar</string>
+    <string name="summary_order_property">Selecciona la propiedad por la que ordenar los resultados</string>
+    <string name="title_dialog_order_property">Indicar propiedad</string>
+
+    <string name="title_limit_check">Limitar el número de resultados</string>
+    <string name="summary_limit_check">Activar / desactivar la limitación de los resultados de las consultas realizadas</string>
+
+    <string name="title_limit">Número máximo de resultados</string>
+    <string name="summary_limit">Selecciona el número máximo de resultados que desea obtener</string>
+    <string name="title_dialog_limit">Introduce valor</string>
+
+    <string name="title_offset_check">Saltar los primeros resultados</string>
+    <string name="summary_offset_check">Activar / desactivar el desplazamiento sobre los resultados de las consultas realizadas</string>
+
+    <string name="title_offset">Número de resultados a saltar</string>
+    <string name="summary_offset">Selecciona el número de resultados que desea saltar</string>
+    <string name="title_dialog_offset">Introduce valor</string>
+
+
+
+
     <!-- Strings for settings activity -->
     <!--<string name=""></string>-->
 

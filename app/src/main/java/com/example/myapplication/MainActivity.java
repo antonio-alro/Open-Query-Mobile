@@ -3,7 +3,9 @@ package com.example.myapplication;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
@@ -34,6 +36,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.example.myapplication.datamodels.DataSet;
 import com.example.myapplication.datamodels.Resource;
+import com.example.myapplication.preferences.SparqlPreferencesActivity;
 import com.example.myapplication.utils.PrefixesManagerSingleton;
 import com.example.myapplication.utils.RequestsManager;
 import com.example.myapplication.utils.SparqlQueryBuilder;
@@ -96,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //CODIGO NUEVO PARA GESTIONAR LA LIST VIEW
         //Generate list View from ArrayList
 //        displayPropertyListView();
+
 
 
         // Obtenemos los prefijos y los guardamos para su posterior consulta
@@ -622,15 +626,30 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         else {
             Log.d("SELECTED PROPERTIES: ", properties_text);
 
-            // Construimos la consulta Sparql correspondiente
+            // CONSTRUIMOS LA CONSULTA SPARQL CORRESPONDIENTE
+
+            // Get the dataset
             DataSet data_set = new DataSet(dataSet.substring(dataSet.indexOf(":") + 1, dataSet.length()),
                     dataSet.substring(0, dataSet.indexOf(":")));
 
-            Log.d("---- MAIN BUILDER ----", String.valueOf(properties.size()));
-            SparqlQueryBuilder builder = new SparqlQueryBuilder(data_set, properties);
+            // Get the sparql preferences values
+            ArrayList<String> sparqlPreferences = readSparqlPreferences();
+            String orderType     = sparqlPreferences.get( 0 );
+            String orderProperty = sparqlPreferences.get( 1 );
+            String limitValue    = sparqlPreferences.get( 2 );
+            String offsetValue   = sparqlPreferences.get( 3 );
+
+            Log.d( "- SPARQL PREFERENCES -", orderType + " - " + orderProperty + " - " + limitValue + " - " + offsetValue );
+
+            // Build the sparql query with the builder
+            Log.d("---- MAIN BUILDER ----", String.valueOf( properties.size() ) );
+            SparqlQueryBuilder builder = new SparqlQueryBuilder( data_set, properties,
+                                                                 orderType, orderProperty,
+                                                                 limitValue, offsetValue );
             Log.d("---- MAIN BUILDER ----", builder.to_s());
             builder.buildSparqlQuery();
             Log.d("---- SPARQL QUERY ----", builder.getSparqlQuery());
+
 
             //Lanzamos la actividad que muestra los resultados de la consulta
 //        Intent intent_results = new Intent(this, ResultsActivity.class);
@@ -682,6 +701,74 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 //        Intent intent_results = new Intent(this, TabsActivity.class);
 //        startActivity(intent_results);
 //    }
+
+
+    /**
+     * Method to get the selected properties by the user
+     * @return      selected properties
+     */
+    public  ArrayList<Property> getSelectedProperties() {
+
+        ArrayList<Property> selectedProperties = new ArrayList<>();
+
+        for (int i = 0; i < properties.size(); i++) {
+
+            Property property = properties.get( i );
+
+            if ( property.isSelected() ) {
+                selectedProperties.add( property );
+            }
+        }
+
+        return selectedProperties;
+    }
+
+
+    // METHOD TO READ PREFERENCES VALUES
+    /**
+     * Method to read the sparql preferences from the App Preferences
+     * @return  the sparql preferences ( orderType, orderProperty, limitValue, offsetValue)
+     */
+    public ArrayList<String> readSparqlPreferences() {
+
+        ArrayList<String> preferences = new ArrayList<>();
+        String orderType     = "";
+        String orderProperty = "";
+        String limitValue    = "0";
+        String offsetValue   = "0";
+
+        // Get the preferences
+        final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        Boolean orderEnabled  = sharedPreferences.getBoolean("order_by_check", false);
+        Boolean limitEnabled  = sharedPreferences.getBoolean( "limit_check", false );
+        Boolean offsetEnabled = sharedPreferences.getBoolean( "offset_check", false );
+
+        if ( orderEnabled ) {
+            if ( sharedPreferences.getString( "order_by_type", "" ).equals( "Ascendentemente" ) ) {
+                orderType = "ASC";
+            }
+            else if ( sharedPreferences.getString( "order_by_type", "" ).equals( "Descendentemente" ) ) {
+                orderType = "DESC";
+            }
+            orderProperty = sharedPreferences.getString( "order_by_property", "" );
+        }
+
+        if ( limitEnabled ) {
+            limitValue = sharedPreferences.getString( "limit", "" );
+        }
+
+        if ( offsetEnabled ) {
+            offsetValue = sharedPreferences.getString( "offset", "" );;
+        }
+
+        preferences.add( orderType );
+        preferences.add( orderProperty );
+        preferences.add( limitValue );
+        preferences.add( offsetValue );
+
+        return preferences;
+    }
 
 
 
@@ -737,12 +824,27 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         int id = item.getItemId();
 
         if (id == R.id.nav_link) {
-            // Handle the camera action
-        } else if (id == R.id.nav_advanced_options) {
 
-        } else if (id == R.id.nav_settings) {
+        }
 
-        } else if (id == R.id.nav_about) {
+        else if (id == R.id.nav_advanced_options) {
+
+            //Lanzamos la actividad que muestra la configuración avanzadade la consulta
+            Intent intent_sparql_settings = new Intent(this, SparqlPreferencesActivity.class);
+
+            // Pasamos las propiedades que están seleccionadas como argumentos
+            intent_sparql_settings.putParcelableArrayListExtra( "SELECTED PROPERTIES", getSelectedProperties() );
+
+            // Lanzamos la actividad de destino
+            startActivity( intent_sparql_settings );
+
+        }
+
+        else if (id == R.id.nav_settings) {
+
+        }
+
+        else if (id == R.id.nav_about) {
 
         }
 
@@ -752,6 +854,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         return true;
 
     }
+
+
 
 
 }

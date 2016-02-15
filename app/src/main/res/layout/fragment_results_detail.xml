@@ -7,7 +7,6 @@
     android:paddingTop="16dp"
     android:paddingBottom="16dp"
     android:orientation="vertical"
-    android:weightSum="1"
     android:clickable="false">
 
     <LinearLayout
@@ -77,6 +76,19 @@
             <!--android:layout_alignParentStart="true"-->
             <!--android:layout_marginLeft="232dp"-->
             <!--android:layout_marginStart="232dp" />-->
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:src="@mipmap/my_icon_maps"
+            android:scaleType="center"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
     </RelativeLayout>
+
 
 </LinearLayout>

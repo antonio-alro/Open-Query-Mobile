@@ -8,6 +8,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -90,8 +91,8 @@ public class TabsMapsFragment extends Fragment implements OnMapReadyCallback, Go
 
         // Le pasamos los argumentos necesarios (en este caso, el detalle del recurso)
         Bundle args = new Bundle();
-        args.putParcelableArrayList(ARG_CONTENT_MAP, resources);
-        args.putString(ARG_DATASETNAME, dataSetName);
+        args.putParcelableArrayList( ARG_CONTENT_MAP, resources );
+        args.putString( ARG_DATASETNAME, dataSetName );
         fragment.setArguments(args);
 
         // Devolver el FRAGMENT
@@ -121,52 +122,22 @@ public class TabsMapsFragment extends Fragment implements OnMapReadyCallback, Go
         View rootView = inflater.inflate(R.layout.fragment_results_map, container, false);
 
         // Obtenemos los datos de la lista con los datos que vienen en los argumentos
-        resources = getArguments().getParcelableArrayList(ARG_CONTENT_MAP);
+        resources = getArguments().getParcelableArrayList( ARG_CONTENT_MAP );
 
         //Obtenemos el nombre del dataset cosultado a partir de los argumentos
-        dataSetName = getArguments().getString(ARG_DATASETNAME);
+        dataSetName = getArguments().getString( ARG_DATASETNAME );
+
 
         // Gets the MapView from the XML layout and creates it
         mapView = (MapView) rootView.findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
 
         // Show the spinner to select the map type
-        displayMapTypeSelector(rootView);
+        displayMapTypeSelector( rootView );
 
         // Gets to GoogleMap from the MapView and does initialization stuff
         mapView.getMapAsync(this);
 
-
-//        map = mapView.getMapAsync( new OnMapReadyCallback() {
-//            @Override public void onMapReady( GoogleMap googleMap ) {
-//                if (googleMap != null) {
-//                    // Indicamos la configuración de la interfaz gráfica
-//                    googleMap.getUiSettings().setAllGesturesEnabled(true);
-//                    googleMap.getUiSettings().setMyLocationButtonEnabled(true);
-//
-//                    // Indicamos el centro del mapa
-//                    LatLng center = new LatLng( 39.473995, -6.374444 );
-//
-//                    // Needs to call MapsInitializer before doing any CameraUpdateFactory calls
-//                    try {
-//                        MapsInitializer.initialize( this.getActivity() );
-//                    } catch ( GooglePlayServicesNotAvailableException e ) {
-//                        e.printStackTrace();
-//                    }
-//
-//                    // Updates the location and zoom of the MapView
-//                    CameraPosition cameraPosition = new CameraPosition.Builder().target( center ).zoom( 15.0f ).build();
-//                    CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(cameraPosition);
-//                    googleMap.moveCamera( cameraUpdate );
-//
-////                    // Updates the location and zoom of the MapView
-////                    CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(39.473995, -6.374444), 10);
-////                    googleMap.animateCamera(cameraUpdate);
-//
-//                }
-//
-//            }
-//        });
 
         // Devolver la Vista inflada con el Layout
         return rootView;
@@ -192,11 +163,15 @@ public class TabsMapsFragment extends Fragment implements OnMapReadyCallback, Go
             map.getUiSettings().setMyLocationButtonEnabled(true);
 
             //Indicamos un Adapter para mostrar InfoWindows personalizadas en el mapa
-            map.setInfoWindowAdapter(new MyInfoWindowAdapter());
+            map.setInfoWindowAdapter( new MyInfoWindowAdapter() );
 
             // Indicamos el centro del mapa
             LatLng center = new LatLng( 39.473995, -6.374444 );
-
+            if ( resources.size() == 1 ) {
+                Double latitude  = Double.valueOf( resources.get( 0 ).getLatitude() );
+                Double longitude = Double.valueOf( resources.get( 0 ).getLongitude() );
+                center = new LatLng( latitude, longitude );
+            }
 
             // Add the markers to the map (a marker for each resource)
             addMarkersToMap(map, resources, dataSetName);
@@ -263,7 +238,7 @@ public class TabsMapsFragment extends Fragment implements OnMapReadyCallback, Go
     }
 
 
-
+    // Adapter for the infoWindows in the map
     class MyInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
         private final View myContentsView;
@@ -320,8 +295,11 @@ public class TabsMapsFragment extends Fragment implements OnMapReadyCallback, Go
 
     }
 
-
-    //METODO PARA GESTIONAR EL SPINNER PARA SELECCIONAR EL TIPO DE MAPA
+    //METHODS TO MANAGE THE SPINNER TO SELECT THE GOOGLE MAP TYPE
+    /**
+     * Method to display the map type selector
+     * @param view
+     */
     private void displayMapTypeSelector( View view ) {
         //Obtener el spinner del layout
         mapTypeSelector = (Spinner) view.findViewById( R.id.mapTypeSelector );
@@ -349,7 +327,14 @@ public class TabsMapsFragment extends Fragment implements OnMapReadyCallback, Go
         mapTypeSelector.setOnItemSelectedListener( this );
     }
 
-    // Overrided methods of listener for the map type selector
+
+    /**
+     * Overrided method of listener for the map type selector
+     * @param parent
+     * @param view
+     * @param position
+     * @param id
+     */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         // On selecting a spinner item
@@ -382,6 +367,10 @@ public class TabsMapsFragment extends Fragment implements OnMapReadyCallback, Go
 
     }
 
+    /**
+     * Overrided method of listener for the map type selector
+     * @param parent
+     */
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 

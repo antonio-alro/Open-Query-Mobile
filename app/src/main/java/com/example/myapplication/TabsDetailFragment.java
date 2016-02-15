@@ -2,6 +2,7 @@ package com.example.myapplication;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -86,11 +87,23 @@ public class TabsDetailFragment extends Fragment {
         // Inflamos la lista con la información de detalle de un Resource
         displayListDetail( detailResource, container.getContext(), rootView);
 
+
+        // Get the FloatingActionButton of layout and set the listener
+        FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        fab.setOnClickListener( (View.OnClickListener) this.getActivity() );
+
+
         // Devolver la Vista inflada con el Layout
         return rootView;
     }
 
 
+    /**
+     * Method to inflate the list with resource data
+     * @param resource
+     * @param context
+     * @param rootView
+     */
     public void displayListDetail( Resource resource, Context context, View rootView ) {
         // Obtener la LISTVIEW del Layout y rellenarlo con los datos que vienen en los argumentos
 
@@ -113,7 +126,7 @@ public class TabsDetailFragment extends Fragment {
         detailValuesList.setAdapter(listDataAdapter);
 
         //Indicamos que el propio fragment es el listener para cuando se haga click un elemento de la lista
-        detailValuesList.setOnItemClickListener((AdapterView.OnItemClickListener) this.getActivity());
+        detailValuesList.setOnItemClickListener( (AdapterView.OnItemClickListener) this.getActivity() );
     }
 
 

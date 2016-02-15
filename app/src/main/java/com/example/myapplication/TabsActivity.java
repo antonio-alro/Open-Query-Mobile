@@ -47,7 +47,7 @@ import java.util.concurrent.TimeoutException;
  * Activity para mostrar las distintas vistas con los resultados de la consulta realizada
  * Incluye una clase que es el adaptador de fragmentos para el ViewPager
  */
-public class TabsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+public class TabsActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, View.OnClickListener {
 
     /**
      * Attribute to save the dataset name of the sparql query
@@ -71,9 +71,9 @@ public class TabsActivity extends AppCompatActivity implements AdapterView.OnIte
 
 
     /**
-     * Atributo para indicar el número de páginas que va a tener esta activity
+     * Atributo para indicar el número de páginas que va a tener el ViewPager de esta activity
      */
-    static final int NUM_PAGES = 3;
+    static final int NUM_PAGES = 4;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -133,19 +133,12 @@ public class TabsActivity extends AppCompatActivity implements AdapterView.OnIte
 //        // Indicar la pestaña a mostrar por defecto
 //        mViewPager.setCurrentItem( 1 );
 
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
     }
 
 
+    /**
+     * Method to display the ViewPager
+     */
     public void displayViewPager() {
         // Crear el adaptador de fragmentos que retornará un fragment por cada una de las
         // 3 secciones primarias de la actvity
@@ -154,12 +147,12 @@ public class TabsActivity extends AppCompatActivity implements AdapterView.OnIte
         mSectionsPagerAdapter = new SectionsPagerAdapter( getSupportFragmentManager() );
 
         // Obtener el ViewPager desde el layout
-        // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById( R.id.container );
         // Indicar el adaptador para el ViewPager
+        // Set up the ViewPager with the sections adapter.
         mViewPager.setAdapter( mSectionsPagerAdapter );
-        // Indicar la pestaña a mostrar por defecto
-        mViewPager.setCurrentItem( 1 );
+        // Indicar la pestaña a mostrar por defecto (la lista de recursos)
+        mViewPager.setCurrentItem( 2 );
 
     }
 
@@ -174,7 +167,7 @@ public class TabsActivity extends AppCompatActivity implements AdapterView.OnIte
         SparqlURIBuilder uriBuilder = new SparqlURIBuilder( "", sparqlQuery, "json" );  //graph, sparql query and format
         String url = uriBuilder.getUri();
 
-        createJSONResquestResources( url );
+        createJSONResquestResources(url);
     }
 
     /**
@@ -249,7 +242,16 @@ public class TabsActivity extends AppCompatActivity implements AdapterView.OnIte
         return super.onOptionsItemSelected(item);
     }
 
-    // Método a ejecutar cuando se pulsa sobre un elemento de la lista de Resources
+
+
+    /**
+     * LISTENER FOR RESOURCES LIST (LIST FRAGMENT)
+     * Método a ejecutar cuando se pulsa sobre un elemento de la lista de Resources
+     * @param parent
+     * @param view
+     * @param position
+     * @param id
+     */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 //        Resource resource = (Resource) parent.getItemAtPosition(position);
@@ -259,15 +261,27 @@ public class TabsActivity extends AppCompatActivity implements AdapterView.OnIte
 
         // Obtener y guardar el Resource de la posicion seleccionada de la lista
         String _class = parent.getItemAtPosition(position).getClass().toString();
-        String className = _class.substring( _class.lastIndexOf(".") + 1, _class.length() );
+        String className = _class.substring(_class.lastIndexOf(".") + 1, _class.length());
 
         if ( className.equals( getResources().getString( R.string.resource_name_class ) ) ) {       //"Resource"
-            detailResource = (Resource) parent.getItemAtPosition(position);
-            mViewPager.setCurrentItem(2);
-            mViewPager.setCurrentItem(0);
+            detailResource = (Resource) parent.getItemAtPosition( position );
+            mViewPager.setCurrentItem( 3 );
+            mViewPager.setCurrentItem( 1 );
         }
 
     }
+
+    /**
+     * LISTENER FOR FLOATING_ACTION_BUTTON OF DETAIL FRAGMENT
+     * @param view
+     */
+    @Override
+    public void onClick(View view) {
+        // Show the MapsFragment with the resource on which we are showing the details
+        mViewPager.setCurrentItem( 2 );
+        mViewPager.setCurrentItem( 0 );
+    }
+
 
 
     /**
@@ -304,10 +318,12 @@ public class TabsActivity extends AppCompatActivity implements AdapterView.OnIte
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return getResources().getString( R.string.title_tab_detail );
+                    return getResources().getString( R.string.title_tab_map );
                 case 1:
-                    return getResources().getString( R.string.title_tab_list );
+                    return getResources().getString( R.string.title_tab_detail );
                 case 2:
+                    return getResources().getString( R.string.title_tab_list );
+                case 3:
                     return getResources().getString( R.string.title_tab_map );
             }
             return null;
@@ -324,16 +340,24 @@ public class TabsActivity extends AppCompatActivity implements AdapterView.OnIte
             // getItem is called to instantiate the fragment for the given page.
             switch (position) {
                 case 0:
-                    // Devuelve un TabsDetailFragment
-                    return TabsDetailFragment.newInstance( datasetName, detailResource );
+                    // Create a list with the resource on which you want show details
+                    ArrayList<Resource> mapResources = new ArrayList<>();
+                    mapResources.add( detailResource );
+                    // Return a TabsMapsFragment
+                    return TabsMapsFragment.newInstance( datasetName, mapResources );
 
                 case 1:
-                    // Return a PlaceholderFragment (defined as a static inner class below).
-                    return TabsListFragment.newInstance( datasetName, resources );
+                    // Return a TabsDetailFragment
+                    return TabsDetailFragment.newInstance( datasetName, detailResource );
 
                 case 2:
-                    // Return a PlaceholderFragment (defined as a static inner class below).
+                    // Return a TabsListFragment
+                    return TabsListFragment.newInstance( datasetName, resources );
+
+                case 3:
+                    // Return a TabsMapsFragment
                     return TabsMapsFragment.newInstance( datasetName, resources );
+                    // Return a PlaceholderFragment (defined as a static inner class below).
 //                    return PlaceholderFragment.newInstance(position + 1);
 
             }

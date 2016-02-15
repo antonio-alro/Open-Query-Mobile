@@ -27,6 +27,6 @@
     <android.support.design.widget.FloatingActionButton android:id="@+id/fab"
         android:layout_width="wrap_content" android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin" app:layout_anchor="@id/app_bar"
-        app:layout_anchorGravity="bottom|end" android:src="@mipmap/icon_maps" />
+        app:layout_anchorGravity="bottom|end" android:src="@mipmap/my_icon_maps" />
 
 </android.support.design.widget.CoordinatorLayout>

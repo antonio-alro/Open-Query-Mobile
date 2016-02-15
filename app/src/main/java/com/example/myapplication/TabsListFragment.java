@@ -2,6 +2,7 @@ package com.example.myapplication;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -82,17 +83,17 @@ public class TabsListFragment extends Fragment {
                                 + getResources().getString( R.string.tab_list_end_header_title ) );
 
 
-
         // Obtener la LISTVIEW del Layout y rellenarlo con los datos que vienen en los argumentos
         //Creamos un ADAPTADOR desde un Property Array
         ResultsListAdapter listDataAdapter = new ResultsListAdapter( container.getContext(), R.layout.fragment_results_list_item, resources );
 
         //Creamos una LISTVIEW y le asginamos el ADAPTADOR
         ListView resultsList = (ListView) rootView.findViewById(R.id.resultsList);
-        resultsList.setAdapter(listDataAdapter);
+        resultsList.setAdapter( listDataAdapter );
 
         //Indicamos que el propio fragment es el listener para cuando se haga click un elemento de la lista
-        resultsList.setOnItemClickListener((AdapterView.OnItemClickListener) this.getActivity());
+        resultsList.setOnItemClickListener( (AdapterView.OnItemClickListener) this.getActivity() );
+
 
         // Devolver la Vista inflada con el Layout
         return rootView;

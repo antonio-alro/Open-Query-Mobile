@@ -1,11 +1,16 @@
 package com.example.myapplication;
 
+
 import android.app.ProgressDialog;
+
 import android.content.Intent;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.content.pm.PackageManager;
+
+import android.os.Build;
+
 
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -15,20 +20,18 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
+
 
 import android.widget.AdapterView;
-import android.widget.TextView;
+
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.RequestFuture;
 import com.example.myapplication.datamodels.Resource;
 import com.example.myapplication.utils.RequestsManager;
 import com.example.myapplication.utils.SparqlURIBuilder;
@@ -37,10 +40,7 @@ import com.example.myapplication.utils.VolleySingleton;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+
 
 
 /**
@@ -109,9 +109,9 @@ public class TabsActivity extends AppCompatActivity implements AdapterView.OnIte
         // Get the parameters of the intent
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-        if ( bundle != null ){
-            datasetName = bundle.getString( "DATASET" );
-            sparqlQuery = bundle.getString( "SPARQL QUERY" );
+        if (bundle != null) {
+            datasetName = bundle.getString("DATASET");
+            sparqlQuery = bundle.getString("SPARQL QUERY");
         }
 
 
@@ -119,19 +119,6 @@ public class TabsActivity extends AppCompatActivity implements AdapterView.OnIte
         getRequestedResources();
 
 
-//        // Crear el adaptador de fragmentos que retornará un fragment por cada una de las
-//        // 3 secciones primarias de la actvity
-//        // Create the adapter that will return a fragment for each of the three
-//        // primary sections of the activity.
-//        mSectionsPagerAdapter = new SectionsPagerAdapter( getSupportFragmentManager() );
-//
-//        // Obtener el ViewPager desde el layout
-//        // Set up the ViewPager with the sections adapter.
-//        mViewPager = (ViewPager) findViewById( R.id.container );
-//        // Indicar el adaptador para el ViewPager
-//        mViewPager.setAdapter( mSectionsPagerAdapter );
-//        // Indicar la pestaña a mostrar por defecto
-//        mViewPager.setCurrentItem( 1 );
 
     }
 
@@ -144,19 +131,17 @@ public class TabsActivity extends AppCompatActivity implements AdapterView.OnIte
         // 3 secciones primarias de la actvity
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter( getSupportFragmentManager() );
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Obtener el ViewPager desde el layout
-        mViewPager = (ViewPager) findViewById( R.id.container );
+        mViewPager = (ViewPager) findViewById(R.id.container);
         // Indicar el adaptador para el ViewPager
         // Set up the ViewPager with the sections adapter.
-        mViewPager.setAdapter( mSectionsPagerAdapter );
+        mViewPager.setAdapter(mSectionsPagerAdapter);
         // Indicar la pestaña a mostrar por defecto (la lista de recursos)
-        mViewPager.setCurrentItem( 2 );
+        mViewPager.setCurrentItem(2);
 
     }
-
-
 
 
     /**
@@ -164,7 +149,7 @@ public class TabsActivity extends AppCompatActivity implements AdapterView.OnIte
      */
     public void getRequestedResources() {
 
-        SparqlURIBuilder uriBuilder = new SparqlURIBuilder( "", sparqlQuery, "json" );  //graph, sparql query and format
+        SparqlURIBuilder uriBuilder = new SparqlURIBuilder("", sparqlQuery, "json");  //graph, sparql query and format
         String url = uriBuilder.getUri();
 
         createJSONResquestResources(url);
@@ -174,11 +159,11 @@ public class TabsActivity extends AppCompatActivity implements AdapterView.OnIte
      * Método que ejecuta una petición HTTP para obtener los recursos que cumplan con la consulta solicitada. Devuelve una respuesta en formato JSON
      * @param url   URL to execute the request
      */
-    public void createJSONResquestResources( String url ) {
+    public void createJSONResquestResources(String url) {
         // PETICION CON LIBRERIA VOLLEY
 
         // Initialize the progress dialog
-        final ProgressDialog progressDialog = new ProgressDialog( TabsActivity.this );
+        final ProgressDialog progressDialog = new ProgressDialog(TabsActivity.this);
 
         // Request a JSON response from the provided URL.
         JsonObjectRequest jsObjRequest = new JsonObjectRequest
@@ -206,18 +191,10 @@ public class TabsActivity extends AppCompatActivity implements AdapterView.OnIte
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsObjRequest);
 
         // Parametrize the progress dialog and show it
-        progressDialog.setTitle( getResources().getString( R.string.progress_dialog_title ) );
-        progressDialog.setMessage( getResources().getString( R.string.progress_dialog_message ) );
+        progressDialog.setTitle(getResources().getString(R.string.progress_dialog_title));
+        progressDialog.setMessage(getResources().getString(R.string.progress_dialog_message));
         progressDialog.show();
     }
-
-
-
-
-
-
-
-
 
 
     @Override
@@ -243,7 +220,6 @@ public class TabsActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
 
-
     /**
      * LISTENER FOR RESOURCES LIST (LIST FRAGMENT)
      * Método a ejecutar cuando se pulsa sobre un elemento de la lista de Resources
@@ -263,10 +239,10 @@ public class TabsActivity extends AppCompatActivity implements AdapterView.OnIte
         String _class = parent.getItemAtPosition(position).getClass().toString();
         String className = _class.substring(_class.lastIndexOf(".") + 1, _class.length());
 
-        if ( className.equals( getResources().getString( R.string.resource_name_class ) ) ) {       //"Resource"
-            detailResource = (Resource) parent.getItemAtPosition( position );
-            mViewPager.setCurrentItem( 3 );
-            mViewPager.setCurrentItem( 1 );
+        if (className.equals(getResources().getString(R.string.resource_name_class))) {       //"Resource"
+            detailResource = (Resource) parent.getItemAtPosition(position);
+            mViewPager.setCurrentItem(3);
+            mViewPager.setCurrentItem(1);
         }
 
     }
@@ -278,9 +254,11 @@ public class TabsActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onClick(View view) {
         // Show the MapsFragment with the resource on which we are showing the details
-        mViewPager.setCurrentItem( 2 );
-        mViewPager.setCurrentItem( 0 );
+        mViewPager.setCurrentItem(2);
+        mViewPager.setCurrentItem(0);
     }
+
+
 
 
 
@@ -318,13 +296,13 @@ public class TabsActivity extends AppCompatActivity implements AdapterView.OnIte
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return getResources().getString( R.string.title_tab_map );
+                    return getResources().getString(R.string.title_tab_map);
                 case 1:
-                    return getResources().getString( R.string.title_tab_detail );
+                    return getResources().getString(R.string.title_tab_detail);
                 case 2:
-                    return getResources().getString( R.string.title_tab_list );
+                    return getResources().getString(R.string.title_tab_list);
                 case 3:
-                    return getResources().getString( R.string.title_tab_map );
+                    return getResources().getString(R.string.title_tab_map);
             }
             return null;
         }
@@ -342,22 +320,22 @@ public class TabsActivity extends AppCompatActivity implements AdapterView.OnIte
                 case 0:
                     // Create a list with the resource on which you want show details
                     ArrayList<Resource> mapResources = new ArrayList<>();
-                    mapResources.add( detailResource );
+                    mapResources.add(detailResource);
                     // Return a TabsMapsFragment
-                    return TabsMapsFragment.newInstance( datasetName, mapResources );
+                    return TabsMapsFragment.newInstance(datasetName, mapResources);
 
                 case 1:
                     // Return a TabsDetailFragment
-                    return TabsDetailFragment.newInstance( datasetName, detailResource );
+                    return TabsDetailFragment.newInstance(datasetName, detailResource);
 
                 case 2:
                     // Return a TabsListFragment
-                    return TabsListFragment.newInstance( datasetName, resources );
+                    return TabsListFragment.newInstance(datasetName, resources);
 
                 case 3:
                     // Return a TabsMapsFragment
-                    return TabsMapsFragment.newInstance( datasetName, resources );
-                    // Return a PlaceholderFragment (defined as a static inner class below).
+                    return TabsMapsFragment.newInstance(datasetName, resources);
+                // Return a PlaceholderFragment (defined as a static inner class below).
 //                    return PlaceholderFragment.newInstance(position + 1);
 
             }
@@ -366,19 +344,17 @@ public class TabsActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
 
-
-
     /**
      * Método que se ejecuta cuando el usuario toca el botón de ayuda
      * @param view
      */
-    public void clickHelpButton( View view ) {
+    public void clickHelpButton(View view) {
         // Do something in response to button click
 
-        String title   = getResources().getString( R.string.info_message_title_resources_list );
-        String message = getResources().getString( R.string.info_message_content_resources_list );
+        String title = getResources().getString(R.string.info_message_title_resources_list);
+        String message = getResources().getString(R.string.info_message_content_resources_list);
 
-        showDialogMessage( view, title, message );
+        showDialogMessage(view, title, message);
 
     }
 
@@ -389,7 +365,7 @@ public class TabsActivity extends AppCompatActivity implements AdapterView.OnIte
      * @param title     title for the dialog
      * @param message   message gor the dialog
      */
-    public void showDialogMessage(View view, String title, String message ) {
+    public void showDialogMessage(View view, String title, String message) {
 
         // CONSTRUIR Y MOSTRAR UN DIALOG
         // Obtener el FragmentManager
@@ -398,8 +374,8 @@ public class TabsActivity extends AppCompatActivity implements AdapterView.OnIte
         HelpMessageDialogFragment messageDialog = new HelpMessageDialogFragment();
         // Al crearlo le pasamos dos argumentos (el título y el mensaje)
         Bundle args = new Bundle();
-        args.putString( messageDialog.ARG_TITLE, title );
-        args.putString( messageDialog.ARG_MESSAGE, message );
+        args.putString(messageDialog.ARG_TITLE, title);
+        args.putString(messageDialog.ARG_MESSAGE, message);
         messageDialog.setArguments(args);
         // Mostrar el diálogo
         messageDialog.show(fragmentManager, "tag" + title);
@@ -409,50 +385,38 @@ public class TabsActivity extends AppCompatActivity implements AdapterView.OnIte
 
 
 
-
-
-
-
-
-
-
-
-
-    // BORRAR DESPUES. ES SOLO PARA PRUEBAS
     /**
-     * A placeholder fragment containing a simple view.
+     * Método que se ejecuta cuando el usuario toca el FloatingActionButton
+     * @param view
      */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
+    public void calculateRoute(View view) {
 
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
+        if (Build.VERSION.SDK_INT >= 23 &&
+                checkSelfPermission(android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                checkSelfPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    public void requestPermissions(@NonNull String[] permissions, int requestCode)
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for Activity#requestPermissions for more details.
+            Log.d("---- LOCATION ----", "calculateRoute 2");
+            return;
         }
 
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_tabs, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
-            return rootView;
-        }
     }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

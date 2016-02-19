@@ -1,7 +1,10 @@
 package com.example.myapplication;
 
-import android.app.Dialog;
-import android.content.pm.PackageManager;
+
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+
 import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
@@ -9,8 +12,10 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
+
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -23,8 +28,14 @@ import android.widget.Spinner;
 
 import android.widget.TextView;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.example.myapplication.utils.RequestsManager;
+import com.example.myapplication.utils.VolleySingleton;
+
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -33,12 +44,17 @@ import com.google.android.gms.maps.MapView;
 import com.example.myapplication.datamodels.Resource;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static android.support.v4.content.ContextCompat.checkSelfPermission;
@@ -80,6 +96,15 @@ public class TabsMapsFragment extends Fragment implements OnMapReadyCallback, Go
      */
     private Spinner mapTypeSelector;
 
+    /**
+     * Atributo para guardar la posicion GPS del dispositivo
+     */
+    private Location mLastLocation = null;
+
+    /**
+     * Atributo para guardar la ruta
+     */
+    List<List<HashMap<String, String>>> routes = null;
 
     /**
      * Devuelve una nueva instancia de este FRAGMENT para la página correspondiente
@@ -133,15 +158,34 @@ public class TabsMapsFragment extends Fragment implements OnMapReadyCallback, Go
         mapView.onCreate(savedInstanceState);
 
         // Show the spinner to select the map type
-        displayMapTypeSelector( rootView );
+        displayMapTypeSelector(rootView);
 
         // Gets to GoogleMap from the MapView and does initialization stuff
         mapView.getMapAsync(this);
 
 
+        // Get the FloatingActionButton of layout and set the listener
+        FloatingActionButton fab = (FloatingActionButton) rootView.findViewById(R.id.fab);
+        // Show the button (by default invisible)
+        if ( resources.size() == 1 ) {
+            fab.setVisibility( View.VISIBLE );
+        }
+        // Set the listener to the button
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+                //Calcular la ruta
+                calculateRoute();
+            }
+        });
+
+
         // Devolver la Vista inflada con el Layout
         return rootView;
     }
+
 
 
     /**
@@ -201,12 +245,19 @@ public class TabsMapsFragment extends Fragment implements OnMapReadyCallback, Go
      * @param longitude     longitude value of geographic point
      */
     public void addMarkerToMap( GoogleMap googleMap, double latitude, double longitude,
-                                String title, String snippet ) {
-        googleMap.addMarker(new MarkerOptions()
-                        .position(new LatLng(latitude, longitude))
-                        .title(title)
-                        .snippet(snippet)
-        );
+                                String title, String snippet, Boolean customIcon ) {
+
+        MarkerOptions options = new MarkerOptions()
+                                    .position(new LatLng(latitude, longitude))
+                                    .title(title)
+                                    .snippet(snippet);
+
+        if ( customIcon ) {
+            options.icon( BitmapDescriptorFactory.fromResource( R.drawable.icon_location ) );
+        }
+
+        googleMap.addMarker(options);
+
     }
 
     /**
@@ -225,11 +276,13 @@ public class TabsMapsFragment extends Fragment implements OnMapReadyCallback, Go
                                 Double.parseDouble( latitude ),
                                 Double.parseDouble( longitude ),
                                 dataSetName,
-                                resources.get( i ).to_snippet()
+                                resources.get( i ).to_snippet(),
+                                false
                             );
             }
         }
     }
+
 
     // Método que se ejecutará cuando se pulse sobre el mapa
     @Override
@@ -375,6 +428,247 @@ public class TabsMapsFragment extends Fragment implements OnMapReadyCallback, Go
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
+
+
+    //METHOD TO MANAGE LOCATION AND CALCULATE ROUTE
+
+    /**
+     * Método que calcula la ruta entre la posición actual del dispositivo y la del recurso mostrado en el mapa
+     */
+    public void calculateRoute() {
+
+        // Get the current location of device (origin location of route)
+        getLocation();
+
+        if ( resources.size() == 1 ) {
+            // Get the destination of route
+            String destinationLatitude  = resources.get( 0 ).getLatitude();
+            String destinationLongitude = resources.get( 0 ).getLongitude();
+
+            // Get directions of route and draw them in the map
+            if ( mLastLocation != null ) {
+                getDirections(String.valueOf(mLastLocation.getLatitude()),
+                        String.valueOf(mLastLocation.getLongitude()),
+                        destinationLatitude,
+                        destinationLongitude
+                );
+            }
+        }
+
+    }
+
+    /**
+     * Method to get the current location of the device
+     */
+    public void getLocation() {
+
+        // Get the location manager
+        final LocationManager locationManager = (LocationManager) getActivity().getSystemService( getContext().LOCATION_SERVICE );
+
+        // Check if GPS is enabled and allow enable it
+        if ( !locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+            buildAlertMessageNoGps();
+        }
+
+//        Toast.makeText( getContext(), "Obteniendo localización", Toast.LENGTH_SHORT ).show();
+
+        Criteria criteria = new Criteria();
+
+        // Getting the name of the best provider
+        String provider = locationManager.getBestProvider(criteria, true);
+
+        try {
+            // Obtener la última localización conocida
+            Location location = locationManager.getLastKnownLocation(provider);
+
+            // Mostrar la localización
+            //showPosition( location );
+
+            // Guardar la localización y mostrarla sobre el mapa
+            mLastLocation = location;
+            if ( location != null ) {
+                addMarkerToMap( map, location.getLatitude(), location.getLongitude(), "", "", true);
+            }
+
+            // Establecer el intervalo de tiempo para obtener las actualizaciones de la localización
+            locationManager.requestLocationUpdates( LocationManager.GPS_PROVIDER, 30000, 0, locationListener );
+
+        }
+        catch ( SecurityException e ){
+            Log.e("", "Error creating location service: " + e.getMessage());
+        }
+
+    }
+
+
+    /**
+     * Method to show a toast with the Location
+     * @param location
+     */
+    public void showPosition( Location location ) {
+        if ( location != null ) {
+            String position = String.valueOf( location.getLatitude() ) + " / " + String.valueOf( location.getLongitude() );
+            //Toast.makeText( getContext(), position, Toast.LENGTH_SHORT).show();
+            //Snackbar.make(getView(), position, Snackbar.LENGTH_LONG).show();
+
+        }
+    }
+
+
+    /**
+     * Nos registramos para recibir actualizaciones de la posición
+     */
+    private final LocationListener locationListener = new LocationListener() {
+        public void onLocationChanged( Location location ) {
+            Log.i("onLocationChanged", String.valueOf(location.getLatitude()) + ", " + String.valueOf(location.getLongitude()));
+        }
+        public void onProviderDisabled( String provider ){
+            Log.i( "", "Provider OFF" );
+        }
+        public void onProviderEnabled( String provider ){
+            Log.i("", "Provider ON");
+        }
+        public void onStatusChanged( String provider, int status, Bundle extras ){
+            Log.i("", "Provider Status: " + status);
+        }
+    };
+
+
+    /**
+     * Method to show a dialog that allows the user to enable the GPS
+     */
+    private void buildAlertMessageNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder( this.getContext() );
+
+        builder.setTitle( getResources().getString( R.string.tab_map_title_dialog_check_gps ) )
+                .setMessage(getResources().getString(R.string.tab_map_message_dialog_check_gps))
+                .setCancelable(false)
+
+                .setPositiveButton( getResources().getString( R.string.tab_map_positive_button_text_dialog_check_gps ),
+                                    new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                })
+
+                .setNegativeButton( getResources().getString( R.string.tab_map_negative_button_text_dialog_check_gps ),
+                                    new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        final AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+
+    /**
+     * Method to execute the request to get the route
+     */
+    public void getDirections( String originLatitude, String originLongitude, String destinationLatitude, String destinationLongitude ) {
+
+        // Format of response
+        String format = "json";
+
+        // Parameters of request
+        String parameters = "origin="      + originLatitude      + "," + originLongitude + "&" +
+                            "destination=" + destinationLatitude + "," + destinationLongitude + "&" +
+                            "sensor=false";
+
+        String url = "https://maps.googleapis.com/maps/api/directions/" + format + "?" + parameters;
+
+        createJSONResquestDirections( url );
+
+    }
+
+
+
+
+    /**
+     * Método que ejecuta una petición HTTP para obtener los pasos de la ruta. Devuelve una respuesta en formato JSON
+     * @param url   URL to execute the request
+     */
+    public void createJSONResquestDirections( String url ) {
+        // PETICION CON LIBRERIA VOLLEY
+
+        final ProgressDialog progressDialog = new ProgressDialog( getActivity() );
+
+        // Request a JSON response from the provided URL.
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // Get the routes
+                        routes = RequestsManager.parseJSONDirections( response );
+                        // Close the progress Dialog
+                        progressDialog.dismiss();
+                        // Fill the layout with the data
+                        drawRouteInMap( map, routes );
+
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Close the progress Dialog
+                        progressDialog.dismiss();
+                    }
+                });
+
+        // Add the request to the RequestQueue.
+        VolleySingleton.getInstance( getContext() ).addToRequestQueue( jsObjRequest );
+
+        // Initialize the progress dialog and show it
+        progressDialog.setTitle( getResources().getString( R.string.progress_dialog_title ) );    //"Obteniendo datos..."
+        progressDialog.setMessage( getResources().getString( R.string.progress_dialog_message ) ); //"Espere un momento..."
+        progressDialog.show();
+    }
+
+
+
+    /**
+     * Method to draw polylines of the route in a map
+     * @param googleMap     the map on which to paint a marker
+     * @param routes        the rout to paint
+     */
+    private void drawRouteInMap( GoogleMap googleMap, List<List<HashMap<String, String>>> routes ) {
+
+        ArrayList<LatLng> points    = null;
+        PolylineOptions lineOptions = null;
+
+        // Traversing through all the routes
+        for( int i=0; i<routes.size(); i++ ) {
+            points      = new ArrayList<LatLng>();
+            lineOptions = new PolylineOptions();
+
+            // Fetching i-th route
+            List<HashMap<String, String>> path = routes.get( i );
+
+            // Fetching all the points in i-th route
+            for( int j=0; j<path.size(); j++ ) {
+                HashMap<String,String> point = path.get( j );
+
+                double lat = Double.parseDouble( point.get( "lat" ) );
+                double lng = Double.parseDouble( point.get( "lng" ) );
+                LatLng position = new LatLng( lat, lng );
+
+                points.add( position );
+            }
+
+            // Adding all the points in the route to LineOptions
+            lineOptions.addAll( points );
+            lineOptions.width( 10 );
+            lineOptions.color( Color.rgb( 33, 150, 243 ) );
+        }
+
+        // Drawing polyline in the Google Map for the i-th route
+        googleMap.addPolyline( lineOptions );
+
+
+    }
+
+
+
 
 
 

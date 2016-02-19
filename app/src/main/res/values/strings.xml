@@ -64,6 +64,11 @@
     <string name="tab_map_type_satellite">Satélite</string>
     <string name="tab_map_type_terrain">Terreno</string>
 
+    <string name="tab_map_title_dialog_check_gps">Activar GPS</string>
+    <string name="tab_map_message_dialog_check_gps">El GPS está desactivado. ¿Quiere activarlo?</string>
+    <string name="tab_map_positive_button_text_dialog_check_gps">Sí</string>
+    <string name="tab_map_negative_button_text_dialog_check_gps">No</string>
+
 
     <!-- Strings for navigation drawer -->
     <string name="navigation_drawer_open">Abrir navigation drawer</string>

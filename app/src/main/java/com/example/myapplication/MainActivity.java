@@ -543,7 +543,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         SparqlURIBuilder uriBuilder = new SparqlURIBuilder( "", sparqlQuery, "json" );  //graph, sparql query and format
         String url = uriBuilder.getUri();
 
-        createJSONResquestDataSets(url);
+        createJSONResquestDataSets( url );
     }
 
     /**

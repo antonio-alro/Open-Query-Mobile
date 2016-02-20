@@ -64,6 +64,8 @@
     <string name="tab_map_type_satellite">Satellite</string>
     <string name="tab_map_type_terrain">Terrain</string>
 
+    <string name="tab_map_textview_filter_distance">Filter by distance:</string>
+
     <string name="tab_map_title_dialog_check_gps">Enable GPS</string>
     <string name="tab_map_message_dialog_check_gps">Your GPS seems to be disabled, do you want to enable it?</string>
     <string name="tab_map_positive_button_text_dialog_check_gps">Yes</string>

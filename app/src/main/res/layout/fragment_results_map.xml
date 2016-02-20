@@ -11,6 +11,7 @@
         android:id="@+id/mapView" />
 
     <LinearLayout
+        android:id="@+id/mapTypeLayout"
         android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -19,7 +20,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="12dp"
-        android:layout_marginRight="6dp">
+        android:layout_marginRight="6dp" >
 
         <TextView
             android:layout_width="wrap_content"
@@ -37,17 +38,49 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/filterDistanceLayout"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/map_type_selector_layout"
+        android:layout_below="@+id/mapTypeLayout"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="12dp"
+        android:layout_marginRight="6dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tab_map_textview_filter_distance"
+            android:id="@+id/textViewFilterDistance"
+            android:layout_below="@+id/mapTypeSelector"
+            android:layout_gravity="center_vertical" />
+
+        <EditText
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="10"
+            android:hint="3000"
+            android:id="@+id/editTextFilterDistance" />
+
+
+    </LinearLayout>
+
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fab_margin"
         android:src="@mipmap/my_icon_directions"
         android:scaleType="center"
+        android:visibility="invisible"
+        android:layout_marginRight="@dimen/fab_margin"
+        android:layout_marginBottom="69dp"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        android:visibility="invisible" />
+        android:layout_alignParentBottom="true" />
 
 
 </RelativeLayout>

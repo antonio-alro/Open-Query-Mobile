@@ -16,6 +16,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -23,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
@@ -169,6 +172,9 @@ public class TabsMapsFragment extends Fragment implements OnMapReadyCallback, Go
         // Show the button (by default invisible)
         if ( resources.size() == 1 ) {
             fab.setVisibility( View.VISIBLE );
+
+            // Not show the layout of distance filter
+            ( (LinearLayout) rootView.findViewById( R.id.filterDistanceLayout ) ).setVisibility( View.INVISIBLE );
         }
         // Set the listener to the button
         fab.setOnClickListener(new View.OnClickListener() {
@@ -180,6 +186,10 @@ public class TabsMapsFragment extends Fragment implements OnMapReadyCallback, Go
                 calculateRoute();
             }
         });
+
+        // Get the EditText with the distance filter and set a TextWatcher to detect when text change
+        EditText editTextDistanceFilter = (EditText) rootView.findViewById( R.id.editTextFilterDistance );
+        editTextDistanceFilter.addTextChangedListener( textWatcherFilterDistance );
 
 
         // Devolver la Vista inflada con el Layout
@@ -247,16 +257,18 @@ public class TabsMapsFragment extends Fragment implements OnMapReadyCallback, Go
     public void addMarkerToMap( GoogleMap googleMap, double latitude, double longitude,
                                 String title, String snippet, Boolean customIcon ) {
 
-        MarkerOptions options = new MarkerOptions()
-                                    .position(new LatLng(latitude, longitude))
-                                    .title(title)
-                                    .snippet(snippet);
+        if ( googleMap != null ){
+            MarkerOptions options = new MarkerOptions()
+                    .position(new LatLng(latitude, longitude))
+                    .title(title)
+                    .snippet(snippet);
 
-        if ( customIcon ) {
-            options.icon( BitmapDescriptorFactory.fromResource( R.drawable.icon_location ) );
+            if ( customIcon ) {
+                options.icon( BitmapDescriptorFactory.fromResource( R.drawable.icon_location ) );
+            }
+
+            googleMap.addMarker(options);
         }
-
-        googleMap.addMarker(options);
 
     }
 
@@ -267,9 +279,17 @@ public class TabsMapsFragment extends Fragment implements OnMapReadyCallback, Go
      * @param dataSetName   the dataset name of the done sparql
      */
     public void addMarkersToMap( GoogleMap googleMap, ArrayList<Resource> resources, String dataSetName ) {
+
+        // Clean the map
+        if ( googleMap != null ) {
+            googleMap.clear();
+        }
+
         for( int i=0; i<resources.size(); i++ ) {
+
             String latitude  = resources.get( i ).getLatitude();
             String longitude = resources.get( i ).getLongitude();
+
             // Check if the resource has latitude and longitude values
             if ( ( latitude != null )  &&  ( longitude != null ) ) {
                 addMarkerToMap( googleMap,
@@ -430,8 +450,117 @@ public class TabsMapsFragment extends Fragment implements OnMapReadyCallback, Go
     }
 
 
-    //METHOD TO MANAGE LOCATION AND CALCULATE ROUTE
 
+
+
+
+    // METHODS TO MANAGE THE DISTANCE FILTER
+    /**
+     * TextWatcher to detect when filter distance text changes
+     */
+    private TextWatcher textWatcherFilterDistance = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            Log.d( "", "El valor ha cambiado" );
+
+            ArrayList<Resource> filteredResources = new ArrayList<>();
+
+            if ( s.toString().isEmpty() ) {
+                filteredResources = resources;
+            }
+            else {
+                // Get the device current location
+                getLocation();
+
+                // Get the filtered resources by distance value
+                if ( mLastLocation != null ) {
+                    Double distanceFilter = Double.valueOf( s.toString() );
+                    filteredResources = filteredResourcesByDistance( distanceFilter );
+                }
+            }
+
+            // Add the markers of resources to map
+            addMarkersToMap( map, filteredResources, dataSetName);
+
+            // Add the marker in current location
+            if ( mLastLocation != null ) {
+                addMarkerToMap(map, mLastLocation.getLatitude(), mLastLocation.getLongitude(), "", "", true);
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
+
+    /**
+     * Method to calculate the distance (in meters) between two geographic points
+     * Courtesy: https://www.mapanet.eu/resources/Script-Distance.htm
+     * @param latitude1         latitude of point one
+     * @param longitude1        longitude of point one
+     * @param latitude2         latitude of point two
+     * @param longitude2        longitude of point two
+     */
+    public Double distanceBetweenPoints( Double latitude1, Double longitude1, Double latitude2, Double longitude2 ) {
+
+        Double R     = 6378.137;                                    // Radio (ecuatorial) de la Tierra en km
+        Double dLat  = ( latitude2 - latitude1 ) * Math.PI / 180;   // Diferencia de latitud en radianes
+        Double dLong = ( longitude2 - longitude1 ) * Math.PI / 180; // Diferencia de longitud en radianes
+
+        Double radLat1 = latitude1 * Math.PI / 180;     // Latitude 1 en radianes
+        Double radLat2 = latitude2 * Math.PI / 180;     // Latitude 2 en radianes
+
+        // Aplicación de la Fórmula de Haversine - http://www.genbetadev.com/cnet/como-calcular-la-distancia-entre-dos-puntos-geograficos-en-c-formula-de-haversine
+        Double a = Math.sin( dLat / 2 ) * Math.sin( dLat / 2 ) + Math.cos( radLat1 ) * Math.cos( radLat2 ) * Math.sin( dLong / 2 )* Math.sin( dLong / 2 );
+        Double c = 2 * Math.atan2( Math.sqrt( a ), Math.sqrt( 1 - a ) );
+        Double d = R * c;               // Distance in km (kilometers)
+
+        return Math.abs(d * 1000);    // Distance in m (meters)
+
+    }
+
+    /**
+     * Method to get the resources that are at less distance than the distance given by the user
+     * @param filterDistance
+     * @return
+     */
+    public ArrayList<Resource> filteredResourcesByDistance( Double filterDistance ) {
+
+        ArrayList<Resource> filteredResources = new ArrayList<>();
+
+        for( int i=0; i<resources.size(); i++ ) {
+            // Get the current resource
+            Resource resource = resources.get( i );
+
+            // Calculate the distance between device position and resource position
+            Double distance = distanceBetweenPoints( mLastLocation.getLatitude(),
+                                                     mLastLocation.getLongitude(),
+                                                     Double.valueOf( resource.getLatitude() ),
+                                                     Double.valueOf( resource.getLongitude() )
+                                                    );
+
+            // Check if the calculated distance is less than distance of the filter
+            if ( distance <= filterDistance ) {
+                filteredResources.add( resource );
+            }
+        }
+
+        return filteredResources;
+
+    }
+
+
+
+
+
+
+    //METHOD TO MANAGE LOCATION AND CALCULATE ROUTE
     /**
      * Método que calcula la ruta entre la posición actual del dispositivo y la del recurso mostrado en el mapa
      */

@@ -81,12 +81,12 @@
             android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:src="@mipmap/my_icon_maps"
             android:scaleType="center"
-            android:layout_centerVertical="true"
+            android:layout_marginBottom="69dp"
             android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true" />
 
     </RelativeLayout>
 

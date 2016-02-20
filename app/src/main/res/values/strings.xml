@@ -64,6 +64,8 @@
     <string name="tab_map_type_satellite">Satélite</string>
     <string name="tab_map_type_terrain">Terreno</string>
 
+    <string name="tab_map_textview_filter_distance">Filtro de distancia:</string>
+
     <string name="tab_map_title_dialog_check_gps">Activar GPS</string>
     <string name="tab_map_message_dialog_check_gps">El GPS está desactivado. ¿Quiere activarlo?</string>
     <string name="tab_map_positive_button_text_dialog_check_gps">Sí</string>

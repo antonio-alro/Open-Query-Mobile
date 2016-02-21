@@ -172,6 +172,10 @@ public class TabsActivity extends AppCompatActivity implements AdapterView.OnIte
                     public void onResponse(JSONObject response) {
                         // Get the requested Resources in the aparql query and save them
                         resources = RequestsManager.parseJSONResources(response);
+                        // Set the first resource as default detailResource
+                        if ( !resources.isEmpty() ){
+                            detailResource = resources.get( 0 );
+                        }
 
                         // Display ViewPager of the Activity
                         displayViewPager();
@@ -320,21 +324,22 @@ public class TabsActivity extends AppCompatActivity implements AdapterView.OnIte
                 case 0:
                     // Create a list with the resource on which you want show details
                     ArrayList<Resource> mapResources = new ArrayList<>();
-                    mapResources.add(detailResource);
+                    mapResources.add( detailResource );
+
                     // Return a TabsMapsFragment
-                    return TabsMapsFragment.newInstance(datasetName, mapResources);
+                    return TabsMapsFragment.newInstance( datasetName, mapResources );
 
                 case 1:
                     // Return a TabsDetailFragment
-                    return TabsDetailFragment.newInstance(datasetName, detailResource);
+                    return TabsDetailFragment.newInstance( datasetName, detailResource );
 
                 case 2:
                     // Return a TabsListFragment
-                    return TabsListFragment.newInstance(datasetName, resources);
+                    return TabsListFragment.newInstance( datasetName, resources );
 
                 case 3:
                     // Return a TabsMapsFragment
-                    return TabsMapsFragment.newInstance(datasetName, resources);
+                    return TabsMapsFragment.newInstance( datasetName, resources );
                 // Return a PlaceholderFragment (defined as a static inner class below).
 //                    return PlaceholderFragment.newInstance(position + 1);
 

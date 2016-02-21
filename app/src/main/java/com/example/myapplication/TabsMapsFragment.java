@@ -220,18 +220,13 @@ public class TabsMapsFragment extends Fragment implements OnMapReadyCallback, Go
             map.setInfoWindowAdapter( new MyInfoWindowAdapter() );
 
             // Indicamos el centro del mapa
-            LatLng center = new LatLng( 39.473995, -6.374444 );
-            if ( resources.size() == 1 ) {
-                Double latitude  = Double.valueOf( resources.get( 0 ).getLatitude() );
-                Double longitude = Double.valueOf( resources.get( 0 ).getLongitude() );
-                center = new LatLng( latitude, longitude );
-            }
+            LatLng center = new LatLng( 39.473995, -6.374444 );     //Center in Cáceres
 
             // Add the markers to the map (a marker for each resource)
-            addMarkersToMap(map, resources, dataSetName);
+            addMarkersToMap( map, resources, dataSetName );
 
             // Needs to call MapsInitializer before doing any CameraUpdateFactory calls
-            MapsInitializer.initialize(this.getActivity());
+            MapsInitializer.initialize( this.getActivity() );
 
             // Updates the location and zoom of the MapView
             CameraPosition cameraPosition = new CameraPosition.Builder().target( center ).zoom( 15.0f ).build();

@@ -91,7 +91,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         NavigationView navigationView = (NavigationView) findViewById( R.id.nav_view );
         navigationView.setNavigationItemSelectedListener( this );
 
-
         //CODIGO NUEVO PARA GESTIONAR EL SPINNER DE LOS DATASETS
         //Generate spinner from ArrayList
 //        displayDataSetSelector();
@@ -100,13 +99,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //Generate list View from ArrayList
 //        displayPropertyListView();
 
-
-
         // Obtenemos los prefijos y los guardamos para su posterior consulta
         getAndSavePrefixes();
 
-        // Get the datasets through HTTP request from opendata caceres
-        getDataSets();
+//        // Get the datasets through HTTP request from opendata caceres
+//        getDataSets();
 
     }
 
@@ -164,24 +161,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     //METODO PARA GESTIONAR LA LIST VIEW
     private void displayPropertyListView( ArrayList<Property> properties ){
+
         //Obtener la LISTVIEW del layout
-        propertiesListView = (ListView) findViewById(R.id.propertiesListView);
-        //Rellenar unas propiedades de ejemplo
-//        ArrayList<Property> properties = new ArrayList<Property>();
-//        Property property = new Property(false, "geo:long");
-//        properties.add(property);
-//        property = new Property(false, "geo:lat");
-//        properties.add(property);
-//        property = new Property(false, "rdfs:label");
-//        properties.add(property);
+        propertiesListView = (ListView) findViewById( R.id.propertiesListView );
 
         //Creamos un ADAPTADOR desde un Property Array
-        listDataAdapter = new PropertyListAdapter(this, R.layout.properties_list_item, properties);
+        listDataAdapter = new PropertyListAdapter( this, R.layout.properties_list_item, properties );
 
         //Asignamos el ADAPTADOR a la LISTVIEW
-        propertiesListView.setAdapter(listDataAdapter);
+        propertiesListView.setAdapter( listDataAdapter );
 
-        propertiesListView.setOnItemClickListener(new PropertiesListViewOnItemClickListener());
+        //Asignamos el LISTENER a la LISTVIEW
+        propertiesListView.setOnItemClickListener( new PropertiesListViewOnItemClickListener() );
     }
 
 
@@ -406,10 +397,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        // Parse the response
-                        PrefixesManagerSingleton.getInstance().parseResponseHTML(response);
+                        // Parse the response to save the prefixes
+                        PrefixesManagerSingleton.getInstance().parseResponseHTML( response );
+
+                        // Get the datasets through HTTP request from opendata caceres
+                        getDataSets();
+
                         // Close the progress Dialog
                         progressDialog.dismiss();
+
                     }
                 }, new Response.ErrorListener() {
             @Override

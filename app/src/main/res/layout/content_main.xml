@@ -73,6 +73,17 @@
 
     </RelativeLayout>
 
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/emptyElementPropertiesList"
+        android:layout_below="@+id/propertiesSeparator" >
+
+        <include layout="@layout/empty_element" />
+
+    </LinearLayout>
+
 
 </RelativeLayout>
 

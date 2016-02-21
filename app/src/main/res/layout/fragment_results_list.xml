@@ -94,5 +94,16 @@
             <!--android:layout_marginStart="232dp" />-->
     </RelativeLayout>
 
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/emptyElementResultsList"
+        android:layout_below="@+id/resultsListSeparator">
+
+        <include layout="@layout/empty_element" />
+
+    </LinearLayout>
+
 
 </RelativeLayout>

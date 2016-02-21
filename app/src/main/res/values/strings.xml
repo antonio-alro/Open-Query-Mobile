@@ -31,6 +31,8 @@
     <string name="progress_dialog_title">Obteniendo datos...</string>
     <string name="progress_dialog_message">Espere un momento...</string>
 
+    <string name="empty_element">No hay datos para mostrar</string>
+
 
     <!-- Strings for result details activity -->
     <string name="title_tab_detail">DETALLE</string>

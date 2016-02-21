@@ -94,6 +94,9 @@ public class TabsListFragment extends Fragment {
         //Indicamos que el propio fragment es el listener para cuando se haga click un elemento de la lista
         resultsList.setOnItemClickListener( (AdapterView.OnItemClickListener) this.getActivity() );
 
+        // Asignamos un layout por defecto para cuando la lista este vacía
+        resultsList.setEmptyView( rootView.findViewById( R.id.emptyElementResultsList ) );
+
 
         // Devolver la Vista inflada con el Layout
         return rootView;

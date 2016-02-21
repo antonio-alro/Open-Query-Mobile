@@ -127,6 +127,9 @@ public class TabsDetailFragment extends Fragment {
 
         //Indicamos que el propio fragment es el listener para cuando se haga click un elemento de la lista
         detailValuesList.setOnItemClickListener( (AdapterView.OnItemClickListener) this.getActivity() );
+
+        // Asignamos un layout por defecto para cuando la lista este vacía
+        detailValuesList.setEmptyView( rootView.findViewById( R.id.emptyElementResultsDetail ) );
     }
 
 

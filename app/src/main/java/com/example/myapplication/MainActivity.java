@@ -173,6 +173,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         //Asignamos el LISTENER a la LISTVIEW
         propertiesListView.setOnItemClickListener( new PropertiesListViewOnItemClickListener() );
+
+        // Asignamos un layout por defecto para cuando la lista este vacía
+        propertiesListView.setEmptyView( findViewById(R.id.emptyElementPropertiesList ) );
+
     }
 
 

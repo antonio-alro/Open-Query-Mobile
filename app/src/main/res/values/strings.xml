@@ -122,11 +122,6 @@
     <string name="title_dialog_offset">Introduce valor</string>
 
 
-    <!-- Strings for web activity -->
-    <string name="title_activity_web">Navegador Web</string>
-
-
-
     <!-- Strings for settings activity -->
     <!--<string name=""></string>-->
 

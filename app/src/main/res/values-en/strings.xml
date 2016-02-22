@@ -122,11 +122,6 @@
     <string name="title_dialog_offset">Enter value</string>
 
 
-    <!-- Strings for web activity -->
-    <string name="title_activity_web">Web browser</string>
-
-
-
     <!-- Strings for settings activity -->
     <!--<string name=""></string>-->
 

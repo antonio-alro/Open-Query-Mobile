@@ -82,6 +82,7 @@
     <string name="navigation_drawer_header_subtitle">Data visualization by exploiting the point the SPARQL Query of opendata.caceres.es</string>
 
     <string name="navigation_drawer_menu_item_link_opendata">Opendata Cáceres</string>
+    <string name="navigation_drawer_menu_item_twitter_opendata">Twitter Opendata Cáceres</string>
     <string name="navigation_drawer_menu_item_advanced_options">Advanced options</string>
     <string name="navigation_drawer_menu_item_settings">Settings</string>
     <string name="navigation_drawer_menu_item_about">About me</string>
@@ -119,6 +120,12 @@
     <string name="title_offset">Number of results to skip</string>
     <string name="summary_offset">Select the number of results to be skipped</string>
     <string name="title_dialog_offset">Enter value</string>
+
+
+    <!-- Strings for web activity -->
+    <string name="title_activity_web">Web browser</string>
+
+
 
     <!-- Strings for settings activity -->
     <!--<string name=""></string>-->

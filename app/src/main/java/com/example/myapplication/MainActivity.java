@@ -1,9 +1,11 @@
 package com.example.myapplication;
 
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
@@ -823,14 +825,40 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_link) {
-
+        if ( id == R.id.nav_link ) {
+            // Creamos un Intent para lanzar el navegador Google Chrome que muestra la página web de Opendata Cáceres
+            Intent intent = new Intent( Intent.ACTION_VIEW, Uri.parse( "http://opendata.caceres.es/" ) );
+            intent.addFlags( Intent.FLAG_ACTIVITY_NEW_TASK );
+            intent.setPackage( "com.android.chrome" );
+            try {
+                // Lanzamos Google Chrome
+                getApplicationContext().startActivity( intent );
+            } catch (ActivityNotFoundException ex) {
+                // Chrome browser presumably not installed so allow user to choose instead
+                intent.setPackage( null );
+                getApplicationContext().startActivity( intent );
+            }
         }
 
-        else if (id == R.id.nav_advanced_options) {
+        else if ( id == R.id.nav_twitter ) {
+            // Creamos un Intent para lanzar el navegador Google Chrome que muestra la página web de Opendata Cáceres
+            Intent intent = new Intent( Intent.ACTION_VIEW, Uri.parse( "http://twitter.com/opendatacc?lang=es" ) );
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setPackage("com.android.chrome");
+            try {
+                // Lanzamos Google Chrome
+                getApplicationContext().startActivity( intent );
+            } catch (ActivityNotFoundException ex) {
+                // Chrome browser presumably not installed so allow user to choose instead
+                intent.setPackage( null );
+                getApplicationContext().startActivity( intent );
+            }
+        }
 
-            //Lanzamos la actividad que muestra la configuración avanzadade la consulta
-            Intent intent_sparql_settings = new Intent(this, SparqlPreferencesActivity.class);
+        else if ( id == R.id.nav_advanced_options ) {
+
+            // Creamos un Intent para lanzar la actividad que muestra la configuración avanzadade la consulta
+            Intent intent_sparql_settings = new Intent( this, SparqlPreferencesActivity.class );
 
             // Pasamos las propiedades que están seleccionadas como argumentos
             intent_sparql_settings.putParcelableArrayListExtra( "SELECTED PROPERTIES", getSelectedProperties() );
@@ -840,16 +868,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         }
 
-        else if (id == R.id.nav_settings) {
+        else if ( id == R.id.nav_settings ) {
 
         }
 
-        else if (id == R.id.nav_about) {
+        else if ( id == R.id.nav_about ) {
 
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        DrawerLayout drawer = (DrawerLayout) findViewById( R.id.drawer_layout );
+        drawer.closeDrawer( GravityCompat.START );
 
         return true;
 

@@ -7,6 +7,10 @@
             android:icon="@mipmap/my_icon_link2"
             android:title="@string/navigation_drawer_menu_item_link_opendata" />
         <item
+            android:id="@+id/nav_twitter"
+            android:icon="@mipmap/my_icon_twitter"
+            android:title="@string/navigation_drawer_menu_item_twitter_opendata" />
+        <item
             android:id="@+id/nav_advanced_options"
             android:icon="@android:drawable/ic_menu_manage"
             android:title="@string/navigation_drawer_menu_item_advanced_options" />

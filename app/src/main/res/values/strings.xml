@@ -82,6 +82,7 @@
     <string name="navigation_drawer_header_subtitle">Visualización de datos mediante la explotación del punto de consulta SPARQL de opendata.caceres.es</string>
 
     <string name="navigation_drawer_menu_item_link_opendata">Opendata Cáceres</string>
+    <string name="navigation_drawer_menu_item_twitter_opendata">Twitter Opendata Cáceres</string>
     <string name="navigation_drawer_menu_item_advanced_options">Opciones avanzadas</string>
     <string name="navigation_drawer_menu_item_settings">Ajustes</string>
     <string name="navigation_drawer_menu_item_about">Sobre mí</string>
@@ -120,6 +121,9 @@
     <string name="summary_offset">Selecciona el número de resultados que desea saltar</string>
     <string name="title_dialog_offset">Introduce valor</string>
 
+
+    <!-- Strings for web activity -->
+    <string name="title_activity_web">Navegador Web</string>
 
 
 

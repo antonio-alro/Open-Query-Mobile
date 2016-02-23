@@ -255,26 +255,35 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     }
                 });
 
+                // Temporal variable to manage the filterParam2 element visibilty
+                final ViewHolder finalHolder = holder;
+
                 //LISTENER para el SPINNER del elemento de la LISTVIEW
+//                holder.filterSelector.setOnItemSelectedListener(new SpinnerOnItemSelectedListener());
                 holder.filterSelector.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         Spinner spinner = (Spinner) parent;
                         Property property = (Property) spinner.getTag();
-                        property.setFilter( String.valueOf(spinner.getSelectedItem()) );
+                        property.setFilter( String.valueOf( spinner.getSelectedItem() ) );
+
+                        // Manage filterParam2 element visibilty
+                        if ( String.valueOf( spinner.getSelectedItem() ).equals("Rango(x,y)") ) {
+                            finalHolder.filterParam2.setVisibility( View.VISIBLE );
+                        }
+                        else {
+                            finalHolder.filterParam2.setVisibility( View.INVISIBLE );
+                        }
                     }
 
                     @Override
                     public void onNothingSelected(AdapterView<?> parent) {
                     }
                 });
-//                holder.filterSelector.setOnItemSelectedListener(new SpinnerOnItemSelectedListener());
 
-                //Rellenar el SPINNER con unos filtros de ejemplo
-//                List<String> filters = new ArrayList<String>();
-//                filters.add("Ninguno");
-//                filters.add("=");
-//                filters.add("<");
+                // Asignar el valor de la variable temporal (finalHolder) a la variable real
+                holder.filterParam2 = finalHolder.filterParam2;
+
 
 
                 //LISTENER para el EDITTEXT 1 del elemento de la LISTVIEW
@@ -305,13 +314,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
 
             //Rellenar el LAYOUT con los datos de la PROPERTY correspondiente
-            holder.selected.setChecked(property.isSelected());
-            holder.selected.setTag(property);
+            holder.selected.setChecked( property.isSelected() );
+            holder.selected.setTag( property );
 
-            holder.name.setText(property.getName());
+            holder.name.setText( property.getName() );
 
-            holder.mandatory.setChecked(property.isMandatory());
-            holder.mandatory.setTag(property);
+            holder.mandatory.setChecked( property.isMandatory() );
+            holder.mandatory.setTag( property );
 
 
             ArrayList<String> filters = property.getAllowedFilters();
@@ -324,14 +333,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     (android.R.layout.simple_spinner_dropdown_item);
 
             holder.filterSelector.setAdapter( filterDropdownDataAdapter );
-            holder.filterSelector.setTag(property);
+            holder.filterSelector.setTag( property );
 
 
-            holder.filterParam1.setText(property.getFilterParam1());
-            holder.filterParam1.setTag(property);
+            holder.filterParam1.setText( property.getFilterParam1() );
+            holder.filterParam1.setTag( property );
 
-            holder.filterParam2.setText(property.getFilterParam2());
-            holder.filterParam2.setTag(property);
+            holder.filterParam2.setText( property.getFilterParam2() );
+            holder.filterParam2.setTag( property );
 
 
             return convertView;
@@ -843,8 +852,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         else if ( id == R.id.nav_twitter ) {
             // Creamos un Intent para lanzar el navegador Google Chrome que muestra la página web de Opendata Cáceres
             Intent intent = new Intent( Intent.ACTION_VIEW, Uri.parse( "http://twitter.com/opendatacc?lang=es" ) );
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.setPackage("com.android.chrome");
+            intent.addFlags( Intent.FLAG_ACTIVITY_NEW_TASK );
+            intent.setPackage( "com.android.chrome" );
             try {
                 // Lanzamos Google Chrome
                 getApplicationContext().startActivity( intent );
@@ -856,7 +865,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
 
         else if ( id == R.id.nav_advanced_options ) {
-
             // Creamos un Intent para lanzar la actividad que muestra la configuración avanzadade la consulta
             Intent intent_sparql_settings = new Intent( this, SparqlPreferencesActivity.class );
 
@@ -865,10 +873,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
             // Lanzamos la actividad de destino
             startActivity( intent_sparql_settings );
-
-        }
-
-        else if ( id == R.id.nav_settings ) {
 
         }
 

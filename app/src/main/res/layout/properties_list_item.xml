@@ -22,7 +22,7 @@
         android:layout_alignBaseline="@+id/selected"
         android:layout_alignBottom="@+id/selected"
         android:layout_toRightOf="@+id/selected"
-        android:text="TextView"
+        android:text="Property"
         android:textStyle="bold" />
 
     <CheckBox

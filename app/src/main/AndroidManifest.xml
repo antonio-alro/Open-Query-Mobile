@@ -35,24 +35,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ResultsActivity"
-            android:label="@string/title_activity_results"
-            android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.myapplication.MainActivity" />
-        </activity>
-        <activity
-            android:name=".ResultsActivityDetail"
-            android:label="@string/title_activity_results_activity_detail"
-            android:parentActivityName=".ResultsActivity"
-            android:theme="@style/AppTheme.NoActionBar" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.myapplication.ResultsActivity" />
-        </activity>
-        <activity
             android:name=".TabsActivity"
             android:configChanges="screenSize|orientation"
             android:label="@string/title_activity_tabs"

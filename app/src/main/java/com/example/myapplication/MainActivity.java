@@ -9,7 +9,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -37,7 +36,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.example.myapplication.datamodels.DataSet;
-import com.example.myapplication.datamodels.Resource;
+import com.example.myapplication.datamodels.Property;
 import com.example.myapplication.preferences.SparqlPreferencesActivity;
 import com.example.myapplication.utils.PrefixesManagerSingleton;
 import com.example.myapplication.utils.RequestsManager;
@@ -663,7 +662,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
 
             //Lanzamos la actividad que muestra los resultados de la consulta
-//        Intent intent_results = new Intent(this, ResultsActivity.class);
             Intent intent_results = new Intent(this, TabsActivity.class);
             // Pasamos el nombre del dataset y la consulta sparql como argumentos
             intent_results.putExtra("DATASET", dataSet);
@@ -674,44 +672,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
-//    public void doSparqlConsult(View view) {
-//        //Obtenemos el dataset seleccionado
-//        String dataSet = String.valueOf(dataSetSelector.getSelectedItem());
-//        String result1 = "Dataset seleccionado: " + dataSet + "\n";
-//
-//        //Obtenemos las properties seleccionadas
-//        String properties_text = new String();
-//        ArrayList<Property> propertiesOfDataSet = listDataAdapter.properties;
-//        for (int i = 0; i < properties.size(); i++) {
-//            Property property = propertiesOfDataSet.get(i);
-//            if (property.isSelected()) {
-//                properties_text += property.to_s();
-//            }
-//        }
-//        String result2 = "Seleccionadas: " + properties_text;
-//        Log.d( "SELECTED PROPERTIES: ", properties_text);
-//
-//        //Concatenamos ambas cosas
-//        String result = result1 + result2;
-//        //Mostramos el resultado en snackbar
-//        Snackbar.make(view, result, Snackbar.LENGTH_LONG)
-//                .setAction("Action", null).show();
-//
-//        // Construimos la consulta Sparql correspondiente
-//        DataSet data_set = new DataSet( dataSet.substring( dataSet.indexOf( ":" )+1, dataSet.length() ),
-//                dataSet.substring( 0, dataSet.indexOf( ":" ) )
-//        );
-//        Log.d( "---- MAIN BUILDER ----", String.valueOf( properties.size() ) );
-//        SparqlQueryBuilder builder = new SparqlQueryBuilder( data_set, properties );
-//        Log.d( "---- MAIN BUILDER ----", builder.to_s() );
-//        builder.buildSparqlQuery();
-//        Log.d( "---- SPARQL QUERY ----", builder.getSparqlQuery() );
-//
-//        //Lanzamos la actividad que muestra los resultados de la consulta
-////        Intent intent_results = new Intent(this, ResultsActivity.class);
-//        Intent intent_results = new Intent(this, TabsActivity.class);
-//        startActivity(intent_results);
-//    }
+
 
 
     /**

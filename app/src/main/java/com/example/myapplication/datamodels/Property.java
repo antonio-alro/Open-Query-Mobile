@@ -1,10 +1,9 @@
-package com.example.myapplication;
+package com.example.myapplication.datamodels;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 
 /**
  * Created by ANTONIO on 21/10/2015.

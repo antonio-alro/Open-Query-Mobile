@@ -1,14 +1,8 @@
 package com.example.myapplication.utils;
 
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.util.Log;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.example.myapplication.Property;
+import com.example.myapplication.datamodels.Property;
 import com.example.myapplication.datamodels.DataSet;
 import com.example.myapplication.datamodels.Resource;
 import com.google.android.gms.maps.model.LatLng;

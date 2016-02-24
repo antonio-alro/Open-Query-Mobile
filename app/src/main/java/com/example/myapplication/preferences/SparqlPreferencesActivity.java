@@ -3,16 +3,13 @@ package com.example.myapplication.preferences;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.ListPreference;
-import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 
 
-import com.example.myapplication.Property;
+import com.example.myapplication.datamodels.Property;
 import com.example.myapplication.R;
-import com.example.myapplication.datamodels.Resource;
 
 import java.util.ArrayList;
 

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Visor Opendata Cáceres</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_main">Visor Opendata Cáceres</string>
     <string name="title_activity_tabs">Resultados</string>
@@ -66,12 +66,17 @@
     <string name="tab_map_type_satellite">Satélite</string>
     <string name="tab_map_type_terrain">Terreno</string>
 
+    <string name="tab_map_infoWindow_title_current_position">Su posición</string>
+
     <string name="tab_map_textview_filter_distance">Filtro de distancia:</string>
 
     <string name="tab_map_title_dialog_check_gps">Activar GPS</string>
     <string name="tab_map_message_dialog_check_gps">El GPS está desactivado. ¿Quiere activarlo?</string>
     <string name="tab_map_positive_button_text_dialog_check_gps">Sí</string>
     <string name="tab_map_negative_button_text_dialog_check_gps">No</string>
+
+    <string name="tab_map_message_location">Obteniendo la posición actual...</string>
+    <string name="tab_map_message_route">Calculando ruta...</string>
 
 
     <!-- Strings for navigation drawer -->

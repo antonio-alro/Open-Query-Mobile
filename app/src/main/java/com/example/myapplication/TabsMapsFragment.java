@@ -484,7 +484,13 @@ public class TabsMapsFragment extends Fragment implements OnMapReadyCallback, Go
 
             // Add the marker in current location
             if ( mLastLocation != null ) {
-                addMarkerToMap(map, mLastLocation.getLatitude(), mLastLocation.getLongitude(), "", "", true);
+                String snippet = String.valueOf( mLastLocation.getLatitude() ) + ", "  + String.valueOf( mLastLocation.getLongitude() );
+                addMarkerToMap( map,
+                                mLastLocation.getLatitude(),
+                                mLastLocation.getLongitude(),
+                                getResources().getString( R.string.tab_map_infoWindow_title_current_position ),
+                                snippet,
+                                true );
             }
         }
 
@@ -564,6 +570,9 @@ public class TabsMapsFragment extends Fragment implements OnMapReadyCallback, Go
         // Get the current location of device (origin location of route)
         getLocation();
 
+        // Show message in Snackbar
+        Snackbar.make( getView(), getResources().getString( R.string.tab_map_message_route), Snackbar.LENGTH_LONG ).show();
+
         if ( resources.size() == 1 ) {
             // Get the destination of route
             String destinationLatitude  = resources.get( 0 ).getLatitude();
@@ -585,6 +594,9 @@ public class TabsMapsFragment extends Fragment implements OnMapReadyCallback, Go
      * Method to get the current location of the device
      */
     public void getLocation() {
+
+        // Show message in Snackbar
+        Snackbar.make( getView(), getResources().getString( R.string.tab_map_message_location), Snackbar.LENGTH_LONG ).show();
 
         // Get the location manager
         final LocationManager locationManager = (LocationManager) getActivity().getSystemService( getContext().LOCATION_SERVICE );
@@ -611,7 +623,13 @@ public class TabsMapsFragment extends Fragment implements OnMapReadyCallback, Go
             // Guardar la localización y mostrarla sobre el mapa
             mLastLocation = location;
             if ( location != null ) {
-                addMarkerToMap( map, location.getLatitude(), location.getLongitude(), "", "", true);
+                String snippet = String.valueOf( location.getLatitude() ) + ", "  + String.valueOf( location.getLongitude() );
+                addMarkerToMap( map,
+                                location.getLatitude(),
+                                location.getLongitude(),
+                                getResources().getString( R.string.tab_map_infoWindow_title_current_position ),
+                                snippet,
+                                true );
             }
 
             // Establecer el intervalo de tiempo para obtener las actualizaciones de la localización

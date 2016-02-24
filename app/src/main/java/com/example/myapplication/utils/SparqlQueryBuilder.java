@@ -2,7 +2,7 @@ package com.example.myapplication.utils;
 
 import android.util.Log;
 
-import com.example.myapplication.Property;
+import com.example.myapplication.datamodels.Property;
 import com.example.myapplication.datamodels.DataSet;
 
 import java.util.ArrayList;

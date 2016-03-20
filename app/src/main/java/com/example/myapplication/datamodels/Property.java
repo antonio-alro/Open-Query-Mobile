@@ -255,6 +255,22 @@ public class Property implements Parcelable {
     }
 
 
+    /**
+     * Method to check if a property must be default selected
+     * @return  true if the property is rdfs:label, geo:lat or geo:long
+     */
+    public Boolean isDefaultProperty() {
+        Boolean isDefault = false;
+
+        if ( this.getName().equals( "rdfs:label" ) ||
+                this.getName().equals( "geo:lat" ) ||
+                this.getName().equals( "geo:long" ) ) {
+            isDefault = true;
+        }
+
+        return isDefault;
+    }
+
 
     /**
      * Method to show PROPERTY class as String

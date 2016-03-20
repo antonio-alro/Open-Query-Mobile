@@ -598,7 +598,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      */
     public void doSparqlConsult(View view) {
         //Obtenemos el dataset seleccionado
-        String dataSet = String.valueOf(dataSetSelector.getSelectedItem());
+        String dataSet = String.valueOf( dataSetSelector.getSelectedItem() );
 
         //Obtenemos las properties seleccionadas
         String properties_text = new String();

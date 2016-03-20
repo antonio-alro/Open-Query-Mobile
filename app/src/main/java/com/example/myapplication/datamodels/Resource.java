@@ -134,9 +134,16 @@ public class Resource implements Parcelable {
      */
     public String getLabel() {
         String label = "";
+
         if ( this.getPropertiesValues().size() >= 2 ) {
-            String key = (String) this.getPropertiesValues().keySet().toArray()[1];
-            label = key + ": " + this.getPropertiesValues().get( key );
+
+            String key = "label";
+            if ( !this.getPropertiesValues().keySet().contains( key ) ) {
+                key = (String) this.getPropertiesValues().keySet().toArray()[1];
+                label = key + ": ";
+            }
+            label += this.getPropertiesValues().get( key );
+
         }
         return label;
     }

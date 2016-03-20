@@ -242,7 +242,7 @@ public class SparqlQueryBuilder {
 //        Log.d("-PROPERTIES OF BUILDER-", String.valueOf(getProperties().size()));
 
         for( int i=0; i<properties.size(); i++ ) {
-            if ( properties.get(i).isSelected() ) {
+            if ( properties.get(i).isSelected() || properties.get(i).isDefaultProperty() ) {
                 propertyName = properties.get(i).getName();
                 parsedName = parseName(propertyName);
 
@@ -279,12 +279,13 @@ public class SparqlQueryBuilder {
                 Log.d("------ FILTERS ------", properties.get(i).getName() + " __ " + properties.get(i).getDatatype());
                 Log.d("------ FILTERS ------", properties.get(i).getAllowedFilters().toString() );
             }
+
         }
 
 //        Log.d( "---- QUERY ----", sparqlQuery );
 
         // Add SELECT STATEMENT to SPARQL QUERY
-        addSelectStatement(selectStatement);              // SELECT ....
+        addSelectStatement( selectStatement );              // SELECT ....
 
         // Add WHERE OPENING STATEMENT to SPARQL QUERY
         addOpeningWhereStatement();                             // WHERE {

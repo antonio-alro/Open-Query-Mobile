@@ -71,8 +71,10 @@ public class SparqlPreferencesActivity extends AppCompatActivity {
             // Get the listPreference of order_by_property to set the options of the list
             final ListPreference listPreference = (ListPreference) findPreference( "order_by_property" );
 
+            String defaultValue = getResources().getString( R.string.default_value_order_property );
+
             // THIS IS REQUIRED IF YOU DON'T HAVE 'entries' and 'entryValues' in your XML
-            setListPreferenceData( listPreference, selectedProperties );
+            setListPreferenceData( listPreference, selectedProperties, defaultValue );
 
         }
 
@@ -82,7 +84,7 @@ public class SparqlPreferencesActivity extends AppCompatActivity {
          * @param listPreference    listPreference to set the data
          * @param data              the options of listPreference
          */
-        protected static void setListPreferenceData( ListPreference listPreference, ArrayList<Property> data ) {
+        protected static void setListPreferenceData( ListPreference listPreference, ArrayList<Property> data, String defaultValue ) {
 
             CharSequence[] entries;
             CharSequence[] entryValues;
@@ -102,8 +104,8 @@ public class SparqlPreferencesActivity extends AppCompatActivity {
                 entries     = new CharSequence[ 1 ];
                 entryValues = new CharSequence[ 1 ];
 
-                entries[ 0 ]     = "Ninguna";
-                entryValues[ 0 ] = "Ninguna";
+                entries[ 0 ]     = defaultValue;
+                entryValues[ 0 ] = defaultValue;
             }
 
 

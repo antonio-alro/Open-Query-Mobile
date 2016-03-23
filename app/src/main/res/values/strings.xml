@@ -89,6 +89,7 @@
     <string name="navigation_drawer_menu_item_link_opendata">Opendata Cáceres</string>
     <string name="navigation_drawer_menu_item_twitter_opendata">Twitter Opendata Cáceres</string>
     <string name="navigation_drawer_menu_item_advanced_options">Opciones avanzadas</string>
+    <string name="navigation_drawer_menu_item_data_source_options">Fuente de datos</string>
     <string name="navigation_drawer_menu_item_settings">Ajustes</string>
     <string name="navigation_drawer_menu_item_about">Acerca de</string>
     <string name="navigation_drawer_menu_section_title_configuration">Configuración</string>
@@ -111,6 +112,7 @@
     <string name="title_order_property">Propiedad para ordenar</string>
     <string name="summary_order_property">Selecciona la propiedad por la que ordenar los resultados</string>
     <string name="title_dialog_order_property">Indicar propiedad</string>
+    <string name="default_value_order_property">Ninguna</string>
 
     <string name="title_limit_check">Limitar el número de resultados</string>
     <string name="summary_limit_check">Activar / desactivar la limitación de los resultados de las consultas realizadas</string>
@@ -125,6 +127,24 @@
     <string name="title_offset">Número de resultados a saltar</string>
     <string name="summary_offset">Selecciona el número de resultados que desea saltar</string>
     <string name="title_dialog_offset">Introduce valor</string>
+
+
+    <!-- Strings for DATA SOURCE settings activity -->
+    <string name="title_activity_datasourcepreferences">Fuente de datos</string>
+
+    <string name="categorty_data_source">Fuente de datos</string>
+
+    <string name="title_data_source_check">Seleccionar la fuente de los datos</string>
+    <string name="summary_data_source_check">Activar / desactivar la elección de la fuente de los datos</string>
+
+    <string name="title_data_source">Fuente de datos</string>
+    <string name="summary_data_source">Selecciona la fuente de los datos</string>
+    <string name="title_dialog_data_source">Indicar fuente de datos</string>
+    <string name="default_value_data_source">Ninguna</string>
+
+    <string name="title_new_data_source">Nueva fuente de datos</string>
+    <string name="summary_new_data_source">Introduce una nueva fuente de datos</string>
+    <string name="title_dialog_new_data_source">Introduce URL</string>
 
 
     <!-- Strings for settings activity -->

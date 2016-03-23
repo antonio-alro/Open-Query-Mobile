@@ -37,6 +37,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.example.myapplication.datamodels.DataSet;
 import com.example.myapplication.datamodels.Property;
+import com.example.myapplication.preferences.DataSourcePreferencesActivity;
 import com.example.myapplication.preferences.SparqlPreferencesActivity;
 import com.example.myapplication.utils.PrefixesManagerSingleton;
 import com.example.myapplication.utils.RequestsManager;
@@ -834,6 +835,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
             // Lanzamos la actividad de destino
             startActivity( intent_sparql_settings );
+
+        }
+
+        else if ( id == R.id.nav_data_source_options ) {
+            // Creamos un Intent para lanzar la actividad que muestra la configuración avanzadade la consulta
+            Intent intent_data_source_settings = new Intent( this, DataSourcePreferencesActivity.class );
+
+            // Lanzamos la actividad de destino
+            startActivity( intent_data_source_settings );
 
         }
 

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:theme="@style/AppTheme.AppBarOverlay" >
+
+    <PreferenceCategory android:title="@string/categorty_data_source">
+
+        <SwitchPreference
+            android:key="data_source_check"
+            android:title="@string/title_data_source_check"
+            android:summary="@string/summary_data_source_check"
+            android:defaultValue="false" />
+
+        <ListPreference
+            android:dependency="data_source_check"
+            android:key="data_source"
+            android:title="@string/title_data_source"
+            android:summary="@string/summary_data_source"
+            android:dialogTitle="@string/title_dialog_data_source" />
+
+        <EditTextPreference
+            android:dependency="data_source_check"
+            android:key="new_data_source"
+            android:title="@string/title_new_data_source"
+            android:summary="@string/summary_new_data_source"
+            android:dialogTitle="@string/title_dialog_new_data_source"
+            android:defaultValue="http://" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

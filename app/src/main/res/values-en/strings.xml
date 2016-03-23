@@ -89,6 +89,7 @@
     <string name="navigation_drawer_menu_item_link_opendata">Opendata Cáceres</string>
     <string name="navigation_drawer_menu_item_twitter_opendata">Twitter Opendata Cáceres</string>
     <string name="navigation_drawer_menu_item_advanced_options">Advanced options</string>
+    <string name="navigation_drawer_menu_item_data_source_options">Data source</string>
     <string name="navigation_drawer_menu_item_settings">Settings</string>
     <string name="navigation_drawer_menu_item_about">About</string>
     <string name="navigation_drawer_menu_section_title_configuration">Configuration</string>
@@ -111,6 +112,7 @@
     <string name="title_order_property">Property to order</string>
     <string name="summary_order_property">Choose the property by that results are sorted</string>
     <string name="title_dialog_order_property">Indicate property</string>
+    <string name="default_value_order_property">None</string>
 
     <string name="title_limit_check">Limit the number of results</string>
     <string name="summary_limit_check">Enable / disable limitation of query results</string>
@@ -125,6 +127,24 @@
     <string name="title_offset">Number of results to skip</string>
     <string name="summary_offset">Select the number of results to be skipped</string>
     <string name="title_dialog_offset">Enter value</string>
+
+
+    <!-- Strings for DATA SOURCE settings activity -->
+    <string name="title_activity_datasourcepreferences">Data Source</string>
+
+    <string name="categorty_data_source">Data Source</string>
+
+    <string name="title_data_source_check">Select the data source</string>
+    <string name="summary_data_source_check">Enable / disable data source selection</string>
+
+    <string name="title_data_source">Data source</string>
+    <string name="summary_data_source">Choose the data source</string>
+    <string name="title_dialog_data_source">Indicate data source</string>
+    <string name="default_value_data_source">None</string>
+
+    <string name="title_new_data_source">New data source</string>
+    <string name="summary_new_data_source">Introduce a new data source</string>
+    <string name="title_dialog_new_data_source">Enter URL</string>
 
 
     <!-- Strings for settings activity -->

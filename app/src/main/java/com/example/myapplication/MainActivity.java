@@ -39,6 +39,7 @@ import com.example.myapplication.datamodels.DataSet;
 import com.example.myapplication.datamodels.Property;
 import com.example.myapplication.preferences.DataSourcePreferencesActivity;
 import com.example.myapplication.preferences.SparqlPreferencesActivity;
+import com.example.myapplication.utils.PreferencesReader;
 import com.example.myapplication.utils.PrefixesManagerSingleton;
 import com.example.myapplication.utils.RequestsManager;
 import com.example.myapplication.utils.SparqlQueryBuilder;
@@ -177,7 +178,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         propertiesListView.setOnItemClickListener( new PropertiesListViewOnItemClickListener() );
 
         // Asignamos un layout por defecto para cuando la lista este vacía
-        propertiesListView.setEmptyView( findViewById(R.id.emptyElementPropertiesList ) );
+        propertiesListView.setEmptyView(findViewById(R.id.emptyElementPropertiesList));
 
     }
 
@@ -365,7 +366,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                          + "\n"                                                                                 //"que desea en la consulta y seleccione los filtros de consulta sobre los datos.\n" +
                          + getResources().getString( R.string.help_message_content_properties_list_part_2 );    //"Si marca la casilla 'Obligatorio' no se mostraran aquellos datos que " +
                                                                                                                 //"no posean esa propiedad.";
-        showDialogMessage( view, title, message );
+        showDialogMessage(view, title, message);
 
     }
 
@@ -386,7 +387,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // Al crearlo le pasamos dos argumentos (el título y el mensaje)
         Bundle args = new Bundle();
         args.putString( messageDialog.ARG_TITLE, title );
-        args.putString( messageDialog.ARG_MESSAGE, message );
+        args.putString(messageDialog.ARG_MESSAGE, message);
         messageDialog.setArguments(args);
         // Mostrar el diálogo
         messageDialog.show( fragmentManager, "tag"+title );
@@ -458,7 +459,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     public void onResponse(JSONObject response) {
                         // Get the dataSets
                         dataSets.clear();
-                        dataSets = RequestsManager.parseJSONDataSets( response );
+                        dataSets = RequestsManager.parseJSONDataSets(response);
                         // Close the progress Dialog
                         progressDialog.dismiss();
                         // Fill the layout with the data
@@ -546,15 +547,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
 //        String url = "http://opendata.caceres.es/sparql?default-graph-uri=&query=select+distinct+%3Fconcept%0D%0A+++where{%0D%0A++++++%3FURI+rdf%3Atype+%3Fconcept.%0D%0A+++}%0D%0A+++order+by+%28%3Fconcept%29&format=json&timeout=0&debug=on";
 
+        String sparqlEndpoint = new PreferencesReader( this.getApplicationContext() ).readDataSourcePreferences();
+
         String sparqlQuery = "select distinct ?concept " +
                                 "where { " +
                                     "?URI rdf:type ?concept. " +
                                 "} order by (?concept)";
 
-        SparqlURIBuilder uriBuilder = new SparqlURIBuilder( "", sparqlQuery, "json" );  //graph, sparql query and format
+        SparqlURIBuilder uriBuilder = new SparqlURIBuilder( sparqlEndpoint, "", sparqlQuery, "json" );  //graph, sparql query and format
         String url = uriBuilder.getUri();
 
-        createJSONResquestDataSets( url );
+        createJSONResquestDataSets(url);
     }
 
     /**
@@ -565,6 +568,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // CONSULTA SPARQL PARA OBTENER LAS PROPERTIES DE UN DATASET
 
 //        String url = "http://opendata.caceres.es/sparql?default-graph-uri=&query=select+distinct+%3Fp+%3Fproperties+Min%28%3Fy%29%0D%0A++++++++++++++++where+{%0D%0A++++++++++++++++++++{%0D%0A+++++++++++++++++++++++++%3Fu+a+om%3ACafeBar.%0D%0A+++++++++++++++++++++++++%3Fu+%3Fproperties+%3Fy.%0D%0A+++++++++++++++++++++++++FILTER+isLiteral%28%3Fy%29%0D%0A++++++++++++++++++++}%0D%0A++++++++++++++++++++UNION%0D%0A++++++++++++++++++++{%0D%0A+++++++++++++++++++++++++%3Fu+a+om%3ACafeBar.%0D%0A+++++++++++++++++++++++++%3Fu+%3Fp+_%3ABlankNode.%0D%0A+++++++++++++++++++++++++_%3ABlankNode+%3Fproperties+%3Fy.%0D%0A++++++++++++++++++++}%0D%0A+++++++++++++++}%0D%0A+++++++++++++++order+by+%28%3Fp%29&format=json&timeout=0&debug=on";
+
+        String sparqlEndpoint = new PreferencesReader( this.getApplicationContext() ).readDataSourcePreferences();
+        Log.d( "SPARQL ENDPOINT", sparqlEndpoint );
 
         String sparqlQuery = "select distinct ?p ?properties Min(?y) " +
                                 "where { " +
@@ -580,7 +586,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                     "} " +
                                 "} order by (?p)";
 
-        SparqlURIBuilder uriBuilder = new SparqlURIBuilder( "", sparqlQuery, "json" );  //graph, sparql query and format
+        SparqlURIBuilder uriBuilder = new SparqlURIBuilder( sparqlEndpoint, "", sparqlQuery, "json" );  //graph, sparql query and format
         String url = uriBuilder.getUri();
 
         createJSONResquestProperties(url);
@@ -644,7 +650,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     dataSet.substring(0, dataSet.indexOf(":")));
 
             // Get the sparql preferences values
-            ArrayList<String> sparqlPreferences = readSparqlPreferences();
+//            ArrayList<String> sparqlPreferences = readSparqlPreferences();
+            ArrayList<String> sparqlPreferences = new PreferencesReader( this.getApplicationContext() ).readSparqlPreferences();
             String orderType     = sparqlPreferences.get( 0 );
             String orderProperty = sparqlPreferences.get( 1 );
             String limitValue    = sparqlPreferences.get( 2 );
@@ -697,59 +704,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
 
-    // METHOD TO READ PREFERENCES VALUES
-    /**
-     * Method to read the sparql preferences from the App Preferences
-     * @return  the sparql preferences ( orderType, orderProperty, limitValue, offsetValue)
-     */
-    public ArrayList<String> readSparqlPreferences() {
-
-        ArrayList<String> preferences = new ArrayList<>();
-        String orderType     = "";
-        String orderProperty = "";
-        String limitValue    = "0";
-        String offsetValue   = "0";
-
-        // Get the preferences
-        final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-
-        Boolean orderEnabled  = sharedPreferences.getBoolean("order_by_check", false);
-        Boolean limitEnabled  = sharedPreferences.getBoolean( "limit_check", false );
-        Boolean offsetEnabled = sharedPreferences.getBoolean( "offset_check", false );
-
-        if ( orderEnabled ) {
-            if ( sharedPreferences.getString( "order_by_type", "" ).equals( "Ascendentemente" ) ) {
-                orderType = "ASC";
-            }
-            else if ( sharedPreferences.getString( "order_by_type", "" ).equals( "Descendentemente" ) ) {
-                orderType = "DESC";
-            }
-            orderProperty = sharedPreferences.getString( "order_by_property", "" );
-        }
-
-        if ( limitEnabled ) {
-            limitValue = sharedPreferences.getString( "limit", "" );
-        }
-
-        if ( offsetEnabled ) {
-            offsetValue = sharedPreferences.getString( "offset", "" );;
-        }
-
-        preferences.add( orderType );
-        preferences.add( orderProperty );
-        preferences.add( limitValue );
-        preferences.add( offsetValue );
-
-        return preferences;
-    }
-
-
-
-
-
-
-
-
 
 
 
@@ -769,14 +723,28 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        switch (item.getItemId()) {
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+            case R.id.action_refresh:
+                getAndSavePrefixes();
+                return true;
+
+            case R.id.action_settings:
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
         }
 
-        return super.onOptionsItemSelected(item);
+
+//        int id = item.getItemId();
+//
+//        //noinspection SimplifiableIfStatement
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
+//
+//        return super.onOptionsItemSelected(item);
     }
 
 

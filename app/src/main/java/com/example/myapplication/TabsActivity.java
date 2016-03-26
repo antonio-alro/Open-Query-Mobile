@@ -33,6 +33,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.myapplication.datamodels.Resource;
+import com.example.myapplication.utils.PreferencesReader;
 import com.example.myapplication.utils.RequestsManager;
 import com.example.myapplication.utils.SparqlURIBuilder;
 import com.example.myapplication.utils.VolleySingleton;
@@ -149,7 +150,8 @@ public class TabsActivity extends AppCompatActivity implements AdapterView.OnIte
      */
     public void getRequestedResources() {
 
-        SparqlURIBuilder uriBuilder = new SparqlURIBuilder("", sparqlQuery, "json");  //graph, sparql query and format
+        String sparqlEndpoint = new PreferencesReader( this.getApplicationContext() ).readDataSourcePreferences();
+        SparqlURIBuilder uriBuilder = new SparqlURIBuilder( sparqlEndpoint, "", sparqlQuery, "json" );  //graph, sparql query and format
         String url = uriBuilder.getUri();
 
         createJSONResquestResources(url);

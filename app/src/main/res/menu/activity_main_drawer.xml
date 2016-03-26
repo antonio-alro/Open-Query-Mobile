@@ -20,7 +20,7 @@
                 android:title="@string/navigation_drawer_menu_item_advanced_options" />
             <item
                 android:id="@+id/nav_data_source_options"
-                android:icon="@mipmap/my_icon_settings"
+                android:icon="@mipmap/my_icon_rdf"
                 android:title="@string/navigation_drawer_menu_item_data_source_options" />
         </menu>
     </item>

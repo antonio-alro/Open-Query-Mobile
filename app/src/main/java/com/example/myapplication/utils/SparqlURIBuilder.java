@@ -28,16 +28,18 @@ public class SparqlURIBuilder {
 
     /**
      * PARAMETRIZED CONSTRUCTOR for SparqlURIBuilder class
+     * @param preQuery  sparql endpoint of the open data portal
      * @param graph     gragh for sparql query
      * @param query     the sparql query
      * @param format    format of response
      */
-    public SparqlURIBuilder(String graph, String query, String format) {
+    public SparqlURIBuilder(String preQuery, String graph, String query, String format) {
         super();
-        this.setPreQuery("http://opendata.caceres.es/sparql");
-        this.setGraph(graph);
-        this.setSparqlQuery(query);
-        this.setFormat(format);
+//        this.setPreQuery("http://opendata.caceres.es/sparql");
+        this.setPreQuery( preQuery );
+        this.setGraph( graph );
+        this.setSparqlQuery( query );
+        this.setFormat( format );
 
     }
 

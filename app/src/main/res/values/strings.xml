@@ -2,7 +2,7 @@
     <string name="app_name">Open Query Mobile</string>
     <string name="action_settings">Settings</string>
     <string name="action_refresh">Refrescar</string>
-    <string name="title_activity_main">Visor Opendata Cáceres</string>
+    <string name="title_activity_main">Open Query Mobile</string>
     <string name="title_activity_tabs">Resultados</string>
 
     <string name="title_activity_results">Resultados</string>                       <!-- BORRAR CUANDO SE BORRE LA ACTIVITY -->
@@ -84,7 +84,7 @@
     <string name="navigation_drawer_open">Abrir navigation drawer</string>
     <string name="navigation_drawer_close">Cerrar navigation drawer</string>
 
-    <string name="navigation_drawer_header_title">Visor Opendata Cáceres</string>
+    <string name="navigation_drawer_header_title">Open Query Mobile</string>
     <string name="navigation_drawer_header_subtitle">Visualización de datos mediante la explotación de los puntos de consulta SPARQL de varios portales Open Data</string>
 
     <string name="navigation_drawer_menu_item_link_opendata">Opendata Cáceres</string>

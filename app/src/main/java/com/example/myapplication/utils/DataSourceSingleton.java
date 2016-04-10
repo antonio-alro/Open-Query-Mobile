@@ -42,6 +42,7 @@ public class DataSourceSingleton {
     public ArrayList getDataSources() {
         if (mDataSources == null) {
             mDataSources = new ArrayList<String>();
+            fillDataSources();
         }
         return mDataSources;
     }
@@ -56,11 +57,22 @@ public class DataSourceSingleton {
     }
 
     /**
-     * METHOD to add a new pair (prefix, URI) to the prefixes map of the class
+     * METHOD to add a new data source to the list of the class
      * @param dataSource    data source url
      */
     public void addToDataSources( String dataSource ) {
         getDataSources().add( dataSource );
+    }
+
+
+    /**
+     *  METHOD to fill the list of data sources with sample data
+     */
+    public void fillDataSources() {
+        ArrayList<String> dataSources = getDataSources();
+        dataSources.add( "http://opendata.caceres.es/sparql" );
+        dataSources.add( "http://opendata.unex.es/sparql" );
+        dataSources.add( "http://dbpedia.org/sparql" );
     }
 
 

@@ -56,6 +56,30 @@ public class RequestsManager {
     }
 
 
+    public static void parseJSONPrefixes( JSONObject jsonObject ) {
+
+        JSONArray prefixes = jsonObject.names();
+
+        if ( prefixes != null ) {
+            for (int i = 0; i < prefixes.length(); i++) {
+                try {
+                    // Get the prefix
+                    String prefix = prefixes.getString( i );
+
+                    // Get the uri
+                    String URI = jsonObject.getString( prefix );
+
+                    //Save the prefixes and its URI in a map
+                    PrefixesManagerSingleton.getInstance().addToPrefixes( prefix, URI );
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+
     public static JSONArray parseJSONGeneral( JSONObject jsonObject ) {
         // Variables locales
         JSONObject results;     // Guarda el objeto que contiene los resultados de la consulta

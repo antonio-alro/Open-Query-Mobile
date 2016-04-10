@@ -86,6 +86,11 @@ public class SparqlQueryBuilder {
 
 
     //METHODS TO BUILD A SYNTAX OF SPARQL QUERY
+    public void addPrefixStatement( String prefixStatement ) {
+        sparqlQuery += addSinglePrefixStatement( getDataset().getPrefix() );
+        sparqlQuery += prefixStatement;
+    }
+
     public void addSelectStatement( String selectStatement ) {
         sparqlQuery += selectStatement;
     }
@@ -95,6 +100,13 @@ public class SparqlQueryBuilder {
     }
 
 
+
+    // PREFIX
+    public String addSinglePrefixStatement ( String prefix ) {
+        String uri = PrefixesManagerSingleton.getInstance().getKeyFromValue( prefix );
+//        Log.d( "PREFIX SENTENCE ", "PREFIX " + prefix + ": <" + uri + "> " );
+        return "PREFIX " + prefix + ": <" + uri + "> ";
+    }
 
     // SELECT
     public String addVariableToSelectStatement( String variableName ) {
@@ -231,6 +243,7 @@ public class SparqlQueryBuilder {
     //BUILD SPARQL QUERY
     public void buildSparqlQuery() {
 
+        String prefixStatement = "";
         String selectStatement = "SELECT ?uri ";
         String whereStatement  = "";
         String filterStatement = "";
@@ -259,6 +272,10 @@ public class SparqlQueryBuilder {
 
                 // Add the variable statement in where of the current property to WHERE STATEMENT
                 if (isPropertyOfLevelTwo(propertyName)) {
+                    // Add the prefix statement with prefix and uri of the property
+                    prefixStatement += addSinglePrefixStatement( parsedName.get( "variableType1" ).split( ":" )[0] );
+                    prefixStatement += addSinglePrefixStatement( parsedName.get( "variableType2" ).split( ":" )[0] );
+
                     whereStatement += addCompoundVariableWhereStatement( parsedName.get("variableName1"),
                                                                          parsedName.get("variableType1"),
                                                                          parsedName.get("variableName2"),
@@ -266,6 +283,9 @@ public class SparqlQueryBuilder {
                                                                          properties.get(i).isMandatory()
                                                                        );
                 } else {
+                    // Add the prefix statement with prefix and uri of the property
+                    prefixStatement += addSinglePrefixStatement( parsedName.get( "variableType2" ).split( ":" )[0] );
+
                     whereStatement += addSingleVariableWhereStatement( parsedName.get("variableName2"),
                                                                        parsedName.get("variableType2"),
                                                                        properties.get(i).isMandatory()
@@ -283,6 +303,9 @@ public class SparqlQueryBuilder {
         }
 
 //        Log.d( "---- QUERY ----", sparqlQuery );
+
+        // Add PREFIX STATEMENTS to SPARQL QUERY
+        addPrefixStatement( prefixStatement );              // PREFIX ...
 
         // Add SELECT STATEMENT to SPARQL QUERY
         addSelectStatement( selectStatement );              // SELECT ....

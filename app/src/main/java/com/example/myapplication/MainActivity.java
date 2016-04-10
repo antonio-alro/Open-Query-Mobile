@@ -415,9 +415,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     public void onResponse(String response) {
                         // Parse the response to save the prefixes
                         PrefixesManagerSingleton.getInstance().parseResponseHTML( response );
+                        Log.d("NUMBER OF PREFIXES 1 ", String.valueOf(PrefixesManagerSingleton.getInstance().countPrefixes()));
 
-                        // Get the datasets through HTTP request from opendata caceres
-                        getDataSets();
+//                        // Get the datasets through HTTP request from opendata caceres
+//                        getDataSets();
+
+                        getPrefixesFromPrefixcc();
 
                         // Close the progress Dialog
                         progressDialog.dismiss();
@@ -441,6 +444,46 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         progressDialog.show();
     }
 
+
+    /**
+     * Método Método que ejecuta una petición HTTP para obtener los datasets. Devuelve una respuesta en formato JSON
+     * @param url   URL to execute the request
+     */
+    public void createJSONRequestPrefixes( String url ) {
+
+        final ProgressDialog progressDialog = new ProgressDialog( MainActivity.this );
+
+        // Request a JSON response from the provided URL.
+        JsonObjectRequest jsObjRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        // Parse the response to save the prefixes
+                        RequestsManager.parseJSONPrefixes(response);
+                        Log.d("NUMBER OF PREFIXES 2 ", String.valueOf(PrefixesManagerSingleton.getInstance().countPrefixes()));
+                        Log.d( "PREFIXES ", PrefixesManagerSingleton.getInstance().getTreeMapString() );
+                        // Get the datasets through HTTP request from opendata caceres
+                        getDataSets();
+
+                        // Close the progress Dialog
+                        progressDialog.dismiss();
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Close the progress Dialog
+                        progressDialog.dismiss();
+                    }
+                });
+
+        // Add the request to the RequestQueue.
+        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue( jsObjRequest );
+
+        // Initialize the progress dialog and show it
+        progressDialog.setTitle( getResources().getString( R.string.progress_dialog_title ) );    //"Obteniendo datos..."
+        progressDialog.setMessage( getResources().getString( R.string.progress_dialog_message ) ); //"Espere un momento..."
+        progressDialog.show();
+    }
 
     /**
      * Método que ejecuta una petición HTTP para obtener los datasets. Devuelve una respuesta en formato JSON
@@ -535,8 +578,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
      * Get the prefixes and theirs URI and save all in a map
      */
     public void getAndSavePrefixes() {
-        String url = "http://opendata.caceres.es/sparql?nsdecl";
-        createStringRequest(url);
+//        String url = "http://opendata.caceres.es/sparql?nsdecl";
+//        createStringRequest( url );
+        String url = "http://prefix.cc/popular/all.file.json";
+        createJSONRequestPrefixes(url);
+    }
+
+    /**
+     * Get the prefixes and theirs URI and save all in a map
+     */
+    public void getPrefixesFromPrefixcc() {
+        String url = "http://prefix.cc/popular/all.file.json";
+        createJSONRequestPrefixes( url );
     }
 
     /**
@@ -572,7 +625,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         String sparqlEndpoint = new PreferencesReader( this.getApplicationContext() ).readDataSourcePreferences();
         Log.d( "SPARQL ENDPOINT", sparqlEndpoint );
 
-        String sparqlQuery = "select distinct ?p ?properties Min(?y) " +
+        String prefix = dataset.split( ":")[ 0 ];
+        String uri    = PrefixesManagerSingleton.getInstance().getKeyFromValue( prefix );
+        String sparqlQuery = "PREFIX " + prefix + ": <" + uri + ">" +
+                             "select distinct ?p ?properties Min(?y) " +
                                 "where { " +
                                     "{ " +
                                         "?u a " + dataset + ". " +

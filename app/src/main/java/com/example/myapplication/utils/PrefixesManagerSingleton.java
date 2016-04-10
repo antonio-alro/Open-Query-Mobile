@@ -61,7 +61,18 @@ public class PrefixesManagerSingleton {
      * @param uri       prefix URI
      */
     public void addToPrefixes( String prefix, String uri ) {
-        getPrefixes().put(prefix, uri);
+        if ( getPrefixes().get( uri ) == null ) {
+            getPrefixes().put( uri, prefix );
+        }
+    }
+
+    public String getKeyFromValue( Object value ) {
+        for ( Object key : getPrefixes().keySet() ) {
+            if ( getPrefixes().get( key ).equals( value ) ) {
+                return key.toString();
+            }
+        }
+        return null;
     }
 
 
@@ -69,7 +80,7 @@ public class PrefixesManagerSingleton {
      * Parse the HTML code of response and save the prefixes and theirs URI in a map
      * @param response HTML code of response
      */
-    public void parseResponseHTML( String response){
+    public void parseResponseHTML( String response ){
         String[] temp;
         String prefix;
         String URI;
@@ -79,14 +90,14 @@ public class PrefixesManagerSingleton {
 
         for (int i=1; i<prefixes_source.length; i++){
             //Split the row
-            temp = prefixes_source[i].split( "</td><td>" );
+            temp = prefixes_source[i].split("</td><td>" );
             //Get the prefix
             prefix = temp[ 0 ];
             //Get the URI for the prefix
             URI = temp[ 1 ].substring( 0 , temp[1].indexOf("</td></tr>") );
 
             //Save the prefixes and its URI in a map
-            addToPrefixes( URI, prefix );
+            addToPrefixes(prefix, URI );
         }
     }
 
@@ -99,6 +110,7 @@ public class PrefixesManagerSingleton {
 
         while (it.hasNext()) {
             Map.Entry e = (Map.Entry)it.next();
+            Log.d( "PREFIXES ", e.getKey() + " - " + e.getValue() );
             results = results.concat( e.getKey() + "\n" + e.getValue() + "\n\n" );
         }
 

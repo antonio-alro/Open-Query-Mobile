@@ -148,6 +148,10 @@
     <string name="title_dialog_new_data_source">Enter URL</string>
 
 
+    <!-- Strings for ADS -->
+    <string name="banner_ad_unit_id">ca-app-pub-8806067539489002/3940010373</string>
+
+
     <!-- Strings for settings activity -->
     <!--<string name=""></string>-->
 

@@ -45,6 +45,8 @@ import com.example.myapplication.utils.RequestsManager;
 import com.example.myapplication.utils.SparqlQueryBuilder;
 import com.example.myapplication.utils.SparqlURIBuilder;
 import com.example.myapplication.utils.VolleySingleton;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import org.json.JSONObject;
 
@@ -93,6 +95,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         NavigationView navigationView = (NavigationView) findViewById( R.id.nav_view );
         navigationView.setNavigationItemSelectedListener( this );
+
+        // LOAD THE ADS (AdMob)
+        AdView mAdView = (AdView) findViewById( R.id.adView );
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd( adRequest );
 
         //CODIGO NUEVO PARA GESTIONAR EL SPINNER DE LOS DATASETS
         //Generate spinner from ArrayList

@@ -152,6 +152,24 @@
     <string name="banner_ad_unit_id">ca-app-pub-8806067539489002/3940010373</string>
 
 
+    <!-- Strings for About Us activity -->
+    <string name="title_activity_about_us">Información</string>
+
+    <string name="about_us_app_info_1">Visualización de datos mediante la explotación de los puntos
+        de consulta SPARQL de los portales Open Data que cumplan las recomendaciones del W3C
+    </string>
+    <string name="about_us_app_info_2">La aplicación permite obtener, de forma universal, datos
+        relativos a las clases registradas en un portal y a las propiedades de las mismas, aplicando
+        filtros según el tipo de dato de esas propiedades
+    </string>
+
+    <string name="about_us_author">Autor</string>
+    <string name="about_us_author_value">Antonio Álvarez Rodrigo</string>
+
+    <string name="about_us_contact">Contacto</string>
+    <string name="about_us_contact_value">alrodev5@gmail.com</string>
+
+
     <!-- Strings for settings activity -->
     <!--<string name=""></string>-->
 

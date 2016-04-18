@@ -879,7 +879,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
 
         else if ( id == R.id.nav_about ) {
+            // Creamos un Intent para lanzar la actividad que muestra la información sobre la aplicación
+            Intent intent_about_us = new Intent( this, AboutUsActivity.class );
 
+            // Lanzamos la actividad de destino
+            startActivity( intent_about_us );
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById( R.id.drawer_layout );

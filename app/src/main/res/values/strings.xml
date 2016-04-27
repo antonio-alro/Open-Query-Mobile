@@ -169,6 +169,8 @@
     <string name="about_us_contact">Contacto</string>
     <string name="about_us_contact_value">alrodev5@gmail.com</string>
 
+    <string name="about_us_email_signature">Enviado desde la app Open Query Mobile</string>
+
 
     <!-- Strings for settings activity -->
     <!--<string name=""></string>-->

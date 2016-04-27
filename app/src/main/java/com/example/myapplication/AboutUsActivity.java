@@ -23,8 +23,15 @@ public class AboutUsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Intent mailIntent = new Intent ( Intent.ACTION_VIEW ,
-                        Uri.parse( "mailto:" + getResources().getString( R.string.about_us_contact_value ) ) );
+                //Parts of email
+                String to        = getResources().getString( R.string.about_us_contact_value );
+                String signature = "\n\n\n" +
+                                   "----------------------------------------------" +
+                                   "\n" +
+                                   getResources().getString( R.string.about_us_email_signature );
+
+                Intent mailIntent = new Intent ( Intent.ACTION_VIEW , Uri.parse( "mailto:" + to ) );
+                mailIntent.putExtra( Intent.EXTRA_TEXT, signature );
                 startActivity( mailIntent );
 
             }

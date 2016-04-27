@@ -792,13 +792,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 getAndSavePrefixes();
                 return true;
 
-            case R.id.action_settings:
-                return true;
-
             default:
                 return super.onOptionsItemSelected(item);
         }
-
 
 //        int id = item.getItemId();
 //

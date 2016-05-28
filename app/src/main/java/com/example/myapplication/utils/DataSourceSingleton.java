@@ -72,7 +72,10 @@ public class DataSourceSingleton {
         ArrayList<String> dataSources = getDataSources();
         dataSources.add( "http://opendata.caceres.es/sparql" );
         dataSources.add( "http://opendata.unex.es/sparql" );
-        dataSources.add( "http://dbpedia.org/sparql" );
+        dataSources.add( "http://data.upf.edu:8890/sparql" );
+        dataSources.add( "http://opendata.aragon.es/sparql" );
+        dataSources.add( "http://datos.zaragoza.es/sparql" );
+
     }
 
 

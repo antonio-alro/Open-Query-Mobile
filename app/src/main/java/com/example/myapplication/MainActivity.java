@@ -823,24 +823,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if ( id == R.id.nav_link ) {
-            // Creamos un Intent para lanzar el navegador Google Chrome que muestra la página web de Opendata Cáceres
-            Intent intent = new Intent( Intent.ACTION_VIEW, Uri.parse( "http://opendata.caceres.es/" ) );
-            intent.addFlags( Intent.FLAG_ACTIVITY_NEW_TASK );
-            intent.setPackage( "com.android.chrome" );
-            try {
-                // Lanzamos Google Chrome
-                getApplicationContext().startActivity( intent );
-            } catch (ActivityNotFoundException ex) {
-                // Chrome browser presumably not installed so allow user to choose instead
-                intent.setPackage( null );
-                getApplicationContext().startActivity( intent );
-            }
-        }
-
-        else if ( id == R.id.nav_twitter ) {
-            // Creamos un Intent para lanzar el navegador Google Chrome que muestra la página web de Opendata Cáceres
-            Intent intent = new Intent( Intent.ACTION_VIEW, Uri.parse( "http://twitter.com/opendatacc?lang=es" ) );
+        if ( id == R.id.nav_twitter ) {
+            // Creamos un Intent para lanzar el navegador Google Chrome que muestra el perfil de Twitter de Open Query Mobile
+            Intent intent = new Intent( Intent.ACTION_VIEW, Uri.parse( "https://twitter.com/OpenQueryMobile" ) );
             intent.addFlags( Intent.FLAG_ACTIVITY_NEW_TASK );
             intent.setPackage( "com.android.chrome" );
             try {

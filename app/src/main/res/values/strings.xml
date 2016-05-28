@@ -88,7 +88,7 @@
     <string name="navigation_drawer_header_subtitle">Visualización de datos mediante la explotación de los puntos de consulta SPARQL de varios portales Open Data</string>
 
     <string name="navigation_drawer_menu_item_link_opendata">Opendata Cáceres</string>
-    <string name="navigation_drawer_menu_item_twitter_opendata">Twitter Opendata Cáceres</string>
+    <string name="navigation_drawer_menu_item_twitter_app">Twitter Open Query Mobile</string>
     <string name="navigation_drawer_menu_item_advanced_options">Opciones avanzadas</string>
     <string name="navigation_drawer_menu_item_data_source_options">Fuente de datos</string>
     <string name="navigation_drawer_menu_item_settings">Ajustes</string>

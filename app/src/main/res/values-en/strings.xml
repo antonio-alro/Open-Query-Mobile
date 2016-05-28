@@ -88,7 +88,7 @@
     <string name="navigation_drawer_header_subtitle">Data visualization by exploiting the SPARQL endpoints of several Open Data portals</string>
 
     <string name="navigation_drawer_menu_item_link_opendata">Opendata Cáceres</string>
-    <string name="navigation_drawer_menu_item_twitter_opendata">Twitter Opendata Cáceres</string>
+    <string name="navigation_drawer_menu_item_twitter_app">Twitter Open Query Mobile</string>
     <string name="navigation_drawer_menu_item_advanced_options">Advanced options</string>
     <string name="navigation_drawer_menu_item_data_source_options">Data source</string>
     <string name="navigation_drawer_menu_item_settings">Settings</string>

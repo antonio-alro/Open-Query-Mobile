@@ -30,11 +30,16 @@ public class RequestsManager {
 
         String prefixUri;
 
-        if ( uri.contains("#") ){
+        if ( uri.contains( "#" ) ){
             prefixUri = uri.substring( 0, uri.indexOf( "#" ) ) + "#";
         }
         else {
-            prefixUri = uri.substring( 0, uri.lastIndexOf("/") ) + "/";
+            if ( uri.contains( "/" ) ) {
+                prefixUri = uri.substring( 0, uri.lastIndexOf("/") ) + "/";
+            }
+            else {
+                prefixUri = "";
+            }
         }
         return (String) PrefixesManagerSingleton.getInstance().getPrefixes().get( prefixUri );
     }
